@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from . import utils as u
 import operator
 from functools import reduce
 from copy import deepcopy
