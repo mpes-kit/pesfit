@@ -1,2 +1,2 @@
 # pesfit
-Lineshape fitting routines for photoemission spectroscopy
+Multiband lineshape fitting routines for photoemission spectroscopy

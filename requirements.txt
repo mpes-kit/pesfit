@@ -1,0 +1,8 @@
+# Dev/Deployment
+lmfit
+h5py==2.9.0
+funcy
+
+sphinx
+nose
+coverage
