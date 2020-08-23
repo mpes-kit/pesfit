@@ -1,6 +1,7 @@
 # Dev/Deployment
 lmfit
 h5py==2.9.0
+functools
 funcy
 
 sphinx
