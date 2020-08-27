@@ -33,6 +33,11 @@ class MultipeakModel(Model):
         else:
             self.ls = model
             self.components = model.components
+
+        if 'independent_vars' not in kws:
+            kws['independent_vars'] = self.components[0].independent_vars
+        if 'missing' not in kws:
+            kws['missing'] = self.components[0].missing
             
         def _tmp(self, *args, **kws):
             pass
