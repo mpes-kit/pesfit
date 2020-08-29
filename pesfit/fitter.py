@@ -43,15 +43,24 @@ def varsetter(params, inits={}, ret=False):
     else:
         if inits:
 
-            # Merge entries if inits are provided as a list of dictionaries
+            # Merge entries if inits are provided as a list of dictionaries.
+            # Merging doesn't change the depth of the dictionary.
             if len(inits) > 1:
                 inits = reduce(u.dictmerge, inits)
-
-            # Unpack the dictionary at the component level
-            for kcomp, vcomp in inits.items():
+            
+            dd = u.dict_depth(inits, level=0)
+            
+            if dd == 3:
+                # Unpack the dictionary at the component level
+                for kcomp, vcomp in inits.items():
+                    # Unpack the dictionary at the parameter level
+                    for kparam, vparam in vcomp.items():
+                        params[kcomp+kparam].set(**vparam)
+            
+            elif dd == 2:
                 # Unpack the dictionary at the parameter level
-                for kparam, vparam in vcomp.items():
-                    params[kcomp+kparam].set(**vparam)
+                for kparam, vparam in inits.items():
+                    params[kparam].set(**vparam)
     
     if ret:
         return params
