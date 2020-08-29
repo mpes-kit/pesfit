@@ -5,29 +5,51 @@ from . import lineshape as ls, utils as u
 import numpy as np
 import matplotlib.pyplot as plt
 from functools import reduce
+import inspect
 
+
+existing_models = dict(inspect.getmembers(ls.lmm, inspect.isclass))
 
 ####################
 # Fitting routines #
 ####################
 
-def init_generator(params=None, **kwargs):
-    """ Generator for initial fitting conditions.
+def init_generator(params=None, varkey='value', **kwds):
+    """ Dictionary generator for initial fitting conditions.
+    As an example, dict(value=1) is equivalent to {'value':1}.
     """
 
     if params is None:
-        pass
+        parnames = kwds.pop('parnames', [])
+    else:
+        parnames = params.keys()
+
+    parvals = kwds.pop('parvals', [])
+
+    if parvals:
+        inits = dict((pn, {varkey:pv}) for pn, pv in zip(parnames, parvals))
+    
+    return inits
 
 
-    pass
-
-
-def model_generator(peaks={'Voigt':2}, background='Gaussian'):
-    """ Generator for simple multiband lineshapes with semantic parsing.
+def model_generator(peaks={'Voigt':2}, background='None'):
+    """ Simple multiband lineshape model generator with semantic parsing.
     """
 
-    model = []
+    bg_modname = background + 'Model'
+    if bg_modname in existing_models.keys():
+        bg_clsname = existing_models[bg_modname]
     
+    # Currently only support a single type of lineshape for arbitrary number of peaks.
+    for pk, pkcount in peaks.items():
+        pk_modname = pk + 'Model'
+        if pk_modname in existing_models.keys():
+            pk_clsname = existing_models[pk_modname]
+        
+        try:
+            model = ls.MultipeakModel(lineshape=pk_clsname, n=pkcount, background=bg_clsname(prefix='bg_'))
+        except:
+            model = ls.MultipeakModel(lineshape=pk_clsname, n=pkcount)
 
     return model
 
