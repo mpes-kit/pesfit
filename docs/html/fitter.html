@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Complex lineshape models (pesfit.fitter) &mdash; pesfit 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pesfit 0.3.0 documentation" href="index.html"/>
+        <link rel="prev" title="Complex lineshape models (pesfit.lineshape)" href="lineshape.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pesfit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="I01_start.html">How to start</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="lineshape.html">Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.lineshape)</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.fitter)</span></code></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pesfit</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.fitter)</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/fitter.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pesfit.fitter">
+<span id="complex-lineshape-models-pesfit-fitter"></span><h1>Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.fitter)</span></code><a class="headerlink" href="#module-pesfit.fitter" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="pesfit.fitter.init_generator">
+<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">init_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">varkey</span><span class="o">=</span><span class="default_value">'value'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.init_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary generator for initial fitting conditions.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt>params<span class="classifier">instance of <cite>lmfit.parameter.Parameters</cite></span></dt><dd><p>Existing model parameters.</p>
+</dd>
+<dt>varkey<span class="classifier">str | ‘value’</span></dt><dd><p>Keyword specified for the parameter (‘value’, ‘min’, ‘max’, ‘vary’).</p>
+</dd>
+</dl>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a>kwds : keyword arguments</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.fitter.model_generator">
+<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">model_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">peaks</span><span class="o">=</span><span class="default_value">{'Voigt': 2}</span></em>, <em class="sig-param"><span class="n">background</span><span class="o">=</span><span class="default_value">'None'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.model_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple multiband lineshape model generator with semantic parsing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>peaks<span class="classifier">dict | {‘Voigt’:2}</span></dt><dd><p>Peak profile specified in a dictionary. All possible models see <cite>lmfit.models</cite>.</p>
+</dd>
+<dt>background<span class="classifier">str | ‘None’</span></dt><dd><p>Background model name. All possible models see <cite>lmfit.models</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.fitter.plot_bandpath">
+<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">plot_bandpath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paths</span></em>, <em class="sig-param"><span class="n">ksymbols</span></em>, <em class="sig-param"><span class="n">erange</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">evals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">path_inds</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">koverline</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">klines</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.plot_bandpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot momentum-energy map from a segment of the band mapping data.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>paths<span class="classifier">numpy array</span></dt><dd><p>Momentum diagram data.</p>
+</dd>
+<dt>ksymbols<span class="classifier">list of strings</span></dt><dd><p>Symbols of the high-symmetry points.</p>
+</dd>
+<dt>erange<span class="classifier">list | []</span></dt><dd><p>Bounds of the electron energy, [lower, upper].</p>
+</dd>
+</dl>
+<p>evals : numpy array | None
+path_inds : list | []
+koverline : bool | True</p>
+<blockquote>
+<div><p>Option to display momentum symbols with an overline.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>klines<span class="classifier">bool | False</span></dt><dd><p>Option to draw vertical lines at the specified high-symmetry points.</p>
+</dd>
+<dt>ret<span class="classifier">bool | False</span></dt><dd><p>Option to return the graphical elements.</p>
+</dd>
+</dl>
+<p><a href="#id3"><span class="problematic" id="id4">**</span></a>kwds : keyword arguments</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.fitter.plot_fit_result">
+<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">plot_fit_result</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitres</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">plot_components</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">downsamp</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.plot_fit_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the fitting outcomes.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt>fitres<span class="classifier">instance of <cite>lmfit.model.ModelResult</cite></span></dt><dd><p>Fitting result from the <cite>lmfit</cite> routine.</p>
+</dd>
+<dt>x<span class="classifier">numpy array</span></dt><dd><p>Horizontal-axis values of the lineshape model.</p>
+</dd>
+<dt>plot_components<span class="classifier">bool | True</span></dt><dd><p>Option to plot components of the multipeak lineshape.</p>
+</dd>
+<dt>downsamp<span class="classifier">int | 1</span></dt><dd><p>Level of downsampling of the data (1 means no downsampling).</p>
+</dd>
+</dl>
+<p><a href="#id5"><span class="problematic" id="id6">**</span></a>kwds : keyword arguments</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.fitter.random_varshift">
+<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">random_varshift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitres</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">shifts</span></em>, <em class="sig-param"><span class="n">yvals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xvals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parnames</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.random_varshift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly apply a shift value to certain key variables to get a better fit.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt>fitres<span class="classifier">instance of <cite>lmfit.model.ModelResult</cite></span></dt><dd><p>Current fitting result.</p>
+</dd>
+<dt>model<span class="classifier">instance of <cite>lmfit.model.Model</cite> or its subclass</span></dt><dd><p>Lineshape model.</p>
+</dd>
+<dt>params<span class="classifier">instance of <cite>lmfit.parameter.Parameters</cite></span></dt><dd><p>Lineshape model parameters.</p>
+</dd>
+<dt>xvals, yvals<span class="classifier">numpy array, numpy array | None, None</span></dt><dd><p>Horizontal and vertical axis values for the lineshape fitting.</p>
+</dd>
+<dt>parnames<span class="classifier">list | []</span></dt><dd><p>List of names of the parameters to update initial conditions.</p>
+</dd>
+<dt>verbose<span class="classifier">bool | True</span></dt><dd><p>Option for printout of the chi-squared value.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.fitter.varsetter">
+<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">varsetter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">inits</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.varsetter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variable setter for multiparameter fitting.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt>params<span class="classifier"><cite>lmfit.parameter.Parameter</cite> or other subclass of dict</span></dt><dd><p>Parameter dictionary.</p>
+</dd>
+<dt>init<span class="classifier">dict | {}</span></dt><dd><p>Initialization value dictionary.</p>
+</dd>
+<dt>ret<span class="classifier">bool | False</span></dt><dd><p>Option for returning outcome.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="lineshape.html" class="btn btn-neutral" title="Complex lineshape models (pesfit.lineshape)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, R. Patrick Xian.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
