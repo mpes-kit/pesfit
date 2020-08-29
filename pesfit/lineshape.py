@@ -16,10 +16,11 @@ class MultipeakModel(Model):
     
     _known_ops = {operator.add: '+', operator.mul: '*'}
     
-    def __init__(self, model=[], n=1, lineshape=[], background=[], op=operator.add, **kws):
+    def __init__(self, model=[], n=1, lineshape=[], background=[], op=operator.add, preftext='lp', **kws):
         
         self.components = []
         self.op = op
+        self.preftext = preftext
         
         # Introduce a background function
         if background:
@@ -30,7 +31,7 @@ class MultipeakModel(Model):
                 self.components += list(background)
         
         if lineshape:
-            self.components += [lineshape(prefix="lp"+str(i+1)+"_", **kws) for i in range(n)]
+            self.components += [lineshape(prefix=preftext+str(i+1)+'_', **kws) for i in range(n)]
         elif model:
             self.components += model.components
 
@@ -147,18 +148,26 @@ class MultipeakModeler(Model):
     
     _known_ops = {operator.add: '+', operator.mul: '*'}
     
-    def __init__(self, lineshape=None, n=1, model=[], background=[], op=operator.add, **kws):
+    def __init__(self, lineshape=None, n=1, model=[], background=[], op=operator.add, preftext='lp', **kws):
         
         self.op = op
         self.lineshape = self._model_convert(lineshape)
         self.background = self._model_convert(background)
         self.model = model
         self.nls = n
+        self.preftext = preftext
             
         if 'independent_vars' not in kws:
-            kws['independent_vars'] = self.components[0].independent_vars
+            try:
+                kws['independent_vars'] = self.components[0].independent_vars
+            except:
+                pass
+        
         if 'missing' not in kws:
-            kws['missing'] = self.components[0].missing
+            try:
+                kws['missing'] = self.components[0].missing
+            except:
+                pass
             
         def _tmp(self, *args, **kws):
             pass
@@ -221,7 +230,7 @@ class MultipeakModeler(Model):
         """
         
         if self.lineshape:
-            components = [self.lineshape.func(prefix="lp"+str(i+1)+"_") for i in range(self.nls)]
+            components = [self.lineshape.func(prefix=self.preftext+str(i+1)+'_') for i in range(self.nls)]
         elif self.model:
             components = self.model.components
         
