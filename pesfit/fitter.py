@@ -11,12 +11,20 @@ from functools import reduce
 # Fitting routines #
 ####################
 
-def init_generator():
+def init_generator(params=None, **kwargs):
+    """ Generator for initial fitting conditions.
+    """
+
+    if params is None:
+
+
 
     pass
 
 
-def model_generator():
+def model_generator(lineshape='voigt', background=''):
+    """ Generator for simple multiband lineshapes with semantic parsing.
+    """
 
     pass
 
@@ -30,7 +38,7 @@ def random_varshift(fitres, model, params, yvals, xvals, shifts, parnames=[], ve
     
     else:
         if verbose:
-            print('csq = {}'.format(fitout.chisqr))
+            print('csq = {}'.format(fitres.chisqr))
         
         idx = np.random.choice(range(len(shifts)), 1)[0]
         sft = shifts[idx]
