@@ -24,6 +24,38 @@ def random_shift():
     pass
 
 
+def varsetter(params, inits={}, ret=False):
+    """ Variable setter for multiparameter fitting.
+    
+    :Parameters:
+        params : `lmfit.parameter.Parameter` or other subclass of dict
+            Parameter dictionary.
+        init : dict | {}
+            Initialization value dictionary.
+        ret : bool | False
+            Option for returning outcome.
+    """
+    
+    if not issubclass(type(params), dict):
+        raise TypeError('The params argument needs to be a dictionary or one of its subclasses.')
+        
+    else:
+        if inits:
+
+            # Merge entries if inits are provided as a list of dictionaries
+            if len(inits) > 1:
+                inits = reduce(u.dictmerge, inits)
+
+            # Unpack the dictionary at the component level
+            for kcomp, vcomp in inits.items():
+                # Unpack the dictionary at the parameter level
+                for kparam, vparam in vcomp.items():
+                    params[kcomp+kparam].set(**vparam)
+    
+    if ret:
+        return params
+
+
 ##########################
 # Visualization routines #
 ##########################
