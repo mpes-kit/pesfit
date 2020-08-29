@@ -26,3 +26,26 @@ def riffle(*arr):
         return riffarr
     except:
         raise ValueError('Input arrays need to have the same number of elements!')
+
+
+def dictmerge(D, others):
+    """
+    Merge a dictionary with other dictionaries
+    :Parameters:
+        D : dict
+            Main dictionary.
+        others : list/tuple/dict
+            Other dictionary or composite dictionarized elements.
+    :Return:
+        D : dict
+            Merged dictionary.
+    """
+
+    if type(others) in (list, tuple): # Merge D with a list or tuple of dictionaries
+        for oth in others:
+            D = {**D, **oth}
+
+    elif type(others) == dict: # Merge D with a single dictionary
+        D = {**D, **others}
+
+    return D

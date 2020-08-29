@@ -1,8 +1,9 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from . import lineshape as ls
+from . import lineshape as ls, utils as u
 import matplotlib.pyplot as plt
+from functools import reduce
 
 
 ####################
