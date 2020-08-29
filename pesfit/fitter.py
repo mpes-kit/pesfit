@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from . import lineshape as ls, utils as u
+import numpy as np
 import matplotlib.pyplot as plt
 from functools import reduce
 
@@ -20,9 +21,27 @@ def model_generator():
     pass
 
 
-def random_shift():
+def random_varshift(fitres, model, params, yvals, xvals, shifts, parnames=[], verbose=True):
+    """ Randomly apply a shift value to certain key variables to get a better fit.
+    """
 
-    pass
+    if fitres.chisqr < 0.8:
+        return fitres
+    
+    else:
+        if verbose:
+            print('csq = {}'.format(fitout.chisqr))
+        
+        idx = np.random.choice(range(len(shifts)), 1)[0]
+        sft = shifts[idx]
+        if parnames:
+            pardict = dict((p, params[p].value+sft) for p in parnames)
+            varsetter(params, pardict)
+        
+        newfit = model.fit(yvals, params, x=xvals)
+        newshifts = np.delete(shifts, idx)
+        
+        return random_varshift(newfit, model, params, yvals, xvals, newshifts)
 
 
 def varsetter(params, inits={}, ret=False):
