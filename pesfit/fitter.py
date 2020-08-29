@@ -16,17 +16,20 @@ def init_generator(params=None, **kwargs):
     """
 
     if params is None:
-
+        pass
 
 
     pass
 
 
-def model_generator(lineshape='voigt', background=''):
+def model_generator(peaks={'Voigt':2}, background='Gaussian'):
     """ Generator for simple multiband lineshapes with semantic parsing.
     """
 
-    pass
+    model = []
+    
+
+    return model
 
 
 def random_varshift(fitres, model, params, yvals, xvals, shifts, parnames=[], verbose=True):
