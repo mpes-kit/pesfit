@@ -16,7 +16,13 @@ existing_models = dict(inspect.getmembers(ls.lmm, inspect.isclass))
 
 def init_generator(params=None, varkey='value', **kwds):
     """ Dictionary generator for initial fitting conditions.
-    As an example, dict(value=1) is equivalent to {'value':1}.
+
+    :Parameters:
+        params : instance of `lmfit.parameter.Parameters`
+            Existing model parameters.
+        varkey : str | 'value'
+            Keyword specified for the parameter ('value', 'min', 'max', 'vary').
+        **kwds : keyword arguments
     """
 
     if params is None:
@@ -27,6 +33,7 @@ def init_generator(params=None, varkey='value', **kwds):
     parvals = kwds.pop('parvals', [])
 
     if parvals:
+        # As an example, dict(value=1) is equivalent to {'value':1}.
         inits = dict((pn, {varkey:pv}) for pn, pv in zip(parnames, parvals))
     
     return inits
@@ -34,6 +41,12 @@ def init_generator(params=None, varkey='value', **kwds):
 
 def model_generator(peaks={'Voigt':2}, background='None'):
     """ Simple multiband lineshape model generator with semantic parsing.
+
+    :Parameters:
+        peaks : dict | {'Voigt':2}
+            Peak profile specified in a dictionary. All possible models see `lmfit.models`.
+        background : str | 'None'
+            Background model name. All possible models see `lmfit.models`.
     """
 
     bg_modname = background + 'Model'
@@ -54,8 +67,22 @@ def model_generator(peaks={'Voigt':2}, background='None'):
     return model
 
 
-def random_varshift(fitres, model, params, yvals, xvals, shifts, parnames=[], verbose=True):
+def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parnames=[], verbose=True):
     """ Randomly apply a shift value to certain key variables to get a better fit.
+
+    :Parameters:
+        fitres : instance of `lmfit.model.ModelResult`
+            Current fitting result.
+        model : instance of `lmfit.model.Model` or its subclass
+            Lineshape model.
+        params : instance of `lmfit.parameter.Parameters`
+            Lineshape model parameters.
+        xvals, yvals : numpy array, numpy array | None, None
+            Horizontal and vertical axis values for the lineshape fitting.
+        parnames : list | []
+            List of names of the parameters to update initial conditions.
+        verbose : bool | True
+            Option for printout of the chi-squared value.
     """
 
     if fitres.chisqr < 0.8:
@@ -124,6 +151,17 @@ def varsetter(params, inits={}, ret=False):
 
 def plot_fit_result(fitres, x, plot_components=True, downsamp=1, **kwds):
     """ Plot the fitting outcomes.
+
+    :Parameters:
+        fitres : instance of `lmfit.model.ModelResult`
+            Fitting result from the `lmfit` routine.
+        x : numpy array
+            Horizontal-axis values of the lineshape model.
+        plot_components : bool | True
+            Option to plot components of the multipeak lineshape.
+        downsamp : int | 1
+            Level of downsampling of the data (1 means no downsampling).
+        **kwds : keyword arguments
     """
     
     figsz = kwds.pop('figsize', (8, 5))
@@ -153,7 +191,7 @@ def plot_bandpath(paths, ksymbols, erange=[], evals=None, path_inds=[], koverlin
         elo, ehi = erange
     except:
         elo, ehi = evals[0], evals[-1]
-    plt.imshow(pathDiagram[:450, :], cmap='Blues', aspect=9.3, extent=[0, maxind, elo, ehi], vmin=0, vmax=0.5)
+    plt.imshow(paths, cmap='Blues', aspect=9.3, extent=[0, maxind, elo, ehi], vmin=0, vmax=0.5)
     
     # Momentum high-symmetry point annotation
     if koverline:
