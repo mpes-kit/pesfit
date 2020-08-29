@@ -22,21 +22,29 @@ class MultipeakModel(Model):
         self.op = op
         
         # Introduce a background function
-        if background is not None:
-            try:
+        if background:
+            bg_comp = background.components
+            if type(bg_comp) == list:
                 self.components += background.components
-            except:
+            else:
                 self.components += list(background)
         
         if lineshape:
-            self.components = [lineshape(prefix="lp"+str(i+1)+"_", **kws) for i in range(n)]
+            self.components += [lineshape(prefix="lp"+str(i+1)+"_", **kws) for i in range(n)]
         elif model:
-            self.components = model.components
+            self.components += model.components
 
         if 'independent_vars' not in kws:
-            kws['independent_vars'] = self.components[0].independent_vars
+            try:
+                kws['independent_vars'] = self.components[0].independent_vars
+            except:
+                pass
+        
         if 'missing' not in kws:
-            kws['missing'] = self.components[0].missing
+            try:
+                kws['missing'] = self.components[0].missing
+            except:
+                pass
             
         def _tmp(self, *args, **kws):
             pass
