@@ -19,4 +19,4 @@ pip install --upgrade git+https://github.com/mpes-kit/pesfit.git
 
 ### Documentation
 
-Documentation is provided here.
+Documentation is provided [here](https://mpes-kit.github.io/pesfit/).

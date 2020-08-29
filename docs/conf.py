@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pesfit'
-copyright = u'2017, R. Patrick Xian'
+copyright = u'2020, R. Patrick Xian'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
