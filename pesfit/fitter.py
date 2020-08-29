@@ -3,9 +3,10 @@
 
 from . import lineshape as ls, utils as u
 import numpy as np
-import matplotlib.pyplot as plt
 from functools import reduce
 import inspect
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
 
 
 existing_models = dict(inspect.getmembers(ls.lmm, inspect.isclass))
@@ -180,6 +181,23 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, **kwds):
 
 def plot_bandpath(paths, ksymbols, erange=[], evals=None, path_inds=[], koverline=True, klines=False, ret=False, **kwds):
     """ Plot momentum-energy map from a segment of the band mapping data.
+
+    :Parameters:
+        paths : numpy array
+            Momentum diagram data.
+        ksymbols : list of strings
+            Symbols of the high-symmetry points.
+        erange : list | []
+            Bounds of the electron energy, [lower, upper].
+        evals : numpy array | None
+        path_inds : list | []
+        koverline : bool | True
+            Option to display momentum symbols with an overline.
+        klines : bool | False
+            Option to draw vertical lines at the specified high-symmetry points.
+        ret : bool | False
+            Option to return the graphical elements.
+        **kwds : keyword arguments
     """
     
     fsize = kwds.pop('figsize', (10, 6))
