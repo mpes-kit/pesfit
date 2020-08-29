@@ -49,3 +49,18 @@ def dictmerge(D, others):
         D = {**D, **others}
 
     return D
+
+
+def dict_depth(dic, level=0): 
+    """ Check the depth of a dictionary.
+    
+    :Parameters:
+        dic : dict
+            Instance of dictionary object or its subclass.
+        level : int | 0
+            Starting level of the depth counting.
+    """
+      
+    if not isinstance(dic, dict) or not dic: 
+        return level 
+    return max(dict_depth(dic[key], level+1) for key in dic)
