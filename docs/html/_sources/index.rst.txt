@@ -20,4 +20,5 @@ API documentation
 
    lineshape
    fitter
+   utils
 
