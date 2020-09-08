@@ -37,7 +37,7 @@ def init_generator(params=None, varkey='value', **kwds):
         # As an example, dict(value=1) is equivalent to {'value':1}.
         inits = dict((pn, {varkey:pv}) for pn, pv in zip(parnames, parvals))
     
-    return inits
+        return inits
 
 
 def model_generator(peaks={'Voigt':2}, background='None'):

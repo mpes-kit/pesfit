@@ -89,9 +89,11 @@
               
             
             
-              <ul>
+              <p class="caption"><span class="caption-text">Instructions</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="I01_start.html">How to start</a></li>
 </ul>
+<p class="caption"><span class="caption-text">API documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="lineshape.html">Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.lineshape)</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="fitter.html">Integrated fitting workflow  <code class="docutils literal notranslate"><span class="pre">(pesfit.fitter)</span></code></a></li>
@@ -162,17 +164,18 @@
   <div class="section" id="pesfit-documentation">
 <h1><code class="docutils literal notranslate"><span class="pre">pesfit</span></code> documentation<a class="headerlink" href="#pesfit-documentation" title="Permalink to this headline">¶</a></h1>
 <p>Multiband lineshape fitting routines and benchmarks for photoemission spectroscopy.</p>
-<div class="section" id="instructions">
-<h2>Instructions<a class="headerlink" href="#instructions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>Lineshape fitting is a universal task in photoemission spectroscopy and can be a tedious endeavor due to the increasing amount of data measured in modern instruments (e.g. angle-resolved hemispherical analyzer, time-of-flight electron momentum microscope). It extracts physically meaningful quantities directly related to the materials’ electronic properties, which can be reproduced from theory calculations. However, the efficiency bottleneck in lineshape fitting puts constraints on the potential new physical insights obtainable within a meaningful time frame. We set up here examples of multiband photoemission spectra along with existing domain knowledge in the field. The routines and benchmarks featured here offer an open-source data and algorithm platform for continuous algorithm development to improve the computational efficiency of the lineshape fitting task, which, in the meantime, also paves the way towards the automation of materials characterization using photoemission spectroscopy.</p>
+<p>The fitting part of the package builds and improves on the existing <code class="docutils literal notranslate"><span class="pre">Model</span></code> and <code class="docutils literal notranslate"><span class="pre">CompositeModel</span></code> classes in the <code class="docutils literal notranslate"><span class="pre">lmfit</span></code> <a class="reference external" href="https://github.com/lmfit/lmfit-py/">package</a> to include multiband lineshapes (involving an arbitrary number of bands) evaluated using map-reduce operations.</p>
 <div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Instructions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="I01_start.html">How to start</a></li>
 </ul>
 </div>
-</div>
-<div class="section" id="api-documentation">
-<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">API documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="lineshape.html">Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.lineshape)</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="fitter.html">Integrated fitting workflow  <code class="docutils literal notranslate"><span class="pre">(pesfit.fitter)</span></code></a></li>
