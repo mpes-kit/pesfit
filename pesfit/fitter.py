@@ -155,6 +155,43 @@ def varsetter(params, inits={}, ret=False):
         return params
 
 
+def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', inits=None, ynorm=True,
+                      jitter_init=False, ret='result', **kwds):
+    """ Pointwise fitting of a multiband line profile.
+    """
+    
+    # Initialize model
+    if model is None:
+        mod = model_generator(peaks=peaks, background=background)
+    else:
+        mod = model
+        if model is None:
+            raise ValueError('The fitting requires a model to execute!')
+    
+    pars = mod.make_params()
+    sfts = kwds.pop('shifts', np.arange(0.1, 1.1, 0.1))
+    
+    # Initialization for each pointwise fitting
+    if inits is not None:
+        varsetter(pars, inits, ret=False)
+    
+    # Intensity normalization
+    if ynorm:
+        ydata /= ydata.max()
+    
+    fit_result = mod.fit(ydata, pars, x=xdata)
+    
+    # Apply random shifts to initialization to find a better fit
+    if jitter_init:
+        fit_result = random_varshift(fit_result, model=mod, params=pars, yvals=ydata, xvals=xdata, shifts=sfts)
+    
+    if ret == 'result':
+        return fit_result
+    elif ret == 'all':
+        fit_comps = fit_result.eval_components(x=xdata)
+        return fit_result, fit_comps
+
+
 ##########################
 # Visualization routines #
 ##########################
