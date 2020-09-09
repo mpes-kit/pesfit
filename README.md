@@ -19,6 +19,10 @@ pip install git+https://github.com/mpes-kit/pesfit.git
 pip install --upgrade git+https://github.com/mpes-kit/pesfit.git
 ```
 
+### Data source
+
+Please download the data from [``mpes-kit/pesarxiv``](https://github.com/mpes-kit/pesarxiv).
+
 ### Documentation
 
 Documentation is provided [here](https://mpes-kit.github.io/pesfit/).
