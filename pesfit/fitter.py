@@ -107,7 +107,7 @@ def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parna
         newfit = model.fit(yvals, params, x=xvals)
         newshifts = np.delete(shifts, idx)
         
-        return random_varshift(newfit, model, params, yvals, xvals, newshifts)
+        return random_varshift(newfit, model, params, newshifts, yvals, xvals)
 
 
 def varsetter(params, inits={}, ret=False):
