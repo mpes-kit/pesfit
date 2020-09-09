@@ -142,8 +142,7 @@ class MultipeakModel(Model):
 
 
 class MultipeakModeler(Model):
-    """ Composite lineshape model consisting of multiple identical peak profiles. This version has preserves
-    the property type of model components (`self.components`).
+    """ Composite lineshape model consisting of multiple identical peak profiles. This version has preserves the property type of model components (``self.components``).
     """
     
     _known_ops = {operator.add: '+', operator.mul: '*'}
@@ -180,7 +179,7 @@ class MultipeakModeler(Model):
 
 
     def _model_convert(self, test_obj):
-        """ Convert into an `lmfit` Model object.
+        """ Convert into an ``lmfit`` Model object.
         """
 
         if type(test_obj) != Model:

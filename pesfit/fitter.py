@@ -19,7 +19,7 @@ def init_generator(params=None, varkey='value', **kwds):
     """ Dictionary generator for initial fitting conditions.
 
     :Parameters:
-        params : instance of `lmfit.parameter.Parameters`
+        params : instance of ``lmfit.parameter.Parameters``
             Existing model parameters.
         varkey : str | 'value'
             Keyword specified for the parameter ('value', 'min', 'max', 'vary').
@@ -45,9 +45,13 @@ def model_generator(peaks={'Voigt':2}, background='None'):
 
     :Parameters:
         peaks : dict | {'Voigt':2}
-            Peak profile specified in a dictionary. All possible models see `lmfit.models`.
+            Peak profile specified in a dictionary. All possible models see ``lmfit.models``.
         background : str | 'None'
-            Background model name. All possible models see `lmfit.models`.
+            Background model name. All possible models see ``lmfit.models``.
+
+    :Return:
+        model : instance of ``pesfit.lineshape.MultipeakModel``
+            Lineshape model created from the specified components.
     """
 
     bg_modname = background + 'Model'
@@ -69,14 +73,14 @@ def model_generator(peaks={'Voigt':2}, background='None'):
 
 
 def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parnames=[], verbose=True):
-    """ Randomly apply a shift value to certain key variables to get a better fit.
+    """ Randomly and recursively apply a shift value to certain key variables to get a better fit. Execution of the function terminates when either (1) the fitting results are sufficiently good (measured by its chi-squared metric) or (2) the trials exhaust all choices of shift parameters.
 
     :Parameters:
-        fitres : instance of `lmfit.model.ModelResult`
+        fitres : instance of ``lmfit.model.ModelResult``
             Current fitting result.
-        model : instance of `lmfit.model.Model` or its subclass
+        model : instance of ``lmfit.model.Model`` or its subclass
             Lineshape model.
-        params : instance of `lmfit.parameter.Parameters`
+        params : instance of ``lmfit.parameter.Parameters``
             Lineshape model parameters.
         xvals, yvals : numpy array, numpy array | None, None
             Horizontal and vertical axis values for the lineshape fitting.
@@ -86,6 +90,7 @@ def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parna
             Option for printout of the chi-squared value.
     """
 
+    # Check goodness-of-fit criterion
     if fitres.chisqr < 0.8:
         return fitres
     
@@ -109,7 +114,7 @@ def varsetter(params, inits={}, ret=False):
     """ Variable setter for multiparameter fitting.
     
     :Parameters:
-        params : `lmfit.parameter.Parameter` or other subclass of dict
+        params : ``lmfit.parameter.Parameter`` or other subclass of dict
             Parameter dictionary.
         init : dict | {}
             Initialization value dictionary.
@@ -154,7 +159,7 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, **kwds):
     """ Plot the fitting outcomes.
 
     :Parameters:
-        fitres : instance of `lmfit.model.ModelResult`
+        fitres : instance of ``lmfit.model.ModelResult``
             Fitting result from the `lmfit` routine.
         x : numpy array
             Horizontal-axis values of the lineshape model.
