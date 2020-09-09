@@ -19,11 +19,15 @@ def init_generator(params=None, varkey='value', **kwds):
     """ Dictionary generator for initial fitting conditions.
 
     :Parameters:
-        params : instance of ``lmfit.parameter.Parameters``
+        params: instance of ``lmfit.parameter.Parameters``
             Existing model parameters.
-        varkey : str | 'value'
+        varkey: str | 'value'
             Keyword specified for the parameter ('value', 'min', 'max', 'vary').
-        **kwds : keyword arguments
+        **kwds: keyword arguments
+            parnames: list/tuple | []
+                Collection of namestrings for parameters.
+            parvals: list/tuple | []
+                Collection of values for parameters.
     """
 
     if params is None:
@@ -44,13 +48,13 @@ def model_generator(peaks={'Voigt':2}, background='None'):
     """ Simple multiband lineshape model generator with semantic parsing.
 
     :Parameters:
-        peaks : dict | {'Voigt':2}
+        peaks: dict | {'Voigt':2}
             Peak profile specified in a dictionary. All possible models see ``lmfit.models``.
-        background : str | 'None'
+        background: str | 'None'
             Background model name. All possible models see ``lmfit.models``.
 
     :Return:
-        model : instance of ``pesfit.lineshape.MultipeakModel``
+        model: instance of ``pesfit.lineshape.MultipeakModel``
             Lineshape model created from the specified components.
     """
 
@@ -76,17 +80,17 @@ def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parna
     """ Randomly and recursively apply a shift value to certain key variables to get a better fit. Execution of the function terminates when either (1) the fitting results are sufficiently good (measured by its chi-squared metric) or (2) the trials exhaust all choices of shift parameters.
 
     :Parameters:
-        fitres : instance of ``lmfit.model.ModelResult``
+        fitres: instance of ``lmfit.model.ModelResult``
             Current fitting result.
-        model : instance of ``lmfit.model.Model`` or its subclass
+        model: instance of ``lmfit.model.Model`` or its subclass
             Lineshape model.
-        params : instance of ``lmfit.parameter.Parameters``
+        params: instance of ``lmfit.parameter.Parameters``
             Lineshape model parameters.
-        xvals, yvals : numpy array, numpy array | None, None
+        xvals, yvals: numpy array, numpy array | None, None
             Horizontal and vertical axis values for the lineshape fitting.
-        parnames : list | []
+        parnames: list | []
             List of names of the parameters to update initial conditions.
-        verbose : bool | True
+        verbose: bool | True
             Option for printout of the chi-squared value.
     """
 
@@ -114,11 +118,11 @@ def varsetter(params, inits={}, ret=False):
     """ Variable setter for multiparameter fitting.
     
     :Parameters:
-        params : ``lmfit.parameter.Parameter`` or other subclass of dict
+        params: ``lmfit.parameter.Parameter`` or other subclass of dict
             Parameter dictionary.
-        init : dict | {}
+        init: dict | {}
             Initialization value dictionary.
-        ret : bool | False
+        ret: bool | False
             Option for returning outcome.
     """
     
@@ -159,15 +163,17 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, **kwds):
     """ Plot the fitting outcomes.
 
     :Parameters:
-        fitres : instance of ``lmfit.model.ModelResult``
+        fitres: instance of ``lmfit.model.ModelResult``
             Fitting result from the `lmfit` routine.
-        x : numpy array
+        x: numpy array
             Horizontal-axis values of the lineshape model.
-        plot_components : bool | True
+        plot_components: bool | True
             Option to plot components of the multipeak lineshape.
-        downsamp : int | 1
+        downsamp: int | 1
             Level of downsampling of the data (1 means no downsampling).
-        **kwds : keyword arguments
+        **kwds: keyword arguments
+            figsize: list/tuple | [8, 5]
+                Default size of the figure.
     """
     
     figsz = kwds.pop('figsize', (8, 5))
@@ -188,21 +194,25 @@ def plot_bandpath(paths, ksymbols, erange=[], evals=None, path_inds=[], koverlin
     """ Plot momentum-energy map from a segment of the band mapping data.
 
     :Parameters:
-        paths : numpy array
+        paths: numpy array
             Momentum diagram data.
-        ksymbols : list of strings
+        ksymbols: list of strings
             Symbols of the high-symmetry points.
-        erange : list | []
+        erange: list | []
             Bounds of the electron energy, [lower, upper].
-        evals : numpy array | None
-        path_inds : list | []
-        koverline : bool | True
+        evals: numpy array | None
+            Energy values.
+        path_inds: list | []
+            Locations of the high-symmetry points along the momentum direction.
+        koverline: bool | True
             Option to display momentum symbols with an overline.
-        klines : bool | False
+        klines: bool | False
             Option to draw vertical lines at the specified high-symmetry points.
-        ret : bool | False
+        ret: bool | False
             Option to return the graphical elements.
-        **kwds : keyword arguments
+        **kwds: keyword arguments
+            figsize: list/tuple | [10, 6]
+                Default size of the figure.
     """
     
     fsize = kwds.pop('figsize', (10, 6))

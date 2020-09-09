@@ -168,15 +168,21 @@
 <dt id="pesfit.fitter.init_generator">
 <code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">init_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">varkey</span><span class="o">=</span><span class="default_value">'value'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.init_generator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dictionary generator for initial fitting conditions.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt>params<span class="classifier">instance of <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameters</span></code></span></dt><dd><p>Existing model parameters.</p>
+<dd class="field-odd"><dl class="simple">
+<dt>params: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameters</span></code></dt><dd><p>Existing model parameters.</p>
 </dd>
-<dt>varkey<span class="classifier">str | ‘value’</span></dt><dd><p>Keyword specified for the parameter (‘value’, ‘min’, ‘max’, ‘vary’).</p>
+<dt>varkey: str | ‘value’</dt><dd><p>Keyword specified for the parameter (‘value’, ‘min’, ‘max’, ‘vary’).</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt>parnames: list/tuple | []</dt><dd><p>Collection of namestrings for parameters.</p>
+</dd>
+<dt>parvals: list/tuple | []</dt><dd><p>Collection of values for parameters.</p>
 </dd>
 </dl>
-<p><a href="#id1"><span class="problematic" id="id2">**</span></a>kwds : keyword arguments</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -185,18 +191,18 @@
 <dt id="pesfit.fitter.model_generator">
 <code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">model_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">peaks</span><span class="o">=</span><span class="default_value">{'Voigt': 2}</span></em>, <em class="sig-param"><span class="n">background</span><span class="o">=</span><span class="default_value">'None'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.model_generator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple multiband lineshape model generator with semantic parsing.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>peaks<span class="classifier">dict | {‘Voigt’:2}</span></dt><dd><p>Peak profile specified in a dictionary. All possible models see <code class="docutils literal notranslate"><span class="pre">lmfit.models</span></code>.</p>
+<dt>peaks: dict | {‘Voigt’:2}</dt><dd><p>Peak profile specified in a dictionary. All possible models see <code class="docutils literal notranslate"><span class="pre">lmfit.models</span></code>.</p>
 </dd>
-<dt>background<span class="classifier">str | ‘None’</span></dt><dd><p>Background model name. All possible models see <code class="docutils literal notranslate"><span class="pre">lmfit.models</span></code>.</p>
+<dt>background: str | ‘None’</dt><dd><p>Background model name. All possible models see <code class="docutils literal notranslate"><span class="pre">lmfit.models</span></code>.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Return</dt>
-<dd class="field-even"><dl>
-<dt>model<span class="classifier">instance of <code class="docutils literal notranslate"><span class="pre">pesfit.lineshape.MultipeakModel</span></code></span></dt><dd><p>Lineshape model created from the specified components.</p>
+<dd class="field-even"><dl class="simple">
+<dt>model: instance of <code class="docutils literal notranslate"><span class="pre">pesfit.lineshape.MultipeakModel</span></code></dt><dd><p>Lineshape model created from the specified components.</p>
 </dd>
 </dl>
 </dd>
@@ -207,29 +213,31 @@
 <dt id="pesfit.fitter.plot_bandpath">
 <code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">plot_bandpath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paths</span></em>, <em class="sig-param"><span class="n">ksymbols</span></em>, <em class="sig-param"><span class="n">erange</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">evals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">path_inds</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">koverline</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">klines</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.plot_bandpath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot momentum-energy map from a segment of the band mapping data.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>paths<span class="classifier">numpy array</span></dt><dd><p>Momentum diagram data.</p>
+<dt>paths: numpy array</dt><dd><p>Momentum diagram data.</p>
 </dd>
-<dt>ksymbols<span class="classifier">list of strings</span></dt><dd><p>Symbols of the high-symmetry points.</p>
+<dt>ksymbols: list of strings</dt><dd><p>Symbols of the high-symmetry points.</p>
 </dd>
-<dt>erange<span class="classifier">list | []</span></dt><dd><p>Bounds of the electron energy, [lower, upper].</p>
+<dt>erange: list | []</dt><dd><p>Bounds of the electron energy, [lower, upper].</p>
+</dd>
+<dt>evals: numpy array | None</dt><dd><p>Energy values.</p>
+</dd>
+<dt>path_inds: list | []</dt><dd><p>Locations of the high-symmetry points along the momentum direction.</p>
+</dd>
+<dt>koverline: bool | True</dt><dd><p>Option to display momentum symbols with an overline.</p>
+</dd>
+<dt>klines: bool | False</dt><dd><p>Option to draw vertical lines at the specified high-symmetry points.</p>
+</dd>
+<dt>ret: bool | False</dt><dd><p>Option to return the graphical elements.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt>figsize: list/tuple | [10, 6]</dt><dd><p>Default size of the figure.</p>
 </dd>
 </dl>
-<p>evals : numpy array | None
-path_inds : list | []
-koverline : bool | True</p>
-<blockquote>
-<div><p>Option to display momentum symbols with an overline.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>klines<span class="classifier">bool | False</span></dt><dd><p>Option to draw vertical lines at the specified high-symmetry points.</p>
-</dd>
-<dt>ret<span class="classifier">bool | False</span></dt><dd><p>Option to return the graphical elements.</p>
 </dd>
 </dl>
-<p><a href="#id3"><span class="problematic" id="id4">**</span></a>kwds : keyword arguments</p>
 </dd>
 </dl>
 </dd></dl>
@@ -238,19 +246,23 @@ koverline : bool | True</p>
 <dt id="pesfit.fitter.plot_fit_result">
 <code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">plot_fit_result</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitres</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">plot_components</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">downsamp</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.plot_fit_result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the fitting outcomes.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt>fitres<span class="classifier">instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.ModelResult</span></code></span></dt><dd><p>Fitting result from the <cite>lmfit</cite> routine.</p>
+<dd class="field-odd"><dl class="simple">
+<dt>fitres: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.ModelResult</span></code></dt><dd><p>Fitting result from the <cite>lmfit</cite> routine.</p>
 </dd>
-<dt>x<span class="classifier">numpy array</span></dt><dd><p>Horizontal-axis values of the lineshape model.</p>
+<dt>x: numpy array</dt><dd><p>Horizontal-axis values of the lineshape model.</p>
 </dd>
-<dt>plot_components<span class="classifier">bool | True</span></dt><dd><p>Option to plot components of the multipeak lineshape.</p>
+<dt>plot_components: bool | True</dt><dd><p>Option to plot components of the multipeak lineshape.</p>
 </dd>
-<dt>downsamp<span class="classifier">int | 1</span></dt><dd><p>Level of downsampling of the data (1 means no downsampling).</p>
+<dt>downsamp: int | 1</dt><dd><p>Level of downsampling of the data (1 means no downsampling).</p>
+</dd>
+<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt>figsize: list/tuple | [8, 5]</dt><dd><p>Default size of the figure.</p>
 </dd>
 </dl>
-<p><a href="#id5"><span class="problematic" id="id6">**</span></a>kwds : keyword arguments</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -259,20 +271,20 @@ koverline : bool | True</p>
 <dt id="pesfit.fitter.random_varshift">
 <code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">random_varshift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitres</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">shifts</span></em>, <em class="sig-param"><span class="n">yvals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xvals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parnames</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.random_varshift" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomly and recursively apply a shift value to certain key variables to get a better fit. Execution of the function terminates when either (1) the fitting results are sufficiently good (measured by its chi-squared metric) or (2) the trials exhaust all choices of shift parameters.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt>fitres<span class="classifier">instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.ModelResult</span></code></span></dt><dd><p>Current fitting result.</p>
+<dd class="field-odd"><dl class="simple">
+<dt>fitres: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.ModelResult</span></code></dt><dd><p>Current fitting result.</p>
 </dd>
-<dt>model<span class="classifier">instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.Model</span></code> or its subclass</span></dt><dd><p>Lineshape model.</p>
+<dt>model: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.Model</span></code> or its subclass</dt><dd><p>Lineshape model.</p>
 </dd>
-<dt>params<span class="classifier">instance of <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameters</span></code></span></dt><dd><p>Lineshape model parameters.</p>
+<dt>params: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameters</span></code></dt><dd><p>Lineshape model parameters.</p>
 </dd>
-<dt>xvals, yvals<span class="classifier">numpy array, numpy array | None, None</span></dt><dd><p>Horizontal and vertical axis values for the lineshape fitting.</p>
+<dt>xvals, yvals: numpy array, numpy array | None, None</dt><dd><p>Horizontal and vertical axis values for the lineshape fitting.</p>
 </dd>
-<dt>parnames<span class="classifier">list | []</span></dt><dd><p>List of names of the parameters to update initial conditions.</p>
+<dt>parnames: list | []</dt><dd><p>List of names of the parameters to update initial conditions.</p>
 </dd>
-<dt>verbose<span class="classifier">bool | True</span></dt><dd><p>Option for printout of the chi-squared value.</p>
+<dt>verbose: bool | True</dt><dd><p>Option for printout of the chi-squared value.</p>
 </dd>
 </dl>
 </dd>
@@ -283,14 +295,14 @@ koverline : bool | True</p>
 <dt id="pesfit.fitter.varsetter">
 <code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">varsetter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">inits</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.varsetter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variable setter for multiparameter fitting.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt>params<span class="classifier"><code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameter</span></code> or other subclass of dict</span></dt><dd><p>Parameter dictionary.</p>
+<dd class="field-odd"><dl class="simple">
+<dt>params: <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameter</span></code> or other subclass of dict</dt><dd><p>Parameter dictionary.</p>
 </dd>
-<dt>init<span class="classifier">dict | {}</span></dt><dd><p>Initialization value dictionary.</p>
+<dt>init: dict | {}</dt><dd><p>Initialization value dictionary.</p>
 </dd>
-<dt>ret<span class="classifier">bool | False</span></dt><dd><p>Option for returning outcome.</p>
+<dt>ret: bool | False</dt><dd><p>Option for returning outcome.</p>
 </dd>
 </dl>
 </dd>

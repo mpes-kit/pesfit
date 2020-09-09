@@ -9,11 +9,11 @@ def riffle(*arr):
     Interleave multiple arrays of the same number of elements.
 
     :Parameter:
-        *arr : array
+        *arr: array
             A number of arrays
 
     :Return:
-        riffarr : 1D array
+        riffarr: 1D array
             An array with interleaving elements from each input array.
     """
 
@@ -32,12 +32,12 @@ def dictmerge(D, others):
     """
     Merge a dictionary with other dictionaries
     :Parameters:
-        D : dict
+        D: dict
             Main dictionary.
-        others : list/tuple/dict
+        others: list/tuple/dict
             Other dictionary or composite dictionarized elements.
     :Return:
-        D : dict
+        D: dict
             Merged dictionary.
     """
 
@@ -55,9 +55,9 @@ def dict_depth(dic, level=0):
     """ Check the depth of a dictionary.
     
     :Parameters:
-        dic : dict
+        dic: dict
             Instance of dictionary object or its subclass.
-        level : int | 0
+        level: int | 0
             Starting level of the depth counting.
     """
       
