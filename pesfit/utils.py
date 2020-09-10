@@ -8,13 +8,15 @@ def riffle(*arr):
     """
     Interleave multiple arrays of the same number of elements.
 
-    :Parameter:
-        *arr: array
-            A number of arrays
+    **Parameter**
 
-    :Return:
-        riffarr: 1D array
-            An array with interleaving elements from each input array.
+    *arr: array
+        A number of arrays
+
+    **Return**
+
+    riffarr: 1D array
+        An array with interleaving elements from each input array.
     """
 
     arr = (map(np.ravel, arr))
@@ -31,14 +33,18 @@ def riffle(*arr):
 def dictmerge(D, others):
     """
     Merge a dictionary with other dictionaries
-    :Parameters:
-        D: dict
-            Main dictionary.
-        others: list/tuple/dict
-            Other dictionary or composite dictionarized elements.
-    :Return:
-        D: dict
-            Merged dictionary.
+ 
+    **Parameters**
+
+    D: dict
+        Main dictionary.
+    others: list/tuple/dict
+        Other dictionary or composite dictionarized elements.
+
+    **Return**
+
+    D: dict
+        Merged dictionary.
     """
 
     if type(others) in (list, tuple): # Merge D with a list or tuple of dictionaries
@@ -54,11 +60,12 @@ def dictmerge(D, others):
 def dict_depth(dic, level=0): 
     """ Check the depth of a dictionary.
     
-    :Parameters:
-        dic: dict
-            Instance of dictionary object or its subclass.
-        level: int | 0
-            Starting level of the depth counting.
+    **Parameters**
+
+    dic: dict
+        Instance of dictionary object or its subclass.
+    level: int | 0
+        Starting level of the depth counting.
     """
       
     if not isinstance(dic, dict) or not dic: 
