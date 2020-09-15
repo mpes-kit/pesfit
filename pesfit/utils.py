@@ -94,3 +94,34 @@ def df_collect(params, currdf=None):
         df = pd.concat([df, currdf], ignore_index=True, sort=True)
         
     return df
+
+
+def partial_flatten(arr, axis):
+    """ Partially flatten a multidimensional array.
+    
+    **Parameters**\n
+    arr: numpy array
+        Multidimensional array for partial flattening.
+    axis: list/tuple
+        Axes to flatten.
+    
+    **Return**\n
+    arr_pf: numpy array
+        Partially flattened array.
+    """
+    
+    if type(axis) != list:
+        axis = list(axis)
+    nax = len(axis)
+    axmin = min(axis)
+    
+    if nax < 2:
+        raise Exception('The number of axes to flatten is at least 2!')
+    else:
+        shape = np.array(arr.shape, dtype='int') # Original shape of array
+        flatsize = np.prod(shape[axis]) # Size of the flattened dimensions
+        # Shape after partial flattening
+        shape_flattened = np.insert(np.delete(shape, axis), axmin, flatsize)
+        arr_pf = arr.reshape(tuple(shape_flattened))
+        
+        return arr_pf
