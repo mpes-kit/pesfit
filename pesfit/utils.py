@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-
+import pandas as pd
 
 def riffle(*arr):
     """
@@ -71,3 +71,26 @@ def dict_depth(dic, level=0):
     if not isinstance(dic, dict) or not dic: 
         return level 
     return max(dict_depth(dic[key], level+1) for key in dic)
+
+
+def df_collect(params, currdf=None):
+    """ Collect parameters from fitting outcome.
+    
+    **Parameters**\n    
+    params: instance of ``lmfit.parameter.Parameters``.
+        Collection of fitting parameters.
+    currdf: instance of ``pandas.DataFrame`` | None
+        An existing dataframe to append new data to.
+        
+    **Return**\n    
+    df: instance of ``pandas.DataFrame``
+        Fitting parameters reformatted as a dataframe (keeps only names and values).
+    """
+
+    dfdict = {param.name:param.value for _, param in params.items()}  
+    df = pd.DataFrame.from_dict(dfdict, orient='index').T
+    
+    if currdf is not None:
+        df = pd.concat([df, currdf], ignore_index=True, sort=True)
+        
+    return df

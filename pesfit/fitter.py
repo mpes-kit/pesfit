@@ -3,6 +3,7 @@
 
 from . import lineshape as ls, utils as u
 import numpy as np
+import pandas as pd
 from functools import reduce
 import inspect
 import matplotlib.pyplot as plt
