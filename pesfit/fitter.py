@@ -4,6 +4,7 @@
 from . import lineshape as ls, utils as u
 import numpy as np
 import pandas as pd
+from tqdm import notebook as nbk
 from functools import reduce
 import inspect
 import matplotlib.pyplot as plt
@@ -196,6 +197,91 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', i
     elif ret == 'all':
         fit_comps = fit_result.eval_components(x=xdata)
         return fit_result, fit_comps
+
+
+class PatchFitter(object):
+    """ Class for fitting a patch of photoemission band mapping data.
+    """
+    
+    def __init__(self, xdata=None, ydata=None, model=None, **kwds):
+        """ Initialize class.
+        """
+        
+        self.xdata = xdata
+        self.ydata = ydata
+        self.patch_shape = self.ydata.shape
+        self.patch_r, self.patch_c, self.elen = self.patch_shape
+        
+        if model is None:
+            peaks = kwds.pop('peaks', {'Voigt':2})
+            bg = kwds.pop('background', 'None')
+            self.model = model_generator(peaks=peaks, background=bg)
+        else:
+            self.model = model
+            
+        self.fitres = None
+    
+    def load_data(self, fdir=''):
+        
+        pass
+    
+    def load_inits(self, fdir=''):
+        """ Load band energy initialization.
+        """
+        
+        pass
+    
+    @property
+    def nspec(self):
+        """ Total number of line spectra.
+        """
+        
+        return self.patch_r * self.patch_c
+    
+    def sequential_fit(self, xdata=None, drange=None, pbar=False, **kwds):
+        """ Sequential line fitting of the data patch.
+        """
+        
+        self.pars = self.model.make_params()
+        
+        if xdata is None:
+            xvals = self.xdata[drange]
+        self.ydata2D = self.ydata.reshape((self.nspec, self.elen))
+        
+        for n in nbk.tqdm(range(self.nspec)):
+
+            self.df_fit = pd.DataFrame(columns=self.pars.keys())
+            y = self.ydata2D[n, drange]
+            out = pointwise_fitting(xvals, y, model=self.model, **kwds)
+
+            dfout = u.df_collect(out.params, currdf=self.df_fit)
+            self.df_fit = dfout
+    
+    def parallel_fit(self):
+        """ Parallel line fitting of the data patch.
+        """
+        
+        pass
+    
+    def save_data(self, fdir=''):
+        """ Save the fitting outcome.
+        """
+        
+        pass
+    
+    def view(self, fit_df=None, xaxis=None, **kwds):
+        """ Visualize selected fitting results.
+        """
+        
+        if xaxis is None:
+            xvals = self.xdata
+        
+        if fit_result is None:
+            fres = self.fit_result
+        
+        plot = plot_fit_result(fres, xvals, **kwds)
+        
+        return plot
 
 
 ##########################
