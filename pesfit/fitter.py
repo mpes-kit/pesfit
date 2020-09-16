@@ -243,6 +243,14 @@ class PatchFitter(object):
         
         self.load(attrname='band_inits', **kwds)
 
+    def load_fitting(self, fdir=r'./', ftype='h5', **kwds):
+        """ Load fitting outcome (for visualization).
+        """
+
+        path = fdir + fname
+        if ftype == 'h5':
+            self.df_fit = pd.read_hdf(path, **kwds)
+
     def set_inits(self, inits_dict=None, xdata=None, drange=None):
         """ Set the persistent part of initialization parameters.
         """
