@@ -283,11 +283,11 @@ class PatchFitter(object):
             # Setting the initialization parameters that vary for every line spectrum
             center_inits = [self.band_inits[i, n] for i in range(self.model.nlp)]
             inits_vary = init_generator(varkey='center', parnames=self.prefixes, parvals=center_inits)
-            varsetter(pars, inits_vary, ret=False)
+            varsetter(self.pars, inits_vary, ret=False)
 
             # Fitting parameters for current line spectrum
             self.df_fit = pd.DataFrame(columns=self.pars.keys())
-            y = self.ydata2D[n, self.drange]
+            y = self.ydata2D[n, self.drange] # Current energy distribution curve
             out = pointwise_fitting(self.xvals, y, model=self.model, **kwds)
 
             dfout = u.df_collect(out.params, currdf=self.df_fit)
@@ -299,11 +299,15 @@ class PatchFitter(object):
         
         pass
     
-    def save_data(self, fdir=''):
+    def save_data(self, fdir=r'./', fname='', ftype='h5', name='fitres', **kwds):
         """ Save the fitting outcome.
         """
         
-        pass
+        path = fdir + fname
+        if ftype == 'h5':
+            self.df_fit.to_hdf(path, key=name)
+        else:
+            raise NotImplementedError
     
     def view(self, fit_result=None, fit_df=None, xaxis=None, **kwds):
         """ Visualize selected fitting results.
@@ -327,9 +331,9 @@ def load_file(fdir=r'./', fname='', ftype='h5', parts=None, **kwds):
     path = fdir + fname
     if ftype == 'h5':
         if parts is None:
-            content = io.h5_to_dict(fdir, **kwds)
+            content = io.h5_to_dict(path, **kwds)
         else:
-            content = io.loadH5Parts(fdir, parts, **kwds)
+            content = io.loadH5Parts(path, parts, **kwds)
     
     else:
         raise NotImplementedError
