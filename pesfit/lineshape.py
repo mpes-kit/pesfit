@@ -100,6 +100,14 @@ class MultipeakModel(Model):
         """
         
         return len(self.components)
+
+    @property
+    def prefixes(self):
+        """ Collection of prefixes for all lineshape components.
+        """
+
+        prefs = [self.components[i].prefix for i in range(self.ncomp)]
+        return prefs
     
     def eval(self, params=None, **kwargs):
         """ Evaluate the entire model.
@@ -248,6 +256,14 @@ class MultipeakModeler(Model):
         """
         
         return len(self.components)
+
+    @property
+    def prefixes(self):
+        """ Collection of prefixes for all lineshape components.
+        """
+
+        prefs = [self.components[i].prefix for i in range(self.ncomp)]
+        return prefs
     
     def eval(self, params=None, **kwargs):
         """ Evaluate the entire model.
