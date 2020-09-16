@@ -9,6 +9,7 @@ from functools import reduce
 import inspect
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
+import hdfio.dict_io as io
 
 
 existing_models = dict(inspect.getmembers(ls.lmm, inspect.isclass))
@@ -218,18 +219,45 @@ class PatchFitter(object):
             self.model = model_generator(peaks=peaks, background=bg)
         else:
             self.model = model
-            
+        
+        self.prefixes = self.model.prefixes
         self.fitres = None
     
-    def load_data(self, fdir=''):
+    def load(self, attrname='temp', fdir='', fname='', ftype='h5', **kwds):
+        """ Generic load function.
+        """
         
-        pass
+        cont = load_file(fdir=fdir, fname=fname, ftype=ftype, **kwds)
+        if len(cont) == 1:
+            setattr(self, attrname, cont[0])
     
-    def load_inits(self, fdir=''):
+    def load_data(self, **kwds):
+        """ Load line spectrum data patch.
+        """
+        
+        self.load(attrname='ydata', **kwds)
+    
+    def load_band_inits(self, **kwds):
         """ Load band energy initialization.
         """
         
-        pass
+        self.load(attrname='band_inits', **kwds)
+
+    def set_inits(self, inits_dict=None, xdata=None, drange=None):
+        """ Set the persistent part of initialization parameters.
+        """
+        
+        if inits_dict is not None:
+            self.inits_persist = inits_dict
+        else:
+            self.inits_persist = {}
+
+        self.drange = drange
+        if xdata is None:
+            self.xvals = self.xdata[drange]
+        else:
+            self.xvals = xdata
+        self.ydata2D = u.partial_flatten(self.ydata, axis=(0, 1))
     
     @property
     def nspec(self):
@@ -238,21 +266,29 @@ class PatchFitter(object):
         
         return self.patch_r * self.patch_c
     
-    def sequential_fit(self, xdata=None, drange=None, pbar=False, **kwds):
+    def sequential_fit(self, pbar=False, **kwds):
         """ Sequential line fitting of the data patch.
         """
         
         self.pars = self.model.make_params()
+        # Setting the initialization parameters persistent throughout the fitting process
+        try:
+            varsetter(pars, self.inits_persist, ret=False)
+        except:
+            pass
         
-        if xdata is None:
-            xvals = self.xdata[drange]
-        self.ydata2D = self.ydata.reshape((self.nspec, self.elen))
-        
+        # Sequentially fit the 
         for n in nbk.tqdm(range(self.nspec)):
 
+            # Setting the initialization parameters that vary for every line spectrum
+            center_inits = [self.band_inits[i, n] for i in range(self.model.nlp)]
+            inits_vary = init_generator(varkey='center', parnames=self.prefixes, parvals=center_inits)
+            varsetter(pars, inits_vary, ret=False)
+
+            # Fitting parameters for current line spectrum
             self.df_fit = pd.DataFrame(columns=self.pars.keys())
-            y = self.ydata2D[n, drange]
-            out = pointwise_fitting(xvals, y, model=self.model, **kwds)
+            y = self.ydata2D[n, self.drange]
+            out = pointwise_fitting(self.xvals, y, model=self.model, **kwds)
 
             dfout = u.df_collect(out.params, currdf=self.df_fit)
             self.df_fit = dfout
@@ -269,26 +305,43 @@ class PatchFitter(object):
         
         pass
     
-    def view(self, fit_df=None, xaxis=None, **kwds):
+    def view(self, fit_result=None, fit_df=None, xaxis=None, **kwds):
         """ Visualize selected fitting results.
         """
         
         if xaxis is None:
-            xvals = self.xdata
+            xvals = self.xvals
         
         if fit_result is None:
-            fres = self.fit_result
+            fres = self.fitres
         
         plot = plot_fit_result(fres, xvals, **kwds)
         
         return plot
 
 
+def load_file(fdir=r'./', fname='', ftype='h5', parts=None, **kwds):
+    """ Load whole file or parts of the file.
+    """
+    
+    path = fdir + fname
+    if ftype == 'h5':
+        if parts is None:
+            content = io.h5_to_dict(fdir, **kwds)
+        else:
+            content = io.loadH5Parts(fdir, parts, **kwds)
+    
+    else:
+        raise NotImplementedError
+        
+    return content
+
+
 ##########################
 # Visualization routines #
 ##########################
 
-def plot_fit_result(fitres, x, plot_components=True, downsamp=1, **kwds):
+def plot_fit_result(fitres, x, plot_components=True, downsamp=1, ret=False, **kwds):
     """ Plot the fitting outcomes.
 
     **Parameters**
@@ -308,16 +361,19 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, **kwds):
     
     figsz = kwds.pop('figsize', (8, 5))
     
-    plt.figure(figsize=figsz)
+    f, ax = plt.subplots(figsize=figsz)
     comps = fitres.eval_components(x=x)
     
     # Plot the spectral components
     if plot_components == True:
         for k, v in comps.items():
-            plt.plot(x, v, '-', label=k[:-1])
+            ax.plot(x, v, '-', label=k[:-1])
     
-    plt.plot(x, fitres.best_fit, '-r')
-    plt.plot(x[::downsamp], fitres.data[::downsamp], '.k')
+    ax.plot(x, fitres.best_fit, '-r')
+    ax.plot(x[::downsamp], fitres.data[::downsamp], '.k')
+
+    if ret:
+        return f, ax
 
 
 def plot_bandpath(paths, ksymbols, erange=[], evals=None, path_inds=[], koverline=True, klines=False, ret=False, **kwds):
