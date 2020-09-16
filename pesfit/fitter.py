@@ -257,7 +257,7 @@ class PatchFitter(object):
         if ftype == 'h5':
             self.df_fit = pd.read_hdf(path, **kwds)
 
-    def set_inits(self, inits_dict=None, xdata=None, drange=None):
+    def set_inits(self, inits_dict=None, xdata=None, band_inits=None, drange=None):
         """ Set the persistent part of initialization parameters.
         """
         
@@ -271,7 +271,13 @@ class PatchFitter(object):
             self.xvals = self.xdata[drange]
         else:
             self.xvals = xdata
-        self.ydata2D = u.partial_flatten(self.ydata, axis=(0, 1))
+        self.ydata2D = u.partial_flatten(self.ydata[...,self.drange], axis=(0, 1))
+        
+        try:
+            if band_inits is None:
+                self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2))
+        except:
+            pass
     
     @property
     def nspec(self):
@@ -291,17 +297,18 @@ class PatchFitter(object):
         except:
             pass
         
+        # Fitting parameters for all line spectra in the data patch
+        self.df_fit = pd.DataFrame(columns=self.pars.keys())
+        
         # Sequentially fit the 
-        for n in nbk.tqdm(range(self.nspec)):
+        for n in nbk.tqdm(range(self.nspec), disable=not(pbar)):
 
             # Setting the initialization parameters that vary for every line spectrum
-            center_inits = [self.band_inits[i, n] for i in range(self.model.nlp)]
+            center_inits = [self.band_inits2D[i, n] for i in range(self.model.nlp)]
             inits_vary = init_generator(varkey='center', parnames=self.prefixes, parvals=center_inits)
             varsetter(self.pars, inits_vary, ret=False)
-
-            # Fitting parameters for current line spectrum
-            self.df_fit = pd.DataFrame(columns=self.pars.keys())
-            y = self.ydata2D[n, self.drange] # Current energy distribution curve
+            
+            y = self.ydata2D[n, :] # Current energy distribution curve
             out = pointwise_fitting(self.xvals, y, model=self.model, **kwds)
 
             dfout = u.df_collect(out.params, currdf=self.df_fit)
