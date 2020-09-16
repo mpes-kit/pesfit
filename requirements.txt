@@ -3,6 +3,7 @@ lmfit
 h5py
 funcy
 pandas
+hdfio
 
 sphinx
 coverage
