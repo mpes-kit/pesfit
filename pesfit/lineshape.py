@@ -21,6 +21,9 @@ class MultipeakModel(Model):
         self.components = []
         self.op = op
         self.preftext = preftext
+        # Initialize the number of components
+        self.nbg = 0 # number of background components
+        self.nlp = 0 # number of line profiles
         
         # Introduce a background function
         if background:
@@ -168,8 +171,10 @@ class MultipeakModeler(Model):
         self.lineshape = self._model_convert(lineshape)
         self.background = self._model_convert(background)
         self.model = model
-        self.nlp = n
         self.preftext = preftext
+        # Initialize the number of components
+        self.nbg = 0 # number of background components
+        self.nlp = 0 # number of line profiles
             
         if 'independent_vars' not in kws:
             try:
