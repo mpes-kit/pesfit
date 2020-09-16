@@ -23,6 +23,10 @@ pip install --upgrade git+https://github.com/mpes-kit/pesfit.git
 
 Please download the data from [``mpes-kit/pesarxiv``](https://github.com/mpes-kit/pesarxiv).
 
+### Benchmarks
+
+The benchmarks for multiband dispersion fitting routines are provided [here](https://github.com/mpes-kit/pesfit/tree/master/benchmarks).
+
 ### Documentation
 
 Documentation is provided [here](https://mpes-kit.github.io/pesfit/).
