@@ -243,7 +243,7 @@ class PatchFitter(object):
         
         self.load(attrname='band_inits', **kwds)
 
-    def load_fitting(self, fdir=r'./', ftype='h5', **kwds):
+    def load_fitting(self, fdir=r'./', fname='', ftype='h5', **kwds):
         """ Load fitting outcome (for visualization).
         """
 
