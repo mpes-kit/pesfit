@@ -16,7 +16,7 @@ class MultipeakModel(Model):
     
     _known_ops = {operator.add: '+', operator.mul: '*'}
     
-    def __init__(self, model=[], n=1, lineshape=[], background=[], op=operator.add, preftext='lp', **kws):
+    def __init__(self, model=[], n=0, lineshape=[], background=[], op=operator.add, preftext='lp', **kws):
         
         self.components = []
         self.op = op
@@ -24,16 +24,23 @@ class MultipeakModel(Model):
         
         # Introduce a background function
         if background:
-            bg_comp = background.components
-            if type(bg_comp) == list:
-                self.components += background.components
-            else:
-                self.components += list(background)
+            try:
+                bg_comp = background.components
+                if type(bg_comp) == list:
+                    self.components += bg_comp
+                    self.nbg = len(bg_comp)
+            except:
+                bg_comp = list(background)
+                self.components += bg_comp
+                self.nbg = len(bg_comp)
         
+        # Construct the lineshape components
         if lineshape:
             self.components += [lineshape(prefix=preftext+str(i+1)+'_', **kws) for i in range(n)]
+            self.nlp = n
         elif model:
             self.components += model.components
+            self.nlp = len(model.components)
 
         if 'independent_vars' not in kws:
             try:
@@ -161,7 +168,7 @@ class MultipeakModeler(Model):
         self.lineshape = self._model_convert(lineshape)
         self.background = self._model_convert(background)
         self.model = model
-        self.nls = n
+        self.nlp = n
         self.preftext = preftext
             
         if 'independent_vars' not in kws:
@@ -237,16 +244,20 @@ class MultipeakModeler(Model):
         """
         
         if self.lineshape:
-            components = [self.lineshape.func(prefix=self.preftext+str(i+1)+'_') for i in range(self.nls)]
+            components = [self.lineshape.func(prefix=self.preftext+str(i+1)+'_') for i in range(self.nlp)]
         elif self.model:
             components = self.model.components
+            self.nlp = len(self.model.components)
         
         # Introduce a background function
         if self.background:
             try:
                 components += self.background.components
+                self.nbg = len(self.background.components)
             except:
-                components += list(self.background)
+                bg_comp = list(self.background)
+                components += bg_comp
+                self.nbg = len(bg_comp)
         
         return components
     
