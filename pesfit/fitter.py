@@ -210,8 +210,10 @@ class PatchFitter(object):
         
         self.xdata = xdata
         self.ydata = ydata
-        self.patch_shape = self.ydata.shape
-        self.patch_r, self.patch_c, self.elen = self.patch_shape
+
+        if self.ydata is not None:
+            self.patch_shape = self.ydata.shape
+            self.patch_r, self.patch_c, self.elen = self.patch_shape
         
         if model is None:
             peaks = kwds.pop('peaks', {'Voigt':2})
@@ -223,19 +225,23 @@ class PatchFitter(object):
         self.prefixes = self.model.prefixes
         self.fitres = None
     
-    def load(self, attrname='temp', fdir='', fname='', ftype='h5', **kwds):
+    def load(self, attrname='', fdir='', fname='', ftype='h5', **kwds):
         """ Generic load function including attribute assignment.
         """
         
-        cont = load_file(fdir=fdir, fname=fname, ftype=ftype, **kwds)
-        if len(cont) == 1:
+        cont = load_file(fdir=fdir, fname=fname, ftype=ftype, outtype='vals', **kwds)
+        if len(cont) * len(attrname) > 0:
             setattr(self, attrname, cont[0])
     
-    def load_data(self, **kwds):
+    def load_spec_data(self, **kwds):
         """ Load line spectrum data patch as ``self.ydata``.
         """
         
         self.load(attrname='ydata', **kwds)
+
+        if self.ydata is not None:
+            self.patch_shape = self.ydata.shape
+            self.patch_r, self.patch_c, self.elen = self.patch_shape
     
     def load_band_inits(self, **kwds):
         """ Load band energy initialization as ``self.band_inits``.
