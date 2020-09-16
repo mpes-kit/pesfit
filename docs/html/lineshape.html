@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Complex lineshape models (pesfit.lineshape) &mdash; pesfit 0.3.0 documentation</title>
+  <title>Complex lineshape models (pesfit.lineshape) &mdash; pesfit 0.4.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.3.0 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.4.0 documentation" href="index.html"/>
         <link rel="next" title="Integrated fitting workflow (pesfit.fitter)" href="fitter.html"/>
         <link rel="prev" title="How to start" href="I01_start.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
             
           
@@ -166,7 +166,7 @@
 <span id="complex-lineshape-models-pesfit-lineshape"></span><h1>Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.lineshape)</span></code><a class="headerlink" href="#module-pesfit.lineshape" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="pesfit.lineshape.MultipeakModel">
-<em class="property">class </em><code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">MultipeakModel</code><span class="sig-paren">(</span><em class="sig-param">model=[]</em>, <em class="sig-param">n=1</em>, <em class="sig-param">lineshape=[]</em>, <em class="sig-param">background=[]</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em>, <em class="sig-param">preftext='lp'</em>, <em class="sig-param">**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">MultipeakModel</code><span class="sig-paren">(</span><em class="sig-param">model=[]</em>, <em class="sig-param">n=0</em>, <em class="sig-param">lineshape=[]</em>, <em class="sig-param">background=[]</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em>, <em class="sig-param">preftext='lp'</em>, <em class="sig-param">**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Composite lineshape model consisting of multiple identical peak profiles.</p>
 <dl class="py method">
 <dt id="pesfit.lineshape.MultipeakModel._make_all_args">
@@ -226,6 +226,12 @@
 <dt id="pesfit.lineshape.MultipeakModel.param_names">
 <em class="property">property </em><code class="sig-name descname">param_names</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModel.param_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>All parameter names for a multipeak model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pesfit.lineshape.MultipeakModel.prefixes">
+<em class="property">property </em><code class="sig-name descname">prefixes</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModel.prefixes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collection of prefixes for all lineshape components.</p>
 </dd></dl>
 
 </dd></dl>
@@ -300,6 +306,12 @@
 <dd><p>All parameter names in a multipeak model.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt id="pesfit.lineshape.MultipeakModeler.prefixes">
+<em class="property">property </em><code class="sig-name descname">prefixes</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler.prefixes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collection of prefixes for all lineshape components.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -348,7 +360,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

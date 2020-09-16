@@ -224,7 +224,7 @@ class PatchFitter(object):
         self.fitres = None
     
     def load(self, attrname='temp', fdir='', fname='', ftype='h5', **kwds):
-        """ Generic load function.
+        """ Generic load function including attribute assignment.
         """
         
         cont = load_file(fdir=fdir, fname=fname, ftype=ftype, **kwds)
@@ -232,13 +232,13 @@ class PatchFitter(object):
             setattr(self, attrname, cont[0])
     
     def load_data(self, **kwds):
-        """ Load line spectrum data patch.
+        """ Load line spectrum data patch as ``self.ydata``.
         """
         
         self.load(attrname='ydata', **kwds)
     
     def load_band_inits(self, **kwds):
-        """ Load band energy initialization.
+        """ Load band energy initialization as ``self.band_inits``.
         """
         
         self.load(attrname='band_inits', **kwds)
