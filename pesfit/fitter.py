@@ -89,7 +89,7 @@ def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parna
 
     fitres: instance of ``lmfit.model.ModelResult``
         Current fitting result.
-    model: instance of ``lmfit.model.Model`` or its subclass
+    model: instance of ``lmfit.model.Model`` or ``pesfit.lineshape.MultipeakModel``
         Lineshape model.
     params: instance of ``lmfit.parameter.Parameters``
         Lineshape model parameters.
@@ -166,6 +166,27 @@ def varsetter(params, inits={}, ret=False):
 def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', inits=None, ynorm=True,
                       jitter_init=False, ret='result', **kwds):
     """ Pointwise fitting of a multiband line profile.
+
+    **Parameters**\n
+    xdata, ydata: 1D array, 1D array
+        x and y axis data.
+    model: instance of ``lmfit.model.Model`` or ``pesfit.lineshape.MultipeakModel`` | None
+        A lineshape model for the fitting task.
+    peaks, background: dictionary, | None, 'None'
+        Details see identical arguments for ``pesfit.fitter.model_generator()``
+    inits: dictionary/list | None
+        Fitting initial values and constraints (format see ``pesfit.fitter.varsetter()``).
+    ynorm: bool | True
+        Option to normalize each trace by its maximum before fitting.
+    jitter_init: bool | False
+        Option to introduct random perturbations (jittering) to the peak position in fitting. The values of jittering is supplied in ``shifts``.
+    ret: str | 'result'
+        Specification of return values.
+        ``'result'``: returns the fitting result
+        'all': returns the fitting result and evaluated lineshape components.
+    **kwds: keyword arguments
+        shifts: list/tuple/numpy array | np.arange(0.1, 1.1, 0.1)
+            The choices of random shifts to apply to the peak position initialization (energy in eV unit). The shifts are only operational when ``jitter_init=True``.
     """
     
     # Initialize model
@@ -227,6 +248,16 @@ class PatchFitter(object):
     
     def load(self, attrname='', fdir='', fname='', ftype='h5', **kwds):
         """ Generic load function including attribute assignment.
+
+        **Parameters**\n
+        attrname: str | ''
+            Attribute name to be assigned to.
+        fdir, fname: str, str | '', ''
+            Directory and name for file to load. The ull path is the string combination of the two).
+        ftype: str | 'h5'
+            File type to load.
+        **kwds: keywords argument
+            Additional arguments for ``pesfit.fitter.load_file()``.
         """
         
         cont = load_file(fdir=fdir, fname=fname, ftype=ftype, outtype='vals', **kwds)
@@ -288,6 +319,10 @@ class PatchFitter(object):
     
     def sequential_fit(self, pbar=False, **kwds):
         """ Sequential line fitting of the data patch.
+
+        **Parameters**\n
+        pbar: bool | False
+            Option to show a progress bar.
         """
         
         self.pars = self.model.make_params()
