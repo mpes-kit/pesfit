@@ -21,7 +21,7 @@ pip install --upgrade git+https://github.com/mpes-kit/pesfit.git
 
 ### Data source
 
-Please download the data from [``mpes-kit/pesarxiv``](https://github.com/mpes-kit/pesarxiv).
+Please download the data from [``mpes-kit/pesarxiv``](https://github.com/mpes-kit/pesarxiv). To run the examples and benchmarks, make a ``./data`` folder and copy the downloaded data into it. 
 
 ### Benchmarks
 
