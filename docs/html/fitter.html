@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Integrated fitting workflow (pesfit.fitter) &mdash; pesfit 0.4.3 documentation</title>
+  <title>Integrated fitting workflow (pesfit.fitter) &mdash; pesfit 0.4.5 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.4.3 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.4.5 documentation" href="index.html"/>
         <link rel="next" title="Utility functions (pesfit.utils)" href="utils.html"/>
         <link rel="prev" title="Complex lineshape models (pesfit.lineshape)" href="lineshape.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.4.3
+                0.4.5
               </div>
             
           
@@ -223,11 +223,22 @@
 
 <dl class="py method">
 <dt id="pesfit.fitter.PatchFitter.sequential_fit">
-<code class="sig-name descname">sequential_fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pbar</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.PatchFitter.sequential_fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sequential_fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">varkeys</span><span class="o">=</span><span class="default_value">['value', 'vary']</span></em>, <em class="sig-param"><span class="n">other_initvals</span><span class="o">=</span><span class="default_value">[True]</span></em>, <em class="sig-param"><span class="n">pbar</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.PatchFitter.sequential_fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sequential line fitting of the data patch.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
+<dt>varkeys: list/tuple | [‘value’, ‘vary’]</dt><dd><p>Collection of parameter keys to set (‘value’, ‘min’, ‘max’, ‘vary’).</p>
+</dd>
+<dt>other_initvals: list/tuple | [True]</dt><dd><p>Initialization values for spectrum-dependent variables. Supply a list/tuple of size 1 or the same size as the number of spectra.</p>
+</dd>
 <dt>pbar: bool | False</dt><dd><p>Option to show a progress bar.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwds: keywords arguments</dt><dd><dl class="simple">
+<dt>nspec: int | <code class="docutils literal notranslate"><span class="pre">self.nspec</span></code></dt><dd><p>Number of spectra for fitting.</p>
+</dd>
+<dt>additional arguments:</dt><dd><p>See <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.pointwise_fitting()</span></code>.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -248,18 +259,20 @@
 
 <dl class="py function">
 <dt id="pesfit.fitter.init_generator">
-<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">init_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">varkey</span><span class="o">=</span><span class="default_value">'value'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.init_generator" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">init_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parname</span><span class="o">=</span><span class="default_value">'center'</span></em>, <em class="sig-param"><span class="n">varkeys</span><span class="o">=</span><span class="default_value">['value']</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.init_generator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dictionary generator for initial fitting conditions.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt>params: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameters</span></code></dt><dd><p>Existing model parameters.</p>
 </dd>
-<dt>varkey: str | ‘value’</dt><dd><p>Keyword specified for the parameter (‘value’, ‘min’, ‘max’, ‘vary’).</p>
+<dt>parname: str | ‘center’</dt><dd><p>Name of the parameter.</p>
 </dd>
-<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
-<dt>parnames: list/tuple | []</dt><dd><p>Collection of namestrings for parameters.</p>
+<dt>varkeys: list/tuple | [‘value’]</dt><dd><p>Keyword specified for the parameter (‘value’, ‘min’, ‘max’, ‘vary’).</p>
 </dd>
-<dt>parvals: list/tuple | []</dt><dd><p>Collection of values for parameters.</p>
+<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt>lpnames: list/tuple | None</dt><dd><p>Collection of namestrings (or prefixes) for lineshapes.</p>
+</dd>
+<dt>parvals: list/tuple | None</dt><dd><p>Collection of values for parameters.</p>
 </dd>
 </dl>
 </dd>
@@ -312,7 +325,7 @@
 </dd>
 <dt>ret: bool | False</dt><dd><p>Option to return the graphical elements.</p>
 </dd>
-<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
 <dt>figsize: list/tuple | [10, 6]</dt><dd><p>Default size of the figure.</p>
 </dd>
 </dl>
@@ -334,7 +347,7 @@
 </dd>
 <dt>downsamp: int | 1</dt><dd><p>Level of downsampling of the data (1 means no downsampling).</p>
 </dd>
-<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
 <dt>figsize: list/tuple | [8, 5]</dt><dd><p>Default size of the figure.</p>
 </dd>
 </dl>
@@ -344,7 +357,7 @@
 
 <dl class="py function">
 <dt id="pesfit.fitter.pointwise_fitting">
-<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">pointwise_fitting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xdata</span></em>, <em class="sig-param"><span class="n">ydata</span></em>, <em class="sig-param"><span class="n">model</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">peaks</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">background</span><span class="o">=</span><span class="default_value">'None'</span></em>, <em class="sig-param"><span class="n">inits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ynorm</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">jitter_init</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">'result'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.pointwise_fitting" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">pointwise_fitting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xdata</span></em>, <em class="sig-param"><span class="n">ydata</span></em>, <em class="sig-param"><span class="n">model</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">peaks</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">background</span><span class="o">=</span><span class="default_value">'None'</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ynorm</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">jitter_init</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">'result'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.pointwise_fitting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pointwise fitting of a multiband line profile.</p>
 <p><strong>Parameters</strong></p>
 <dl>
@@ -352,9 +365,11 @@
 </dd>
 <dt>model: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.Model</span></code> or <code class="docutils literal notranslate"><span class="pre">pesfit.lineshape.MultipeakModel</span></code> | None</dt><dd><p>A lineshape model for the fitting task.</p>
 </dd>
-<dt>peaks, background: dictionary, | None, ‘None’</dt><dd><p>Details see identical arguments for <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.model_generator()</span></code></p>
+<dt>peaks, background: dict, str | None, ‘None’</dt><dd><p>Details see identical arguments for <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.model_generator()</span></code></p>
 </dd>
-<dt>inits: dictionary/list | None</dt><dd><p>Fitting initial values and constraints (format see <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.varsetter()</span></code>).</p>
+<dt>params: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.paramter.Parameters</span></code> | None</dt><dd><p>Parameters of the model.</p>
+</dd>
+<dt>inits: dict/list | None</dt><dd><p>Fitting initial values and constraints (format see <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.varsetter()</span></code>).</p>
 </dd>
 <dt>ynorm: bool | True</dt><dd><p>Option to normalize each trace by its maximum before fitting.</p>
 </dd>
@@ -364,8 +379,10 @@
 <p><code class="docutils literal notranslate"><span class="pre">'result'</span></code>: returns the fitting result</p>
 <p><code class="docutils literal notranslate"><span class="pre">'all'</span></code>: returns the fitting result and evaluated lineshape components.</p>
 </dd>
-<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt><a href="#id11"><span class="problematic" id="id12">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
 <dt>shifts: list/tuple/numpy array | np.arange(0.1, 1.1, 0.1)</dt><dd><p>The choices of random shifts to apply to the peak position initialization (energy in eV unit). The shifts are only operational when <code class="docutils literal notranslate"><span class="pre">jitter_init=True</span></code>.</p>
+</dd>
+<dt>other arguments</dt><dd><p>See details in <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.random_varshift()</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -454,7 +471,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.3',
+            VERSION:'0.4.5',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
