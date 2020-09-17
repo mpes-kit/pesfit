@@ -18,32 +18,37 @@ existing_models = dict(inspect.getmembers(ls.lmm, inspect.isclass))
 # Fitting routines #
 ####################
 
-def init_generator(params=None, varkey='value', **kwds):
+def init_generator(params=None, parname='center', varkeys=['value'], **kwds):
     """ Dictionary generator for initial fitting conditions.
 
     **Parameters**
     
     params: instance of ``lmfit.parameter.Parameters``
         Existing model parameters.
-    varkey: str | 'value'
+    parname: str | 'center'
+        Name of the parameter.
+    varkeys: list/tuple | ['value']
         Keyword specified for the parameter ('value', 'min', 'max', 'vary').
     **kwds: keyword arguments
-        parnames: list/tuple | []
-            Collection of namestrings for parameters.
-        parvals: list/tuple | []
+        lpnames: list/tuple | None
+            Collection of namestrings (or prefixes) for lineshapes.
+        parvals: list/tuple | None
             Collection of values for parameters.
     """
 
     if params is None:
-        parnames = kwds.pop('parnames', [])
+        lpnames = kwds.pop('lpnames', None)
     else:
-        parnames = params.keys()
+        lpnames = params.keys()
 
-    parvals = kwds.pop('parvals', [])
+    parvals = kwds.pop('parvals', None)
 
-    if parvals:
+    if parvals is not None:
+        inits = []
         # As an example, dict(value=1) is equivalent to {'value':1}.
-        inits = dict((pn, {varkey:pv}) for pn, pv in zip(parnames, parvals))
+        # inits = dict((pn, {varkey:pv}) for pn, pv in zip(parnames, parvals))
+        for ln, pvs in zip(lpnames, parvals):
+            inits.append({ln: {parname: dict((vk, pv) for vk, pv in zip(varkeys, pvs))}})
     
         return inits
 
@@ -163,8 +168,7 @@ def varsetter(params, inits={}, ret=False):
         return params
 
 
-def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', inits=None, ynorm=True,
-                      jitter_init=False, ret='result', **kwds):
+def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', params=None, inits=None, ynorm=True, jitter_init=False, ret='result', **kwds):
     """ Pointwise fitting of a multiband line profile.
 
     **Parameters**\n
@@ -172,9 +176,11 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', i
         x and y axis data.
     model: instance of ``lmfit.model.Model`` or ``pesfit.lineshape.MultipeakModel`` | None
         A lineshape model for the fitting task.
-    peaks, background: dictionary, | None, 'None'
+    peaks, background: dict, str | None, 'None'
         Details see identical arguments for ``pesfit.fitter.model_generator()``
-    inits: dictionary/list | None
+    params: instance of ``lmfit.paramter.Parameters`` | None
+        Parameters of the model.
+    inits: dict/list | None
         Fitting initial values and constraints (format see ``pesfit.fitter.varsetter()``).
     ynorm: bool | True
         Option to normalize each trace by its maximum before fitting.
@@ -187,6 +193,8 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', i
     **kwds: keyword arguments
         shifts: list/tuple/numpy array | np.arange(0.1, 1.1, 0.1)
             The choices of random shifts to apply to the peak position initialization (energy in eV unit). The shifts are only operational when ``jitter_init=True``.
+        other arguments
+            See details in ``pesfit.fitter.random_varshift()``.
     """
     
     # Initialize model
@@ -197,7 +205,12 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', i
         if model is None:
             raise ValueError('The fitting requires a model to execute!')
     
-    pars = mod.make_params()
+    # Initialize parameters
+    if params is None:
+        pars = mod.make_params()
+    else:
+        pars = params
+
     sfts = kwds.pop('shifts', np.arange(0.1, 1.1, 0.1))
     
     # Initialization for each pointwise fitting
@@ -212,7 +225,7 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', i
     
     # Apply random shifts to initialization to find a better fit
     if jitter_init:
-        fit_result = random_varshift(fit_result, model=mod, params=pars, yvals=ydata, xvals=xdata, shifts=sfts)
+        fit_result = random_varshift(fit_result, model=mod, params=pars, yvals=ydata, xvals=xdata, shifts=sfts, **kwds)
     
     if ret == 'result':
         return fit_result
@@ -305,10 +318,11 @@ class PatchFitter(object):
         self.ydata2D = u.partial_flatten(self.ydata[...,self.drange], axis=(0, 1))
         
         try:
-            if band_inits is None:
-                self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2))
+            if band_inits is not None:
+                self.band_inits = band_inits
+            self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2))
         except:
-            pass
+            raise Exception('Cannot reshape the initialization!')
     
     @property
     def nspec(self):
@@ -317,34 +331,60 @@ class PatchFitter(object):
         
         return self.patch_r * self.patch_c
     
-    def sequential_fit(self, pbar=False, **kwds):
+    def sequential_fit(self, varkeys=['value', 'vary'], other_initvals=[True], pbar=False, **kwds):
         """ Sequential line fitting of the data patch.
 
         **Parameters**\n
+        varkeys: list/tuple | ['value', 'vary']
+            Collection of parameter keys to set ('value', 'min', 'max', 'vary').
+        other_initvals: list/tuple | [True]
+            Initialization values for spectrum-dependent variables. Supply a list/tuple of size 1 or the same size as the number of spectra.
         pbar: bool | False
             Option to show a progress bar.
+        **kwds: keywords arguments
+            nspec: int | ``self.nspec``
+                Number of spectra for fitting.
+            additional arguments:
+                See ``pesfit.fitter.pointwise_fitting()``.
         """
         
         self.pars = self.model.make_params()
         # Setting the initialization parameters persistent throughout the fitting process
         try:
-            varsetter(pars, self.inits_persist, ret=False)
+            varsetter(self.pars, self.inits_persist, ret=False)
         except:
             pass
         
         # Fitting parameters for all line spectra in the data patch
         self.df_fit = pd.DataFrame(columns=self.pars.keys())
+        # Number of spectrum to fit (for diagnostics)
+        nspec = kwds.pop('nspec', self.nspec)
         
-        # Sequentially fit the 
-        for n in nbk.tqdm(range(self.nspec), disable=not(pbar)):
+        # Construct the variable initialization parameters for all spectra
+        # TODO: a better handling of nested dictionary generation
+        varyvals = self.band_inits2D[:self.model.nlp, :nspec]
+        if other_initvals is not None:
+            other_size = np.asarray(other_initvals).size
+            if (other_size != nspec) or ((other_size == 1) and (nspec == 1)):
+                try:
+                    othervals = np.ones((self.model.nlp, nspec))*other_initvals
+                    inits_vary_vals = np.stack((varyvals, othervals))
+                except:
+                    raise Exception('other_initvals has incorrect shape!')
+            else:
+                raise Exception('other_initvals has incorrect shape!')
+
+        # Sequentially fit every line spectrum in the data patch
+        for n in nbk.tqdm(range(nspec), disable=not(pbar)):
 
             # Setting the initialization parameters that vary for every line spectrum
-            center_inits = [self.band_inits2D[i, n] for i in range(self.model.nlp)]
-            inits_vary = init_generator(varkey='center', parnames=self.prefixes, parvals=center_inits)
-            varsetter(self.pars, inits_vary, ret=False)
+            other_inits = inits_vary_vals[..., n].T
+            self.inits_vary = init_generator(parname='center', varkeys=varkeys, lpnames=self.prefixes, parvals=other_inits)
+            varsetter(self.pars, self.inits_vary, ret=False)
             
             y = self.ydata2D[n, :] # Current energy distribution curve
-            out = pointwise_fitting(self.xvals, y, model=self.model, **kwds)
+            # Line fitting with all the initial guesses supplied
+            out = pointwise_fitting(self.xvals, y, model=self.model, params=self.pars, ynorm=True, **kwds)
 
             dfout = u.df_collect(out.params, currdf=self.df_fit)
             self.df_fit = dfout
