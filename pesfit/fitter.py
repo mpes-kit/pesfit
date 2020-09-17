@@ -181,9 +181,9 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', i
     jitter_init: bool | False
         Option to introduct random perturbations (jittering) to the peak position in fitting. The values of jittering is supplied in ``shifts``.
     ret: str | 'result'
-        Specification of return values.
-        ``'result'``: returns the fitting result
-        'all': returns the fitting result and evaluated lineshape components.
+        Specification of return values.\n
+        ``'result'``: returns the fitting result\n
+        ``'all'``: returns the fitting result and evaluated lineshape components.
     **kwds: keyword arguments
         shifts: list/tuple/numpy array | np.arange(0.1, 1.1, 0.1)
             The choices of random shifts to apply to the peak position initialization (energy in eV unit). The shifts are only operational when ``jitter_init=True``.
