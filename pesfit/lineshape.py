@@ -17,6 +17,8 @@ class MultipeakModel(Model):
     _known_ops = {operator.add: '+', operator.mul: '*'}
     
     def __init__(self, model=[], n=0, lineshape=[], background=[], op=operator.add, preftext='lp', **kws):
+        """ Initialize class.
+        """
         
         self.components = []
         self.op = op
@@ -147,13 +149,31 @@ class MultipeakModel(Model):
         return out
     
     def multi_eval(self, op, objs, fevs, *args, **kwargs):
-        """ Evaluate multiple components with a defined operator, returns a list.
+        """ Evaluate multiple components with a defined operator using map-reduce operation, returns a list.
+
+        **Parameters**\n
+        op: func
+            Functional operator used to reduce the terms.
+        objs: iterable
+            Collection of objects to evaluate on.
+        fevs: iterable (list/tuple of functions)
+            Collection of functions to map to objects.
+        *args: arguments
+            Additional arguments for the mapped function (every entry in ``fevs``).
+        **kwargs: keyword arguments
+            Additional keyword arguments for the mapped function (every entry in ``fevs``).
         """
         
         return reduce(op, map(lambda obj, fev: fev(obj, *args, **kwargs), objs, fevs))
     
     def multi_retrieve(self, prop, op=operator.add):
         """ Retrieve the specified properties for all components in the multipeak model.
+
+        **Parameters**\n
+        prop: str
+            Namestring of the property to retrieve.
+        op: func | operator.add
+            Functional operator used to reduce the terms.
         """
         
         return self.multi_eval(op, self.components, [getattr]*self.ncomp, prop)
@@ -166,6 +186,8 @@ class MultipeakModeler(Model):
     _known_ops = {operator.add: '+', operator.mul: '*'}
     
     def __init__(self, lineshape=None, n=1, model=[], background=[], op=operator.add, preftext='lp', **kws):
+        """ Initialize class.
+        """
         
         self.op = op
         self.lineshape = self._model_convert(lineshape)
@@ -309,13 +331,31 @@ class MultipeakModeler(Model):
         return out
     
     def multi_eval(self, op, objs, fevs, *args, **kwargs):
-        """ Evaluate multiple components with a defined operator, returns a list.
+        """ Evaluate multiple components with a defined operator using map-reduce operation, returns a list.
+
+        **Parameters**\n
+        op: func
+            Functional operator used to reduce the terms.
+        objs: iterable
+            Collection of objects to evaluate on.
+        fevs: iterable (list/tuple of functions)
+            Collection of functions to map to objects.
+        *args: arguments
+            Additional arguments for the mapped function (every entry in ``fevs``).
+        **kwargs: keyword arguments
+            Additional keyword arguments for the mapped function (every entry in ``fevs``).
         """
         
         return reduce(op, map(lambda obj, fev: fev(obj, *args, **kwargs), objs, fevs))
     
     def multi_retrieve(self, prop, op=operator.add):
         """ Retrieve the specified properties for all components in the multipeak model.
+
+        **Parameters**\n
+        prop: str
+            Namestring of the property to retrieve.
+        op: func | operator.add
+            Functional operator used to reduce the terms.
         """
         
         return self.multi_eval(op, self.components, [getattr]*self.ncomp, prop)

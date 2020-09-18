@@ -278,7 +278,7 @@ class PatchFitter(object):
             setattr(self, attrname, cont[0])
     
     def load_spec_data(self, **kwds):
-        """ Load line spectrum data patch as ``self.ydata``.
+        """ Load line spectrum data patch as ``self.ydata``. Executes ``self.load()`` with ``attrname=ydata``.
         """
         
         self.load(attrname='ydata', **kwds)
@@ -288,7 +288,7 @@ class PatchFitter(object):
             self.patch_r, self.patch_c, self.elen = self.patch_shape
     
     def load_band_inits(self, **kwds):
-        """ Load band energy initialization as ``self.band_inits``.
+        """ Load band energy initialization as ``self.band_inits``. Executes ``self.load()`` with ``attrname=band_inits``.
         """
         
         self.load(attrname='band_inits', **kwds)
