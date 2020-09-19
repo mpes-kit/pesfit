@@ -1,4 +1,5 @@
 # pesfit
+![License](https://img.shields.io/github/license/mpes-kit/pesfit)
 Multiband lineshape fitting routines and benchmarks for photoemission spectroscopy
 
 ### Rationale
@@ -9,15 +10,11 @@ The fitting part of the package builds and improves on the existing ``Model`` an
 ### Installation
 
 1. Install from scratch
+    <pre><code class="console"> pip install git+https://github.com/mpes-kit/pesfit.git </code></pre>
 
-```
-pip install git+https://github.com/mpes-kit/pesfit.git
-```
 2. Upgrade or override an existing installation
 
-```
-pip install --upgrade git+https://github.com/mpes-kit/pesfit.git
-```
+    <pre><code class="console"> pip install --upgrade git+https://github.com/mpes-kit/pesfit.git </code></pre>
 
 ### Data source
 
