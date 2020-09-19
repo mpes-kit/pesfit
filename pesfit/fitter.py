@@ -21,8 +21,7 @@ existing_models = dict(inspect.getmembers(ls.lmm, inspect.isclass))
 def init_generator(params=None, parname='center', varkeys=['value'], **kwds):
     """ Dictionary generator for initial fitting conditions.
 
-    **Parameters**
-    
+    **Parameters**\n    
     params: instance of ``lmfit.parameter.Parameters``
         Existing model parameters.
     parname: str | 'center'
@@ -56,15 +55,13 @@ def init_generator(params=None, parname='center', varkeys=['value'], **kwds):
 def model_generator(peaks={'Voigt':2}, background='None'):
     """ Simple multiband lineshape model generator with semantic parsing.
 
-    **Parameters**
-
+    **Parameters**\n
     peaks: dict | {'Voigt':2}
         Peak profile specified in a dictionary. All possible models see ``lmfit.models``.
     background: str | 'None'
         Background model name. All possible models see ``lmfit.models``.
 
-    **Return**
-
+    **Return**\n
     model: instance of ``pesfit.lineshape.MultipeakModel``
         Lineshape model created from the specified components.
     """
@@ -90,8 +87,7 @@ def model_generator(peaks={'Voigt':2}, background='None'):
 def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parnames=[], verbose=True):
     """ Randomly and recursively apply a shift value to certain key variables to get a better fit. Execution of the function terminates when either (1) the fitting results are sufficiently good (measured by its chi-squared metric) or (2) the trials exhaust all choices of shift parameters.
 
-    **Parameters**
-
+    **Parameters**\n
     fitres: instance of ``lmfit.model.ModelResult``
         Current fitting result.
     model: instance of ``lmfit.model.Model`` or ``pesfit.lineshape.MultipeakModel``
@@ -127,10 +123,9 @@ def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parna
 
 
 def varsetter(params, inits={}, ret=False):
-    """ Variable setter for multiparameter fitting.
+    """ Function to set the parameter constrains in multiparameter fitting.
     
-    **Parameters**
-
+    **Parameters**\n
     params: ``lmfit.parameter.Parameter`` or other subclass of dict
         Parameter dictionary.
     init: dict | {}
@@ -315,6 +310,16 @@ class PatchFitter(object):
 
     def set_inits(self, inits_dict=None, xdata=None, band_inits=None, drange=None):
         """ Set the persistent part of initialization parameters.
+
+        **Parameters**\n
+        inits_dict: dict | None
+            Initialization parameters and constraints persistent throughout the fitting process.
+        xdata: 1D array | None
+            Calibrated energies for the energy axis
+        band_inits: numpy array | None
+            Initialization for the band energy values.
+        drange: slice object | None
+            Slice object corresponding to the energy range to select (None or slice(None, None) means selecting all values).
         """
         
         if inits_dict is not None:
@@ -361,7 +366,7 @@ class PatchFitter(object):
         """
         
         self.pars = self.model.make_params()
-        # Setting the initialization parameters persistent throughout the fitting process
+        # Setting the initialization parameters and constraints persistent throughout the fitting process
         try:
             varsetter(self.pars, self.inits_persist, ret=False)
         except:
@@ -408,7 +413,7 @@ class PatchFitter(object):
         pass
     
     def save_data(self, fdir=r'./', fname='', ftype='h5', name='fitres', **kwds):
-        """ Save the fitting outcome.
+        """ Save the fitting outcome to a file.
         """
         
         path = fdir + fname
@@ -456,8 +461,7 @@ def load_file(fdir=r'./', fname='', ftype='h5', parts=None, **kwds):
 def plot_fit_result(fitres, x, plot_components=True, downsamp=1, ret=False, **kwds):
     """ Plot the fitting outcomes.
 
-    **Parameters**
-
+    **Parameters**\n
     fitres: instance of ``lmfit.model.ModelResult``
         Fitting result from the `lmfit` routine.
     x: numpy array
@@ -491,8 +495,7 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, ret=False, **kw
 def plot_bandpath(paths, ksymbols, erange=[], evals=None, path_inds=[], koverline=True, klines=False, ret=False, **kwds):
     """ Plot momentum-energy map from a segment of the band mapping data.
 
-    **Parameters**
-
+    **Parameters**\n
     paths: numpy array
         Momentum diagram data.
     ksymbols: list of strings

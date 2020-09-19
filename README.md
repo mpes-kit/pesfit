@@ -1,5 +1,6 @@
 # pesfit
 ![License](https://img.shields.io/github/license/mpes-kit/pesfit)
+
 Multiband lineshape fitting routines and benchmarks for photoemission spectroscopy
 
 ### Rationale
