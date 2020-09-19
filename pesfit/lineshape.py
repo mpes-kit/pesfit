@@ -12,6 +12,20 @@ from lmfit import Model
 
 class MultipeakModel(Model):
     """ Composite lineshape model consisting of multiple identical peak profiles.
+
+    **Parameters**\n
+    model: instance of ``lmfit.model.Model`` | []
+        An existing lineshape model.
+    n, lineshape: int, ``lmfit.model.Model`` | 0, []
+        Basis lineshape and the number of it. Their way of combination is defined by the ``op``.
+    background: list/tuple or instance of ``lmfit.model.Model`` | []
+        Functional model to approximate the signal background. If multiple operations are needed (e.g summation and multiplication), a precomposed background function should be supplied.
+    op: func | ``operator.add``
+        Operator used to combine lineshape components and between them and the signal background.
+    preftext: str | 'lp'
+        Prefix for the basis lineshape components. If it is set to ``'lp'``, the automatically generated lineshapes will be named as ``'lp1_'``, ``'lp2_'``, etc.
+    **kws: keyword argument
+        Additional keyword arguments passed to ``lmfit.Model`` class, including ``'independent_vars'`` and ``'missing'``.
     """
     
     _known_ops = {operator.add: '+', operator.mul: '*'}

@@ -168,6 +168,19 @@
 <dt id="pesfit.fitter.PatchFitter">
 <em class="property">class </em><code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">PatchFitter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xdata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ydata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.PatchFitter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for fitting a patch of photoemission band mapping data.</p>
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt>xdata: 1D array</dt><dd><p>Energy coordinates for photoemission line spectrum fitting.</p>
+</dd>
+<dt>ydata: numpy array</dt><dd><p>Photoemission spectral data for fitting (2D or 3D).</p>
+</dd>
+<dt>model: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.Model</span></code> or <code class="docutils literal notranslate"><span class="pre">pesfit.lineshape.MultipeakModel</span></code></dt><dd><p>Existing universal lineshape model for fitting (all spectra).</p>
+</dd>
+<dt>peaks: dict | {‘Voigt’:2}</dt><dd><p>Specification of constituent single-peak lineshape model.</p>
+</dd>
+<dt>background: str | ‘None’</dt><dd><p>Specification of approximation function for approximating the signal background.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt id="pesfit.fitter.PatchFitter.load">
 <code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attrname</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">fdir</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">fname</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">ftype</span><span class="o">=</span><span class="default_value">'h5'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.PatchFitter.load" title="Permalink to this definition">¶</a></dt>

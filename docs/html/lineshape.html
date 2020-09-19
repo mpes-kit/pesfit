@@ -168,6 +168,21 @@
 <dt id="pesfit.lineshape.MultipeakModel">
 <em class="property">class </em><code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">MultipeakModel</code><span class="sig-paren">(</span><em class="sig-param">model=[]</em>, <em class="sig-param">n=0</em>, <em class="sig-param">lineshape=[]</em>, <em class="sig-param">background=[]</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em>, <em class="sig-param">preftext='lp'</em>, <em class="sig-param">**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Composite lineshape model consisting of multiple identical peak profiles.</p>
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt>model: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.Model</span></code> | []</dt><dd><p>An existing lineshape model.</p>
+</dd>
+<dt>n, lineshape: int, <code class="docutils literal notranslate"><span class="pre">lmfit.model.Model</span></code> | 0, []</dt><dd><p>Basis lineshape and the number of it. Their way of combination is defined by the <code class="docutils literal notranslate"><span class="pre">op</span></code>.</p>
+</dd>
+<dt>background: list/tuple or instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.Model</span></code> | []</dt><dd><p>Functional model to approximate the signal background. If multiple operations are needed (e.g summation and multiplication), a precomposed background function should be supplied.</p>
+</dd>
+<dt>op: func | <code class="docutils literal notranslate"><span class="pre">operator.add</span></code></dt><dd><p>Operator used to combine lineshape components and between them and the signal background.</p>
+</dd>
+<dt>preftext: str | ‘lp’</dt><dd><p>Prefix for the basis lineshape components. If it is set to <code class="docutils literal notranslate"><span class="pre">'lp'</span></code>, the automatically generated lineshapes will be named as <code class="docutils literal notranslate"><span class="pre">'lp1_'</span></code>, <code class="docutils literal notranslate"><span class="pre">'lp2_'</span></code>, etc.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kws: keyword argument</dt><dd><p>Additional keyword arguments passed to <code class="docutils literal notranslate"><span class="pre">lmfit.Model</span></code> class, including <code class="docutils literal notranslate"><span class="pre">'independent_vars'</span></code> and <code class="docutils literal notranslate"><span class="pre">'missing'</span></code>.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt id="pesfit.lineshape.MultipeakModel._make_all_args">
 <code class="sig-name descname">_make_all_args</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModel._make_all_args" title="Permalink to this definition">¶</a></dt>
@@ -216,9 +231,9 @@
 </dd>
 <dt>fevs: iterable (list/tuple of functions)</dt><dd><p>Collection of functions to map to objects.</p>
 </dd>
-<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>args: arguments</dt><dd><p>Additional arguments for the mapped function (every entry in <code class="docutils literal notranslate"><span class="pre">fevs</span></code>).</p>
+<dt><a href="#id3"><span class="problematic" id="id4">*</span></a>args: arguments</dt><dd><p>Additional arguments for the mapped function (every entry in <code class="docutils literal notranslate"><span class="pre">fevs</span></code>).</p>
 </dd>
-<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs: keyword arguments</dt><dd><p>Additional keyword arguments for the mapped function (every entry in <code class="docutils literal notranslate"><span class="pre">fevs</span></code>).</p>
+<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs: keyword arguments</dt><dd><p>Additional keyword arguments for the mapped function (every entry in <code class="docutils literal notranslate"><span class="pre">fevs</span></code>).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -314,9 +329,9 @@
 </dd>
 <dt>fevs: iterable (list/tuple of functions)</dt><dd><p>Collection of functions to map to objects.</p>
 </dd>
-<dt><a href="#id5"><span class="problematic" id="id6">*</span></a>args: arguments</dt><dd><p>Additional arguments for the mapped function (every entry in <code class="docutils literal notranslate"><span class="pre">fevs</span></code>).</p>
+<dt><a href="#id7"><span class="problematic" id="id8">*</span></a>args: arguments</dt><dd><p>Additional arguments for the mapped function (every entry in <code class="docutils literal notranslate"><span class="pre">fevs</span></code>).</p>
 </dd>
-<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs: keyword arguments</dt><dd><p>Additional keyword arguments for the mapped function (every entry in <code class="docutils literal notranslate"><span class="pre">fevs</span></code>).</p>
+<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs: keyword arguments</dt><dd><p>Additional keyword arguments for the mapped function (every entry in <code class="docutils literal notranslate"><span class="pre">fevs</span></code>).</p>
 </dd>
 </dl>
 </dd></dl>

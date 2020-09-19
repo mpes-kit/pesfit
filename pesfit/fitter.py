@@ -236,6 +236,18 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', p
 
 class PatchFitter(object):
     """ Class for fitting a patch of photoemission band mapping data.
+
+    **Parameters**\n
+    xdata: 1D array
+        Energy coordinates for photoemission line spectrum fitting.
+    ydata: numpy array
+        Photoemission spectral data for fitting (2D or 3D).
+    model: instance of ``lmfit.model.Model`` or ``pesfit.lineshape.MultipeakModel``
+        Existing universal lineshape model for fitting (all spectra).
+    peaks: dict | {'Voigt':2}
+        Specification of constituent single-peak lineshape model.
+    background: str | 'None'
+        Specification of approximation function for approximating the signal background.
     """
     
     def __init__(self, xdata=None, ydata=None, model=None, **kwds):
