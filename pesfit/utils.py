@@ -144,3 +144,17 @@ def tqdmenv(env):
         tqdm = nbk.tqdm
 
     return tqdm
+
+
+def argpick(cliargs, argkey, defaults):
+    """ Argument picker.
+    """
+
+    try:
+        argval = getattr(cliargs, argkey)
+        if argval is not None:
+            a = argval
+    except:
+        a = defaults[argkey.upper()]
+    
+    return a

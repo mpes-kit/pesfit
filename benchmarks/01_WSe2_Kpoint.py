@@ -6,18 +6,33 @@ import numpy as np
 import pesfit as pf
 import time
 from hdfio import dict_io as io
+import argparse
+
+# Definitions of command line interaction
+parser = argparse.ArgumentParser(description='Input arguments')
+parser.add_argument('nband', metavar='nb', nargs='?', type=int, help='integer between 1 and 14')
+parser.add_argument('timecount', metavar='t', nargs='?', type=bool, help='whether to include time profiling')
+parser.add_argument('persistent_init', metavar='pi', nargs='?', type=bool, help='initialization include persistent settings')
+parser.add_argument('varying_init', metavar='vi', nargs='?', type=str, help='initialization including varying settings')
+parser.add_argument('jitter_init', metavar='ji', nargs='?', type=bool, help='add jitter to initialization for better fits')
+parser.add_argument('preproc', metavar='pp', nargs='?', type=str, help='the stage of preprocessing used for fitting')
+parser.set_defaults(nband=2, timecount=True, persistent_init=True, varying_init='recon',
+                    jitter_init=False, preproc='symmetrized')
+cli_args = parser.parse_args([])
 
 # Sequential fitting of photoemission data patch around the K point of WSe2
 # Option to introduce persistent initial conditions
-PERSISTENT_INIT = True
+PERSISTENT_INIT = cli_args.persistent_init
 # Number of bands to fit
-NBAND = 4
+NBAND = cli_args.nband
 # Option to enable code profiling
-TIMECOUNT = True
+TIMECOUNT = cli_args.timecount
 # Specification of spectrum-dependent initial conditions ('theory' or 'recon')
-VARYING_INIT = 'recon'
+VARYING_INIT = cli_args.varying_init
 # The preprocessing needed before fitting ('symmetrized', 'mclahe', 'mclahe_smooth')
-PREPROC = 'symmetrized'
+PREPROC = cli_args.preproc
+# Option to apply jittering to initializations to obtain better fitting results
+JITTER_INIT = cli_args.jitter_init
 
 # Photoemission band mapping data
 data_dir = r'../data/WSe2'
@@ -118,7 +133,7 @@ elif NBAND == 14:
     en_range = slice(20, None)
 
 kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
-kfit.sequential_fit(pbar=True, pbenv='classic', jitter_inits=True, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
+kfit.sequential_fit(pbar=True, pbenv='classic', jitter_inits=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
 
 if TIMECOUNT:
     tstop = time.perf_counter()
