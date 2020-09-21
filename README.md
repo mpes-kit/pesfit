@@ -11,7 +11,7 @@ Lineshape fitting is a universal task in photoemission spectroscopy and can be a
 
 The fitting part of the package builds and improves on the existing ``Model`` and ``CompositeModel`` classes in the widely-used ``lmfit`` [package](https://github.com/lmfit/lmfit-py/) to include multiband lineshapes (involving an arbitrary number of peaks) evaluated using map-reduce operations. Fitting of multiple intensity profiles can be carried out either in sequence or in parallel.
 
-The focus of the software and its benchmarks in on determining the momentum-dependent band positions in valence band photoemission data *at scale*, which meets the needs for a *global understanding* of these complex data with tolerable accuracy (not necessarily accounting for all photoemission physics). For conventional data analysis of core-level photoemission spectroscopy with complex background, please consult software packages such as [lmfit](https://github.com/lmfit/lmfit-py/), [xps](https://gitlab.com/ddkn/xps), and [gxps](https://github.com/schachmett/gxps).
+The focus of the software and its benchmarks in on determining the momentum-dependent band positions in valence band photoemission data *at scale*, which meets the needs for a *global understanding* of these complex data with reasonable accuracy (not necessarily accounting for all photoemission physics) to yield empirical structural information (i.e. band structure parameters). For conventional data analysis of core-level photoemission spectroscopy that often exhibits a complex background, please consult software packages such as [lmfit](https://github.com/lmfit/lmfit-py/), [xps](https://gitlab.com/ddkn/xps), and [gxps](https://github.com/schachmett/gxps).
 
 ### Installation
 
@@ -19,7 +19,6 @@ The focus of the software and its benchmarks in on determining the momentum-depe
     <pre><code class="console"> pip install git+https://github.com/mpes-kit/pesfit.git </code></pre>
 
 2. Upgrade or override an existing installation
-
     <pre><code class="console"> pip install --upgrade git+https://github.com/mpes-kit/pesfit.git </code></pre>
 
 ### Data source

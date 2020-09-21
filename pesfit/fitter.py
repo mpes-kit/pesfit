@@ -52,7 +52,7 @@ def init_generator(params=None, parname='center', varkeys=['value'], **kwds):
         return inits
 
 
-def model_generator(peaks={'Voigt':2}, background='None'):
+def model_generator(peaks={'Voigt':2}, background='None', **kwds):
     """ Simple multiband lineshape model generator with semantic parsing.
 
     **Parameters**\n
@@ -60,6 +60,8 @@ def model_generator(peaks={'Voigt':2}, background='None'):
         Peak profile specified in a dictionary. All possible models see ``lmfit.models``.
     background: str | 'None'
         Background model name. All possible models see ``lmfit.models``.
+    **kwds: keyword arguments
+        Additional keyword arguments for ``pesfit.lineshape.MultipeakModel`` class.
 
     **Return**\n
     model: instance of ``pesfit.lineshape.MultipeakModel``
@@ -77,9 +79,9 @@ def model_generator(peaks={'Voigt':2}, background='None'):
             pk_clsname = existing_models[pk_modname]
         
         try:
-            model = ls.MultipeakModel(lineshape=pk_clsname, n=pkcount, background=bg_clsname(prefix='bg_'))
+            model = ls.MultipeakModel(lineshape=pk_clsname, n=pkcount, background=bg_clsname(prefix='bg_'), **kwds)
         except:
-            model = ls.MultipeakModel(lineshape=pk_clsname, n=pkcount)
+            model = ls.MultipeakModel(lineshape=pk_clsname, n=pkcount, **kwds)
 
     return model
 
@@ -163,7 +165,7 @@ def varsetter(params, inits={}, ret=False):
         return params
 
 
-def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', params=None, inits=None, ynorm=True, jitter_init=False, ret='result', **kwds):
+def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', params=None, inits=None, ynorm=True, jitter_init=False, ret='result', modelkwds={}, **kwds):
     """ Pointwise fitting of a multiband line profile.
 
     **Parameters**\n
@@ -194,7 +196,7 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', p
     
     # Initialize model
     if model is None:
-        mod = model_generator(peaks=peaks, background=background)
+        mod = model_generator(peaks=peaks, background=background, **modelkwds)
     else:
         mod = model
         if model is None:
@@ -245,7 +247,7 @@ class PatchFitter(object):
         Specification of approximation function for approximating the signal background.
     """
     
-    def __init__(self, xdata=None, ydata=None, model=None, **kwds):
+    def __init__(self, xdata=None, ydata=None, model=None, modelkwds={}, **kwds):
         """ Initialize class.
         """
         
@@ -259,7 +261,7 @@ class PatchFitter(object):
         if model is None:
             peaks = kwds.pop('peaks', {'Voigt':2})
             bg = kwds.pop('background', 'None')
-            self.model = model_generator(peaks=peaks, background=bg)
+            self.model = model_generator(peaks=peaks, background=bg, **modelkwds)
         else:
             self.model = model
         
