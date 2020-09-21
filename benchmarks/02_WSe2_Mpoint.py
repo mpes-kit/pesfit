@@ -1,10 +1,12 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import numpy as np
 import pesfit as pf
 import time
 from hdfio import dict_io as io
+import argparse
 
 # Definitions of command line interaction
 parser = argparse.ArgumentParser(description='Input arguments')
@@ -34,17 +36,17 @@ JITTER_INIT = cli_args.jitter_init
 
 # Photoemission band mapping data
 data_dir = r'./data/WSe2'
-pes_fname = r'/pes/kpoint/mpoint_symmetrized.h5'
+pes_fname = r'/pes/mpoint/mpoint_symmetrized.h5'
 pes_path = data_dir + pes_fname
 pes_data = io.h5_to_dict(pes_path)
 
 # Theoretical calculations interpolated to the same momentum grid (as one type of initialization)
-theo_fname = r'/theory/kpoint/mpoint_LDA.h5'
+theo_fname = r'/theory/mpoint/mpoint_LDA.h5'
 theo_path = data_dir + theo_fname
 theo_data = io.h5_to_dict(theo_path)
 
 # Reconstructed photoemission band dispersion (as another type of initialization)
-recon_fname = r'/recon/kpoint/mpoint_LDA_recon.h5'
+recon_fname = r'/recon/mpoint/mpoint_LDA_recon.h5'
 recon_path = data_dir + recon_fname
 recon_data = io.h5_to_dict(recon_path)
 
@@ -84,8 +86,11 @@ if PERSISTENT_INIT:
 if TIMECOUNT:
     tstart = time.perf_counter()
 
-# Run fitting routine
-mfit = pf.fitter.PatchFitter(xdata=pes_data['E'], ydata=pes_data['V'])
+# Set up and run the fitting routine
+## Fitting model initialization
+mfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], preftext=preftext)
+
+## Specify the set of initialization to apply to the fitting
 if PERSISTENT_INIT:
     inits_persist = vardict[str(int(NBAND)).zfill(2)]
 else:
@@ -96,7 +101,17 @@ if VARYING_INIT == 'theory':
 elif VARYING_INIT == 'recon':
     inits_vary = recon_data
 
-mfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=slice(20,100))
+## Select energy axis data range used for fitting
+if NBAND == 2:
+    en_range = slice(20, 100)
+elif NBAND == 4:
+    en_range = slice(20, 220)
+elif NBAND == 8:
+    en_range = slice(20, 320)
+elif NBAND == 14:
+    en_range = slice(20, None)
+
+mfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
 mfit.sequential_fit(pbar=False, jitter_inits=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
 
 if TIMECOUNT:
@@ -108,4 +123,4 @@ out_dir = r'../data/WSe2/benchmark'
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
-kfit.save_data(fdir=out_dir, fname='/mpoint_symmetrized_fit_nband={}.h5'.format(NBAND))
+mfit.save_data(fdir=out_dir, fname='/mpoint_symmetrized_fit_nband={}.h5'.format(NBAND))
