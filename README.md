@@ -11,7 +11,7 @@ Lineshape fitting is a universal task in photoemission spectroscopy and can be a
 
 The fitting part of the package builds and improves on the existing ``Model`` and ``CompositeModel`` classes in the widely-used ``lmfit`` [package](https://github.com/lmfit/lmfit-py/) to include multiband lineshapes (involving an arbitrary number of peaks) evaluated using map-reduce operations. Fitting of multiple intensity profiles can be carried out either in sequence or in parallel.
 
-The benchmarks concerns determining the momentum-dependent band positions in valence band photoemission data *at scale*. For conventional data analysis of multi-core-level photoemission spectroscopy with complex background, please consult software packages such as [lmfit](https://github.com/lmfit/lmfit-py/), [xps](https://gitlab.com/ddkn/xps), and [gxps](https://github.com/schachmett/gxps).
+The focus of the software and its benchmarks in on determining the momentum-dependent band positions in valence band photoemission data *at scale*, which meets the needs for a *global understanding* of these complex data with tolerable accuracy (not necessarily accounting for all photoemission physics). For conventional data analysis of core-level photoemission spectroscopy with complex background, please consult software packages such as [lmfit](https://github.com/lmfit/lmfit-py/), [xps](https://gitlab.com/ddkn/xps), and [gxps](https://github.com/schachmett/gxps).
 
 ### Installation
 
@@ -26,10 +26,10 @@ The benchmarks concerns determining the momentum-dependent band positions in val
 
 Please download the data from [``mpes-kit/pesarxiv``](https://github.com/mpes-kit/pesarxiv). To run the examples and benchmarks, create a ``./data`` folder in the cloned repository and copy the downloaded data into it.
 
-### Benchmarks
+### Benchmarks and examples
 
-The benchmarks for multiband dispersion fitting routines are provided [here](https://github.com/mpes-kit/pesfit/tree/master/benchmarks).
+Besides source code, the package comes with [examples](https://github.com/mpes-kit/pesfit/tree/master/examples) presented in Jupyter notebooks and [benchmarks](https://github.com/mpes-kit/pesfit/tree/master/benchmarks) for multiband dispersion fitting routines in scripts, using the data described above.
 
 ### Documentation
 
-Documentation is provided [here](https://mpes-kit.github.io/pesfit/).
+Online documentation is provided [here](https://mpes-kit.github.io/pesfit/).
