@@ -11,7 +11,7 @@ from hdfio import dict_io as io
 # Option to introduce persistent initial conditions
 PERSISTENT_INIT = True
 # Number of bands to fit
-NBAND = 2
+NBAND = 4
 # Option to enable code profiling
 TIMECOUNT = True
 # Specification of spectrum-dependent initial conditions ('theory' or 'recon')
@@ -37,7 +37,8 @@ elif VARYING_INIT == 'recon':
     recon_path = data_dir + recon_fname
     recon_data = io.h5_to_dict(recon_path)['recon']
 
-# Setting initial conditions persistent throughout the fitting. These fixed constraints are tested for fitting the band dispersion nearby the K point of WSe2 and are required to make the fitting relatively stable!
+# Setting initial conditions persistent throughout the fitting. These fixed constraints are tested for fitting
+# the band dispersion nearby the K point of WSe2 and are required to make the fitting relatively stable!
 if PERSISTENT_INIT:
     vardict = {}
     preftext = 'lp'
@@ -91,9 +92,11 @@ if PERSISTENT_INIT:
 if TIMECOUNT:
     tstart = time.perf_counter()
 
-# Run the fitting routine
-kfit = pf.fitter.PatchFitter(peaks={'Voigt':2}, xdata=pes_data['E'], ydata=pes_data['V'], preftext=preftext)
+# Set up and run the fitting routine
+## Fitting model initialization
+kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], preftext=preftext)
 
+## Specify the set of initialization to apply to the fitting
 if PERSISTENT_INIT:
     inits_persist = vardict[str(int(NBAND)).zfill(2)]
 else:
@@ -104,14 +107,24 @@ if VARYING_INIT == 'theory':
 elif VARYING_INIT == 'recon':
     inits_vary = recon_data
 
-kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=slice(20,100))
+## Select energy axis data range used for fitting
+if NBAND == 2:
+    en_range = slice(20, 100)
+elif NBAND == 4:
+    en_range = slice(20, 220)
+elif NBAND == 8:
+    en_range = slice(20, 320)
+elif NBAND == 14:
+    en_range = slice(20, None)
+
+kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
 kfit.sequential_fit(pbar=True, pbenv='classic', jitter_inits=True, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
 
 if TIMECOUNT:
     tstop = time.perf_counter()
     tdiff =  tstop - tstart
 
-# Save fitting outcome
+# Save the fitting outcome
 out_dir = r'../data/WSe2/benchmark'
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
