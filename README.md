@@ -1,5 +1,5 @@
 # pesfit
-![License](https://img.shields.io/github/license/mpes-kit/pesfit)
+![License](https://img.shields.io/github/license/mpes-kit/pesfit) ![Downloads](https://pepy.tech/badge/pesfit) ![PyPI version](https://badge.fury.io/py/pesfit.svg)
 
 Multiband lineshape fitting routines and benchmarks for photoemission spectroscopy
 
@@ -18,8 +18,11 @@ The focus of the software and its benchmarks in on determining the momentum-depe
 1. Install from scratch
     <pre><code class="console"> pip install git+https://github.com/mpes-kit/pesfit.git </code></pre>
 
-2. Upgrade or override an existing installation
+2. Upgrade or overwrite an existing installation
     <pre><code class="console"> pip install --upgrade git+https://github.com/mpes-kit/pesfit.git </code></pre>
+
+3. Install from [PyPI](https://pypi.org/project/pesfit/)
+    <pre><code class="console"> pip install pesfit </code></pre>
 
 ### Data source
 
