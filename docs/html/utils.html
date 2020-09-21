@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.4.6 documentation</title>
+  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.4.8 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.4.6 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.4.8 documentation" href="index.html"/>
         <link rel="prev" title="Integrated fitting workflow (pesfit.fitter)" href="fitter.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.4.6
+                0.4.8
               </div>
             
           
@@ -164,6 +164,12 @@
   <div class="section" id="module-pesfit.utils">
 <span id="utility-functions-pesfit-utils"></span><h1>Utility functions  <code class="docutils literal notranslate"><span class="pre">(pesfit.utils)</span></code><a class="headerlink" href="#module-pesfit.utils" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
+<dt id="pesfit.utils.argpick">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">argpick</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cliargs</span></em>, <em class="sig-param"><span class="n">argkey</span></em>, <em class="sig-param"><span class="n">defaults</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.argpick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Argument picker.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pesfit.utils.df_collect">
 <code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">df_collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">currdf</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.df_collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collect parameters from fitting outcome.</p>
@@ -246,6 +252,20 @@
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt id="pesfit.utils.tqdmenv">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">tqdmenv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.tqdmenv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose tqdm progress bar executing environment.</p>
+<p><strong>Parameter</strong></p>
+<blockquote>
+<div><dl class="simple">
+<dt>env: str</dt><dd><p>Name of the environment, ‘classic’ for ordinary environment,
+‘notebook’ for Jupyter notebook.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
 </div>
 
 
@@ -290,7 +310,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.6',
+            VERSION:'0.4.8',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
