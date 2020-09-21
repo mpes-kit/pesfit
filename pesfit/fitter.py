@@ -4,7 +4,6 @@
 from . import lineshape as ls, utils as u
 import numpy as np
 import pandas as pd
-from tqdm import notebook as nbk
 from functools import reduce
 import inspect
 import matplotlib.pyplot as plt
@@ -350,7 +349,7 @@ class PatchFitter(object):
         
         return self.patch_r * self.patch_c
     
-    def sequential_fit(self, varkeys=['value', 'vary'], other_initvals=[True], pbar=False, **kwds):
+    def sequential_fit(self, varkeys=['value', 'vary'], other_initvals=[True], pbar=False, pbenv='notebook', **kwds):
         """ Sequential line fitting of the data patch.
 
         **Parameters**\n
@@ -374,6 +373,8 @@ class PatchFitter(object):
         except:
             pass
         
+        tqdm = u.tqdmenv(pbenv)
+
         # Fitting parameters for all line spectra in the data patch
         self.df_fit = pd.DataFrame(columns=self.pars.keys())
         # Number of spectrum to fit (for diagnostics)
@@ -394,7 +395,7 @@ class PatchFitter(object):
                 raise Exception('other_initvals has incorrect shape!')
 
         # Sequentially fit every line spectrum in the data patch
-        for n in nbk.tqdm(range(nspec), disable=not(pbar)):
+        for n in tqdm(range(nspec), disable=not(pbar)):
 
             # Setting the initialization parameters that vary for every line spectrum
             other_inits = inits_vary_vals[..., n].T

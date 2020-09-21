@@ -3,6 +3,8 @@
 
 import numpy as np
 import pandas as pd
+from tqdm import notebook as nbk
+from tqdm import tqdm as tqdm_classic
 
 def riffle(*arr):
     """
@@ -125,3 +127,20 @@ def partial_flatten(arr, axis):
         arr_pf = arr.reshape(tuple(shape_flattened))
         
         return arr_pf
+
+
+def tqdmenv(env):
+    """ Choose tqdm progress bar executing environment.
+    
+    **Parameter**\n
+        env: str
+            Name of the environment, 'classic' for ordinary environment,
+            'notebook' for Jupyter notebook.
+    """
+
+    if env == 'classic':
+        tqdm = tqdm_classic
+    elif env == 'notebook':
+        tqdm = nbk.tqdm
+
+    return tqdm
