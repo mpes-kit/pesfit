@@ -231,7 +231,7 @@
 <dl class="py method">
 <dt id="pesfit.fitter.PatchFitter.save_data">
 <code class="sig-name descname">save_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fdir</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">fname</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">ftype</span><span class="o">=</span><span class="default_value">'h5'</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'fitres'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.PatchFitter.save_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the fitting outcome.</p>
+<dd><p>Save the fitting outcome to a file.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -260,6 +260,17 @@
 <dt id="pesfit.fitter.PatchFitter.set_inits">
 <code class="sig-name descname">set_inits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inits_dict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xdata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">band_inits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">drange</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.PatchFitter.set_inits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the persistent part of initialization parameters.</p>
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt>inits_dict: dict | None</dt><dd><p>Initialization parameters and constraints persistent throughout the fitting process.</p>
+</dd>
+<dt>xdata: 1D array | None</dt><dd><p>Calibrated energies for the energy axis</p>
+</dd>
+<dt>band_inits: numpy array | None</dt><dd><p>Initialization for the band energy values.</p>
+</dd>
+<dt>drange: slice object | None</dt><dd><p>Slice object corresponding to the energy range to select (None or slice(None, None) means selecting all values).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -426,7 +437,7 @@
 <dl class="py function">
 <dt id="pesfit.fitter.varsetter">
 <code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">varsetter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">inits</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.varsetter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Variable setter for multiparameter fitting.</p>
+<dd><p>Function to set the parameter constrains in multiparameter fitting.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt>params: <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameter</span></code> or other subclass of dict</dt><dd><p>Parameter dictionary.</p>
