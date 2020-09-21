@@ -6,17 +6,31 @@ import pesfit as pf
 import time
 from hdfio import dict_io as io
 
-# Sequential fitting of photoemission data patch around the M' point of WSe2
+# Definitions of command line interaction
+parser = argparse.ArgumentParser(description='Input arguments')
+parser.add_argument('nband', metavar='nb', nargs='?', type=int, help='integer between 1 and 14')
+parser.add_argument('timecount', metavar='t', nargs='?', type=bool, help='whether to include time profiling')
+parser.add_argument('persistent_init', metavar='pi', nargs='?', type=bool, help='initialization include persistent settings')
+parser.add_argument('varying_init', metavar='vi', nargs='?', type=str, help='initialization including varying settings')
+parser.add_argument('jitter_init', metavar='ji', nargs='?', type=bool, help='add jitter to initialization for better fits')
+parser.add_argument('preproc', metavar='pp', nargs='?', type=str, help='the stage of preprocessing used for fitting')
+parser.set_defaults(nband=2, timecount=True, persistent_init=True, varying_init='recon',
+                    jitter_init=False, preproc='symmetrized')
+cli_args = parser.parse_args()
+
+# Sequential fitting of photoemission data patch around the K point of WSe2
 # Option to introduce persistent initial conditions
-PERSISTENT_INIT = True
+PERSISTENT_INIT = cli_args.persistent_init
 # Number of bands to fit
-NBAND = 2
+NBAND = cli_args.nband
 # Option to enable code profiling
-TIMECOUNT = True
+TIMECOUNT = cli_args.timecount
 # Specification of spectrum-dependent initial conditions ('theory' or 'recon')
-VARYING_INIT = 'recon'
+VARYING_INIT = cli_args.varying_init
 # The preprocessing needed before fitting ('symmetrized', 'mclahe', 'mclahe_smooth')
-PREPROC = 'symmetrized'
+PREPROC = cli_args.preproc
+# Option to apply jittering to initializations to obtain better fitting results
+JITTER_INIT = cli_args.jitter_init
 
 # Photoemission band mapping data
 data_dir = r'./data/WSe2'
@@ -39,15 +53,13 @@ if PERSISTENT_INIT:
     vardict = {}
 
     ## Case of 2 bands near K point
-    vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.2, min=0, max=2, vary=1.),
+    vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
                     'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                    'gamma':dict(value=0.02, min=0, max=2, vary=True),
-                    'center':dict(vary=True)}},
+                    'gamma':dict(value=0.02, min=0, max=2, vary=True)}},
             
-                {'lp2_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
-                    'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                    'gamma':dict(value=0.02, min=0, max=2, vary=True),
-                    'center':dict(vary=True)}}]
+                    {'lp2_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
+                        'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
+                        'gamma':dict(value=0.02, min=0, max=2, vary=True)}}]
 
     ## Case of 4 bands near K point
     vardict['04'] = [{'lp3_':{'amplitude':dict(value=0.2, min=0, max=2, vary=1.),
@@ -85,11 +97,15 @@ elif VARYING_INIT == 'recon':
     inits_vary = recon_data
 
 mfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=slice(20,100))
-mfit.sequential_fit(pbar=False, jitter_inits=True, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
+mfit.sequential_fit(pbar=False, jitter_inits=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
 
 if TIMECOUNT:
     tstop = time.perf_counter()
     tdiff =  tstop - tstart
 
-# Save fitting outcome
-mfit.save_data()
+# Save the fitting outcome
+out_dir = r'../data/WSe2/benchmark'
+if not os.path.exists(out_dir):
+    os.makedirs(out_dir)
+
+kfit.save_data(fdir=out_dir, fname='/mpoint_symmetrized_fit_nband={}.h5'.format(NBAND))

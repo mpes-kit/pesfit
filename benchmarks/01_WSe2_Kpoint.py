@@ -18,7 +18,7 @@ parser.add_argument('jitter_init', metavar='ji', nargs='?', type=bool, help='add
 parser.add_argument('preproc', metavar='pp', nargs='?', type=str, help='the stage of preprocessing used for fitting')
 parser.set_defaults(nband=2, timecount=True, persistent_init=True, varying_init='recon',
                     jitter_init=False, preproc='symmetrized')
-cli_args = parser.parse_args([])
+cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the K point of WSe2
 # Option to introduce persistent initial conditions
