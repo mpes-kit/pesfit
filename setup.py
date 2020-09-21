@@ -22,6 +22,7 @@ setup(
     name='pesfit',
     version=__version__,
     description='Multiband lineshape fitting routines for photoemission spectroscopy',
+    long_description_content_type='text/markdown',
     long_description=long_description,
     url='https://github.com/mpes-kit/pesfit',
     download_url='https://github.com/mpes-kit/pesfit/tarball/' + __version__,
