@@ -414,15 +414,31 @@ class PatchFitter(object):
         
         pass
     
-    def save_data(self, fdir=r'./', fname='', ftype='h5', name='fitres', **kwds):
+    def save_data(self, fdir=r'./', fname='', ftype='h5', keyname='fitres', orient='dict', **kwds):
         """ Save the fitting outcome to a file.
         """
         
         path = fdir + fname
         if ftype == 'h5':
-            self.df_fit.to_hdf(path, key=name)
+            self.df_fit.to_hdf(path, key=keyname, **kwds)
+        elif ftype == 'json':
+            self.df_fit.to_json(path, **kwds)
+        elif ftype == 'mat':
+            import scipy.io as scio
+            outdict = self.df_fit.to_dict(orient=orient)
+            scio.savemat(path, outdict, **kwds)
         else:
             raise NotImplementedError
+
+    def fit_to_dict(self, shape, orient='dict'):
+        """ Restructure the fitting outcome to dictionary.
+        """
+
+        outdict = self.df_fit.to_dict(orient=orient)
+        for k, v in outdict:
+            outdict[k] = v.reshape(shape)
+        
+        return outdict
     
     def view(self, fit_result=None, fit_df=None, xaxis=None, **kwds):
         """ Visualize selected fitting results.
