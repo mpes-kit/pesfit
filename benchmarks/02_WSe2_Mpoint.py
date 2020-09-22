@@ -112,7 +112,7 @@ elif NBAND == 14:
     en_range = slice(20, None)
 
 mfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
-mfit.sequential_fit(pbar=False, jitter_inits=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
+mfit.sequential_fit(pbar=False, jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
 
 if TIMECOUNT:
     tstop = time.perf_counter()

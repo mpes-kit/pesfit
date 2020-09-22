@@ -133,7 +133,7 @@ elif NBAND == 14:
     en_range = slice(20, None)
 
 kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
-kfit.sequential_fit(pbar=True, pbenv='classic', jitter_inits=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
+kfit.sequential_fit(pbar=True, pbenv='classic', jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
 
 if TIMECOUNT:
     tstop = time.perf_counter()
