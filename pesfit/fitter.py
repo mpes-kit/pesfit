@@ -181,6 +181,8 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', p
         Fitting initial values and constraints (format see ``pesfit.fitter.varsetter()``).
     ynorm: bool | True
         Option to normalize each trace by its maximum before fitting.
+    method: str | 'leastsq'
+        Optimization method of choice (complete list see https://lmfit.github.io/lmfit-py/fitting.html).
     jitter_init: bool | False
         Option to introduct random perturbations (jittering) to the peak position in fitting. The values of jittering is supplied in ``shifts``.
     ret: str | 'result'
