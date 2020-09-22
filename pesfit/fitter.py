@@ -5,6 +5,7 @@ from . import lineshape as ls, utils as u
 import numpy as np
 import pandas as pd
 from functools import reduce
+from lmfit import Minimizer, fit_report
 import inspect
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
@@ -471,6 +472,23 @@ def load_file(fdir=r'./', fname='', ftype='h5', parts=None, **kwds):
         raise NotImplementedError
         
     return content
+
+
+def print_fit_result(params, printout=False, fpath='', **kwds):
+    """ Pretty-print the fitting outcome.
+    """
+
+    fr = fit_report(params, **kwds)
+    if printout:
+        
+        if fpath:
+            with open(fpath, 'a') as f:
+                print(fr, file=f)
+                print('\n')
+        else:
+            print(fr)
+
+    return
 
 
 ##########################
