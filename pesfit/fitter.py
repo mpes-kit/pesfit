@@ -86,8 +86,8 @@ def model_generator(peaks={'Voigt':2}, background='None', **kwds):
     return model
 
 
-def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parnames=[], verbose=True):
-    """ Randomly and recursively apply a shift value to certain key variables to get a better fit. Execution of the function terminates when either (1) the fitting results are sufficiently good (measured by its chi-squared metric) or (2) the trials exhaust all choices of shift parameters.
+def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parnames=[], verbose=True, **kwds):
+    """ Recursively apply a random shift value to certain key variables to get a better fit. Execution of the function terminates when either (1) the fitting results are sufficiently good (measured by its chi-squared metric) or (2) the trials exhaust all choices of shift parameters.
 
     **Parameters**\n
     fitres: instance of ``lmfit.model.ModelResult``
@@ -118,10 +118,10 @@ def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parna
             pardict = dict((p, params[p].value+sft) for p in parnames)
             varsetter(params, pardict)
         
-        newfit = model.fit(yvals, params, x=xvals)
+        newfit = model.fit(yvals, params, x=xvals, **kwds)
         newshifts = np.delete(shifts, idx)
         
-        return random_varshift(newfit, model, params, newshifts, yvals, xvals)
+        return random_varshift(newfit, model, params, newshifts, yvals, xvals, parnames, verbose, **kwds)
 
 
 def varsetter(params, inits={}, ret=False):
@@ -165,7 +165,7 @@ def varsetter(params, inits={}, ret=False):
         return params
 
 
-def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', params=None, inits=None, ynorm=True, jitter_init=False, ret='result', modelkwds={}, **kwds):
+def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', params=None, inits=None, ynorm=True, method='leastsq', jitter_init=False, ret='result', modelkwds={}, **kwds):
     """ Pointwise fitting of a multiband line profile.
 
     **Parameters**\n
@@ -218,11 +218,11 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', p
     if ynorm:
         ydata /= ydata.max()
     
-    fit_result = mod.fit(ydata, pars, x=xdata)
+    fit_result = mod.fit(ydata, pars, x=xdata, **kwds)
     
     # Apply random shifts to initialization to find a better fit
     if jitter_init:
-        fit_result = random_varshift(fit_result, model=mod, params=pars, yvals=ydata, xvals=xdata, shifts=sfts, **kwds)
+        fit_result = random_varshift(fit_result, model=mod, params=pars, yvals=ydata, xvals=xdata, shifts=sfts, method=method, **kwds)
     
     if ret == 'result':
         return fit_result
@@ -360,6 +360,8 @@ class PatchFitter(object):
             Initialization values for spectrum-dependent variables. Supply a list/tuple of size 1 or the same size as the number of spectra.
         pbar: bool | False
             Option to show a progress bar.
+        pbenv: str | 'notebook'
+            Progress bar environment ('notebook' for Jupyter notebook or 'classic' for command line).
         **kwds: keywords arguments
             nspec: int | ``self.nspec``
                 Number of spectra for fitting.
