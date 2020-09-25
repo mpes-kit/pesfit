@@ -25,6 +25,8 @@ cli_args = parser.parse_args()
 PERSISTENT_INIT = cli_args.persistent_init
 # Number of bands to fit
 NBAND = cli_args.nband
+if NBAND > 14 or NBAND < 1:
+    raise ValueError('The number of bands to reconstruct is within [1, 14] for WSe2.')
 # Option to enable code profiling
 TIMECOUNT = cli_args.timecount
 # Specification of spectrum-dependent initial conditions ('theory' or 'recon')
@@ -104,6 +106,16 @@ if PERSISTENT_INIT:
     vardict['14'] = amplitudes + sigmas + gammas
     vardict['14'] = vardict['04'] + vardict['14']
 
+    ## Other number of bands
+    vals = vardict['14']
+    vardict_other = {}
+    lp_exclude = [preftext+str(i)+'_' for i in range(NBAND+1, 15)]
+    for inits in vardict['14']:
+        for lpn, lpv in inits.items():
+            if lpn in lp_exclude:
+                vals.pop(lpn)
+    vardict_other[str(NBAND).zfill(2)] = vals
+
 if TIMECOUNT:
     tstart = time.perf_counter()
 
@@ -113,7 +125,11 @@ kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=p
 
 ## Specify the set of initialization to apply to the fitting
 if PERSISTENT_INIT:
-    inits_persist = vardict[str(int(NBAND)).zfill(2)]
+    bandkey = str(int(NBAND)).zfill(2)
+    try:
+        inits_persist = vardict[bandkey]
+    except:
+        inits_persist = vardict_other[bandkey]
 else:
     inits_persist = None
 
@@ -130,7 +146,9 @@ elif NBAND == 4:
 elif NBAND == 8:
     en_range = slice(20, 320)
 elif NBAND == 14:
-    en_range = slice(20, None)
+    en_range = slice(20, 470)
+else:
+    en_range = slice(20, 400)
 
 kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
 kfit.sequential_fit(pbar=True, pbenv='classic', jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
@@ -138,6 +156,7 @@ kfit.sequential_fit(pbar=True, pbenv='classic', jitter_init=JITTER_INIT, shifts=
 if TIMECOUNT:
     tstop = time.perf_counter()
     tdiff =  tstop - tstart
+    print(tdiff/900)
 
 # Save the fitting outcome
 out_dir = r'../data/WSe2/benchmark'
