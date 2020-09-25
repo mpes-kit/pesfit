@@ -11,6 +11,9 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import hdfio.dict_io as io
 
+import yaml
+yaml.warnings({'YAMLLoadWarning': False})
+
 
 existing_models = dict(inspect.getmembers(ls.lmm, inspect.isclass))
 
@@ -393,7 +396,7 @@ class PatchFitter(object):
             if (other_size != nspec) or ((other_size == 1) and (nspec == 1)):
                 try:
                     othervals = np.ones((self.model.nlp, nspec))*other_initvals
-                    inits_vary_vals = np.stack((varyvals, othervals))
+                    inits_vary_vals = np.moveaxis(np.stack((varyvals, othervals)), 0, 1)
                 except:
                     raise Exception('other_initvals has incorrect shape!')
             else:
@@ -403,7 +406,7 @@ class PatchFitter(object):
         for n in tqdm(range(nspec), disable=not(pbar)):
 
             # Setting the initialization parameters that vary for every line spectrum
-            other_inits = inits_vary_vals[..., n].T
+            other_inits = inits_vary_vals[..., n]
             self.inits_vary = init_generator(parname='center', varkeys=varkeys, lpnames=self.prefixes, parvals=other_inits)
             varsetter(self.pars, self.inits_vary, ret=False)
             
@@ -414,11 +417,13 @@ class PatchFitter(object):
             dfout = u.df_collect(out.params, currdf=self.df_fit)
             self.df_fit = dfout
     
-    def parallel_fit(self):
-        """ Parallel line fitting of the data patch.
-        """
-        
-        pass
+    # def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], **kwds):
+    #     """ Parallel line fitting of the data patch.
+    #     """
+
+    #     nspec = kwds.pop('nspec', self.nspec)
+
+    #     self.out = parallel_fitting(self.xvals, self.ydata2D, self.model, self.inits_persist, self.band_inits2D, nspec, self.prefixes,varkeys, other_initvals, **kwds)
     
     def save_data(self, fdir=r'./', fname='', ftype='h5', keyname='fitres', orient='dict', **kwds):
         """ Save the fitting outcome to a file.
@@ -461,6 +466,129 @@ class PatchFitter(object):
         return plot
 
 
+import concurrent.futures as ccf
+import multiprocessing as mp
+import dask as dk
+
+class ParallelPatchFitter(object):
+    """ Parallelized fitting of line spectra in a photoemission data patch.
+    """
+
+    def __init__(self, xdata=None, ydata=None, model=None, modelkwds={}, **kwds):
+
+        self.nspec = kwds.pop('nspec', 1)
+        self.fitters = [PatchFitter(xdata, ydata, mode=model, modelkwds=modelkwds, **kwds) for _ in range(self.nspec)]
+        self.models = [self.fitters[n].model for n in range(self.nspec)]
+        self.prefixes = self.fitters[0].prefixes
+        self.xdata = xdata
+        self.ydata = ydata
+
+    def set_inits(self, inits_dict=None, xdata=None, band_inits=None, drange=None):
+        """ Set initialization for all constituent fitters.
+        """
+        
+        for i in range(self.nspec):
+            self.fitters[i].set_inits(inits_dict=inits_dict, band_inits=band_inits, drange=drange)
+        if xdata is None:
+            self.xvals = self.xdata[drange]
+        else:
+            self.xvals = xdata
+        self.model = self.fitters[0].model
+        self.ydata2D = self.fitters[0].ydata2D
+        self.inits_persist = self.fitters[0].inits_persist
+        self.band_inits2D = self.fitters[0].band_inits2D
+
+    def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], compute_kwds={}, scheduler='processes', backend='concurrent', ret=False, **kwds):
+        """ Parallel line fitting of the data patch.
+        """
+
+        nspec = kwds.pop('nspec', self.nspec)
+        self.pars = [md.make_params() for md in self.models]
+        # Setting the initialization parameters and constraints persistent throughout the fitting process
+        try:
+            for p in self.pars:
+                varsetter(p, self.inits_persist, ret=False)
+        except:
+            pass
+
+        # Fitting parameters for all line spectra in the data patch
+        df_fit = pd.DataFrame(columns=self.pars[0].keys())
+
+        varyvals = self.band_inits2D[:self.model.nlp, :nspec]
+        if other_initvals is not None:
+            other_size = np.asarray(other_initvals).size
+            if (other_size != nspec) or ((other_size == 1) and (nspec == 1)):
+                try:
+                    othervals = np.ones((self.model.nlp, nspec))*other_initvals
+                    self.other_inits = np.moveaxis(np.stack((varyvals, othervals)), 0, 1)
+                except:
+                    raise Exception('other_initvals has incorrect shape!')
+            else:
+                raise Exception('other_initvals has incorrect shape!')
+            
+        # Carry out parallelized fitting
+        process_args = [(self.models[n], self.pars[n], self.xvals, self.ydata2D[n, :], n, self.prefixes,
+        varkeys, self.other_inits[...,n]) for n in range(nspec)]
+        
+        if backend == 'dask':
+            fit_tasks = [dk.delayed(self._single_fit)(*args) for args in process_args]
+            fit_results = dk.compute(*fit_tasks, scheduler=scheduler, **compute_kwds)
+
+        elif backend == 'concurrent':
+            with ccf.ProcessPoolExecutor() as executor:
+                fit_results = executor.map(self._single_fit, *zip(*process_args))
+
+        elif backend == 'multiprocessing':
+            nproc = kwds.pop('nproc', mp.cpu_count())
+            pool = mp.Pool(processes=nproc)
+            fit_results = pool.starmap(self._single_fit, process_args)
+            pool.close()
+
+        # Collect the results
+        for fres in fit_results:
+            dfout = u.df_collect(fres.params, currdf=df_fit)
+            df_fit = dfout
+            # print_fit_result(fres.params, printout=True)
+
+        self.df_fit = df_fit
+
+        if ret:
+            return df_fit
+    
+    # @classmethod
+    def _single_fit(self, model, pars, xvals, yspec, n, prefixes, varkeys, others, **kwds):
+        """ Fit a single line spectrum with custom initializaton.
+        """
+        
+        # Setting the initialization parameters that vary for every line spectrum
+        inits_vary = init_generator(parname='center', varkeys=varkeys, lpnames=prefixes, parvals=others)
+        varsetter(pars, inits_vary, ret=False)
+        
+        # Line fitting with all the initial guesses supplied
+        out_single = pointwise_fitting(xvals, yspec, model=model, params=pars, ynorm=True, **kwds)
+
+        return out_single
+
+    def save_data(self, fdir=r'./', fname='', ftype='h5', keyname='fitres', orient='dict', **kwds):
+        """ Save the fitting outcome to a file.
+        """
+        
+        path = fdir + fname
+        if ftype == 'h5':
+            self.df_fit.to_hdf(path, key=keyname, **kwds)
+        elif ftype == 'json':
+            self.df_fit.to_json(path, **kwds)
+        elif ftype == 'mat':
+            import scipy.io as scio
+            outdict = self.df_fit.to_dict(orient=orient)
+            scio.savemat(path, outdict, **kwds)
+        else:
+            raise NotImplementedError
+
+if __name__ == '__main__':
+    pass
+
+
 def load_file(fdir=r'./', fname='', ftype='h5', parts=None, **kwds):
     """ Load whole file or parts of the file.
     """
@@ -478,7 +606,7 @@ def load_file(fdir=r'./', fname='', ftype='h5', parts=None, **kwds):
     return content
 
 
-def print_fit_result(params, printout=False, fpath='', **kwds):
+def print_fit_result(params, printout=False, fpath='', mode='a', **kwds):
     """ Pretty-print the fitting outcome.
     """
 
@@ -486,7 +614,7 @@ def print_fit_result(params, printout=False, fpath='', **kwds):
     if printout:
         
         if fpath:
-            with open(fpath, 'a') as f:
+            with open(fpath, mode) as f:
                 print(fr, file=f)
                 print('\n')
         else:
