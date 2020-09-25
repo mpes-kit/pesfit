@@ -73,14 +73,20 @@ class MultipeakModel(Model):
             except:
                 pass
             
-        def _tmp(self, *args, **kws):
-            pass
-        Model.__init__(self, _tmp, **kws)
+        # def _tmp(self, *args, **kws):
+        #     pass
+        # Model.__init__(self, _tmp, **kws)
+        Model.__init__(self, self._tmp, **kws)
 
         for side in self.components:
             prefix = side.prefix
             for basename, hint in side.param_hints.items():
                 self.param_hints["%s%s" % (prefix, basename)] = hint
+
+    def _tmp(self, *args, **kws):
+        """ Dummy function.
+        """
+        pass
             
     def _parse_params(self):
         """ Parsing and merging parameters from constituent models.
