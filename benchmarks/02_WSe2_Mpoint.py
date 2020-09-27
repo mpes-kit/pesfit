@@ -12,6 +12,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Input arguments')
 parser.add_argument('nband', metavar='nb', nargs='?', type=int, help='integer between 1 and 14')
 parser.add_argument('timecount', metavar='t', nargs='?', type=bool, help='whether to include time profiling')
+parser.add_argument('operation', metavar='op', nargs='?', type=str, help='what computing method to run the benchmark program with')
 parser.add_argument('persistent_init', metavar='pi', nargs='?', type=bool, help='initialization include persistent settings')
 parser.add_argument('varying_init', metavar='vi', nargs='?', type=str, help='initialization including varying settings')
 parser.add_argument('jitter_init', metavar='ji', nargs='?', type=bool, help='add jitter to initialization for better fits')
@@ -53,6 +54,8 @@ recon_data = io.h5_to_dict(recon_path)
 # Setting initial conditions persistent throughout the fitting. These fixed constraints are tested for fitting the band dispersion nearby the M' point of WSe2 and are required to make the fitting relatively stable!
 if PERSISTENT_INIT:
     vardict = {}
+    preftext = 'lp'
+    lp_prefixes = [preftext+str(i)+'_' for i in range(1, NBAND+1)]
 
     ## Case of 2 bands near K point
     vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
@@ -80,8 +83,28 @@ if PERSISTENT_INIT:
     vardict['08'] = vardict['04'] + vardict['08']
 
     ## Case of 14 bands near K point
-    vardict['14'] = []
+    amplitudes = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='sigma',
+                                        varkeys=['value', 'min', 'max', 'vary'],
+                                        parvals=[[0.5, 0, 2, True] for i in range(14-4)])
+    sigmas = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='sigma',
+                                    varkeys=['value', 'min', 'max', 'vary'],
+                                    parvals=[[0.1, 0.05, 0.2, False] for i in range(14-4)])
+    gammas = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='gamma', 
+                                    varkeys=['value', 'min', 'max', 'vary'],
+                                    parvals=[[0.05, 0, 2, True] for i in range(14-4)])
+    vardict['14'] = amplitudes + sigmas + gammas
     vardict['14'] = vardict['08'] + vardict['14']
+
+    ## Other number of bands
+    if NBAND not in [2, 4, 8, 14]:
+        vals = vardict['14']
+        vardict_other = {}
+        lp_exclude = [preftext+str(i)+'_' for i in range(NBAND+1, 15)]
+        for inits in vardict['14']:
+            for lpn, lpv in inits.items():
+                if lpn in lp_exclude:
+                    vals.pop(lpn)
+        vardict_other[str(NBAND).zfill(2)] = vals
 
 if TIMECOUNT:
     tstart = time.perf_counter()
@@ -109,7 +132,7 @@ elif NBAND == 4:
 elif NBAND == 8:
     en_range = slice(20, 320)
 elif NBAND == 14:
-    en_range = slice(20, None)
+    en_range = slice(20, 470)
 
 mfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
 mfit.sequential_fit(pbar=False, jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
