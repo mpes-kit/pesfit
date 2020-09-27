@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import hdfio.dict_io as io
 
+# Suppress YAML deprecation warning
 import yaml
 yaml.warnings({'YAMLLoadWarning': False})
 
@@ -476,18 +477,25 @@ class ParallelPatchFitter(object):
 
     def __init__(self, xdata=None, ydata=None, model=None, modelkwds={}, **kwds):
 
-        self.nspec = kwds.pop('nspec', 1)
-        self.fitters = [PatchFitter(xdata, ydata, mode=model, modelkwds=modelkwds, **kwds) for _ in range(self.nspec)]
-        self.models = [self.fitters[n].model for n in range(self.nspec)]
+        self.nfitter = kwds.pop('nfitter', 1)
+        self.fitters = [PatchFitter(xdata, ydata, mode=model, modelkwds=modelkwds, **kwds) for _ in range(self.nfitter)]
+        self.models = [self.fitters[n].model for n in range(self.nfitter)]
         self.prefixes = self.fitters[0].prefixes
         self.xdata = xdata
         self.ydata = ydata
+    
+    @property
+    def nspec(self):
+        """ Number of line spectra.
+        """
+        
+        return self.fitters[0].nspec
 
     def set_inits(self, inits_dict=None, xdata=None, band_inits=None, drange=None):
         """ Set initialization for all constituent fitters.
         """
         
-        for i in range(self.nspec):
+        for i in range(self.nfitter):
             self.fitters[i].set_inits(inits_dict=inits_dict, band_inits=band_inits, drange=drange)
         if xdata is None:
             self.xvals = self.xdata[drange]
@@ -498,11 +506,11 @@ class ParallelPatchFitter(object):
         self.inits_persist = self.fitters[0].inits_persist
         self.band_inits2D = self.fitters[0].band_inits2D
 
-    def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], compute_kwds={}, scheduler='processes', backend='concurrent', ret=False, **kwds):
+    def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], compute_kwds={}, scheduler='processes', backend='dask', ret=False, **kwds):
         """ Parallel line fitting of the data patch.
         """
 
-        nspec = kwds.pop('nspec', self.nspec)
+        nspec = kwds.pop('nfitter', self.nfitter) # Separate nspec and nfitter
         self.pars = [md.make_params() for md in self.models]
         # Setting the initialization parameters and constraints persistent throughout the fitting process
         try:
@@ -530,6 +538,7 @@ class ParallelPatchFitter(object):
         process_args = [(self.models[n], self.pars[n], self.xvals, self.ydata2D[n, :], n, self.prefixes,
         varkeys, self.other_inits[...,n]) for n in range(nspec)]
         
+        # Use different libraries for parallelization
         if backend == 'dask':
             fit_tasks = [dk.delayed(self._single_fit)(*args) for args in process_args]
             fit_results = dk.compute(*fit_tasks, scheduler=scheduler, **compute_kwds)
@@ -606,6 +615,10 @@ def load_file(fdir=r'./', fname='', ftype='h5', parts=None, **kwds):
     return content
 
 
+#####################################
+# Output and visualization routines #
+#####################################
+
 def print_fit_result(params, printout=False, fpath='', mode='a', **kwds):
     """ Pretty-print the fitting outcome.
     """
@@ -622,10 +635,6 @@ def print_fit_result(params, printout=False, fpath='', mode='a', **kwds):
 
     return
 
-
-##########################
-# Visualization routines #
-##########################
 
 def plot_fit_result(fitres, x, plot_components=True, downsamp=1, ret=False, **kwds):
     """ Plot the fitting outcomes.
