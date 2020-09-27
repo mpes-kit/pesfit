@@ -100,16 +100,20 @@ def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parna
         Lineshape model.
     params: instance of ``lmfit.parameter.Parameters``
         Lineshape model parameters.
+    shifts: list/tuple/array
+        Different random shifts to apply to the initial conditions.
     xvals, yvals: numpy array, numpy array | None, None
         Horizontal and vertical axis values for the lineshape fitting.
     parnames: list | []
         List of names of the parameters to update initial conditions.
     verbose: bool | True
         Option for printout of the chi-squared value.
+    **kwds: keyword arguments
+        Extra keywords passed to the ``Model.fit()`` method.
     """
 
     # Check goodness-of-fit criterion
-    if fitres.chisqr < 0.8:
+    if (fitres.chisqr < 0.8) or (len(shifts) == 0):
         return fitres
     
     else:
@@ -501,10 +505,17 @@ class ParallelPatchFitter(object):
         self.inits_persist = self.fitters[0].inits_persist
         self.band_inits2D = self.fitters[0].band_inits2D
 
-    def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], compute_kwds={}, scheduler='processes', backend='dask', ret=False, **kwds):
+    def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], para_kwds={}, scheduler='processes', backend='multiprocessing', ret=False, **kwds):
         """ Parallel pointwise spectrum fitting of the data patch.
 
         **Parameters**\n
+        varkeys: list/tuple | ['value', 'vary']
+        other_initvals: list/tuple | [True]
+        para_kwds: dic | {}
+        scheduler: str | 'processes'
+        backend: str | 'multiprocessing'
+        ret: bool | False
+        **kwds: keyword arguments
         """
 
         n_cpu = mp.cpu_count()
@@ -541,20 +552,20 @@ class ParallelPatchFitter(object):
         n_workers = kwds.pop('num_workers', n_cpu)
         if backend == 'dask':
             fit_tasks = [dk.delayed(self._single_fit)(*args) for args in process_args]
-            fit_results = dk.compute(*fit_tasks, scheduler=scheduler, num_workers=n_workers, **compute_kwds)
+            fit_results = dk.compute(*fit_tasks, scheduler=scheduler, num_workers=n_workers, **para_kwds)
 
         elif backend == 'concurrent':
-            with ccf.ProcessPoolExecutor(max_workers=n_workers) as executor:
+            with ccf.ProcessPoolExecutor(max_workers=n_workers, **para_kwds) as executor:
                 fit_results = executor.map(self._single_fit, *zip(*process_args))
 
         elif backend == 'multiprocessing':
-            pool = mp.Pool(processes=n_workers)
+            pool = mp.Pool(processes=n_workers, **para_kwds)
             fit_results = pool.starmap(self._single_fit, process_args)
             pool.close()
             pool.join()
         
         elif backend == 'async':
-            pool = mp.Pool(processes=n_workers)
+            pool = mp.Pool(processes=n_workers, **para_kwds)
             fit_results = pool.starmap_async(self._single_fit, process_args).get()
             pool.close()
             pool.join()
@@ -562,18 +573,21 @@ class ParallelPatchFitter(object):
         elif backend == 'singles': # Run sequentially for debugging
             fit_results = [self._single_fit(*args, **kwds) for args in process_args]
 
+        else:
+            raise NotImplementedError
+
         # Collect the results
         for fres in fit_results:
             dfout = u.df_collect(fres[0].params, extra_params=fres[1], currdf=self.df_fit)
             self.df_fit = dfout
             # print_fit_result(fres.params, printout=True)
 
+        # Sort values by `spec_id`
         self.df_fit.sort_values('spec_id', ascending=True, inplace=True)
 
         if ret:
             return self.df_fit
     
-    # @classmethod
     def _single_fit(self, model, pars, xvals, yspec, n, prefixes, varkeys, others, **kwds):
         """ Fit a single line spectrum with custom initializaton.
         """
