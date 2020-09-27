@@ -90,7 +90,7 @@ def model_generator(peaks={'Voigt':2}, background='None', **kwds):
     return model
 
 
-def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parnames=[], verbose=True, **kwds):
+def random_varshift(fitres, model, params, shifts=[], yvals=None, xvals=None, parnames=[], verbose=True, **kwds):
     """ Recursively apply a random shift value to certain key variables to get a better fit. Execution of the function terminates when either (1) the fitting results are sufficiently good (measured by its chi-squared metric) or (2) the trials exhaust all choices of shift parameters.
 
     **Parameters**\n
@@ -100,7 +100,7 @@ def random_varshift(fitres, model, params, shifts, yvals=None, xvals=None, parna
         Lineshape model.
     params: instance of ``lmfit.parameter.Parameters``
         Lineshape model parameters.
-    shifts: list/tuple/array
+    shifts: list/tuple/array | []
         Different random shifts to apply to the initial conditions.
     xvals, yvals: numpy array, numpy array | None, None
         Horizontal and vertical axis values for the lineshape fitting.
