@@ -75,12 +75,14 @@ def dict_depth(dic, level=0):
     return max(dict_depth(dic[key], level+1) for key in dic)
 
 
-def df_collect(params, currdf=None):
+def df_collect(params, extra_params=None, currdf=None):
     """ Collect parameters from fitting outcome.
     
     **Parameters**\n    
     params: instance of ``lmfit.parameter.Parameters``.
         Collection of fitting parameters.
+    extra_params: dict | None
+        Extra parameters supplied as a dictionary
     currdf: instance of ``pandas.DataFrame`` | None
         An existing dataframe to append new data to.
         
@@ -89,7 +91,10 @@ def df_collect(params, currdf=None):
         Fitting parameters reformatted as a dataframe (keeps only names and values).
     """
 
-    dfdict = {param.name:param.value for _, param in params.items()}  
+    # Convert parameters into a dataframe through a dictionary
+    dfdict = {param.name:param.value for _, param in params.items()}
+    if extra_params is not None:
+        dfdict = dictmerge(dfdict, extra_params)
     df = pd.DataFrame.from_dict(dfdict, orient='index').T
     
     if currdf is not None:
