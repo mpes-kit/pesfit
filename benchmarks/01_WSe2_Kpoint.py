@@ -69,11 +69,13 @@ if PERSISTENT_INIT:
     ## Case of 2 bands near K point
     vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                            'gamma':dict(value=0.02, min=0, max=2, vary=True)}},
+                            'gamma':dict(value=0.02, min=0, max=2, vary=True),
+                            'center':dict(vary=True)}},
             
                     {'lp2_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                            'gamma':dict(value=0.02, min=0, max=2, vary=True)}}]
+                            'gamma':dict(value=0.02, min=0, max=2, vary=True),
+                            'center':dict(vary=True)}}]
 
     ## Case of 4 bands near K point
     vardict['04'] = [{'lp3_':{'amplitude':dict(value=0.5, min=0, max=2, vary=True),
@@ -160,34 +162,35 @@ if OPERATION == 'sequential':
 
     if TIMECOUNT:
         tdiff =  tstop - tstart
-        print(tdiff)
+        print('Fitting took {} seconds'.format(tdiff))
 
-    # Save the fitting outcome
+    ## Save the fitting outcome
     out_dir = r'../data/WSe2/benchmark'
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
-    kfit.save_data(fdir=out_dir, fname='/kpoint_symmetrized_fit_nband={}.h5'.format(NBAND))
+    kfit.save_data(fdir=out_dir, fname='/kpoint_symmetrized_seqfit_nband={}.h5'.format(NBAND))
 
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
         kfit = pf.fitter.ParallelPatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], nfitter=nspec)
-        kfit.set_inits(inits_dict=vardict, band_inits=inits_vary, drange=slice(20,100))
+        
+        kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
 
         tstart = time.perf_counter()
-        kfit.parallel_fit(jitter_init=False, shifts=np.arange(-0.08, 0.09, 0.01), nfitter=nspec, backend='multiprocessing', scheduler='processes')
+        kfit.parallel_fit(jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nfitter=nspec, backend='multiprocessing', scheduler='processes')
         tstop = time.perf_counter()
 
         if TIMECOUNT:
             tdiff =  tstop - tstart
-            print(tdiff)
+            print('Fitting took {} seconds'.format(tdiff))
 
-        # Save the fitting outcome
+        ## Save the fitting outcome
         out_dir = r'../data/WSe2/benchmark'
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        kfit.save_data(fdir=out_dir, fname='/kpoint_symmetrized_fit_nband={}.h5'.format(NBAND))
+        kfit.save_data(fdir=out_dir, fname='/kpoint_symmetrized_parafit_nband={}.h5'.format(NBAND))
 
 else:
     raise NotImplementedError
