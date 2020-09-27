@@ -549,6 +549,9 @@ class ParallelPatchFitter(object):
             pool = mp.Pool(processes=n_workers)
             fit_results = pool.starmap(self._single_fit, process_args)
             pool.close()
+        
+        elif backend == 'singles': # Run sequentially for debugging
+            fit_results = [self._single_fit(*args, **kwds) for args in process_args]
 
         # Collect the results
         for fres in fit_results:
