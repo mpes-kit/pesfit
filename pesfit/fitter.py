@@ -386,6 +386,7 @@ class PatchFitter(object):
 
         # Fitting parameters for all line spectra in the data patch
         self.df_fit = pd.DataFrame(columns=self.pars.keys())
+        self.df_fit['spec_id'] = ''
         # Number of spectrum to fit (for diagnostics)
         nspec = kwds.pop('nspec', self.nspec)
         
@@ -415,16 +416,10 @@ class PatchFitter(object):
             # Line fitting with all the initial guesses supplied
             out = pointwise_fitting(self.xvals, y, model=self.model, params=self.pars, ynorm=True, **kwds)
 
-            dfout = u.df_collect(out.params, currdf=self.df_fit)
+            dfout = u.df_collect(out.params, extra_params={'spec_id':n}, currdf=self.df_fit)
             self.df_fit = dfout
-    
-    # def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], **kwds):
-    #     """ Parallel line fitting of the data patch.
-    #     """
 
-    #     nspec = kwds.pop('nspec', self.nspec)
-
-    #     self.out = parallel_fitting(self.xvals, self.ydata2D, self.model, self.inits_persist, self.band_inits2D, nspec, self.prefixes,varkeys, other_initvals, **kwds)
+        self.df_fit.sort_values('spec_id', ascending=True, inplace=True)
     
     def save_data(self, fdir=r'./', fname='', ftype='h5', keyname='fitres', orient='dict', **kwds):
         """ Save the fitting outcome to a file.
@@ -510,6 +505,7 @@ class ParallelPatchFitter(object):
         """ Parallel line fitting of the data patch.
         """
 
+        n_cpu = mp.cpu_count()
         nspec = kwds.pop('nfitter', self.nfitter) # Separate nspec and nfitter
         self.pars = [md.make_params() for md in self.models]
         # Setting the initialization parameters and constraints persistent throughout the fitting process
@@ -520,7 +516,8 @@ class ParallelPatchFitter(object):
             pass
 
         # Fitting parameters for all line spectra in the data patch
-        df_fit = pd.DataFrame(columns=self.pars[0].keys())
+        self.df_fit = pd.DataFrame(columns=self.pars[0].keys())
+        self.df_fit['spec_id'] = ''
 
         varyvals = self.band_inits2D[:self.model.nlp, :nspec]
         if other_initvals is not None:
@@ -539,30 +536,30 @@ class ParallelPatchFitter(object):
         varkeys, self.other_inits[...,n]) for n in range(nspec)]
         
         # Use different libraries for parallelization
+        n_workers = kwds.pop('num_workers', n_cpu)
         if backend == 'dask':
             fit_tasks = [dk.delayed(self._single_fit)(*args) for args in process_args]
-            fit_results = dk.compute(*fit_tasks, scheduler=scheduler, **compute_kwds)
+            fit_results = dk.compute(*fit_tasks, scheduler=scheduler, num_workers=n_workers, **compute_kwds)
 
         elif backend == 'concurrent':
-            with ccf.ProcessPoolExecutor() as executor:
+            with ccf.ProcessPoolExecutor(max_workers=n_workers) as executor:
                 fit_results = executor.map(self._single_fit, *zip(*process_args))
 
         elif backend == 'multiprocessing':
-            nproc = kwds.pop('nproc', mp.cpu_count())
-            pool = mp.Pool(processes=nproc)
+            pool = mp.Pool(processes=n_workers)
             fit_results = pool.starmap(self._single_fit, process_args)
             pool.close()
 
         # Collect the results
         for fres in fit_results:
-            dfout = u.df_collect(fres.params, currdf=df_fit)
-            df_fit = dfout
+            dfout = u.df_collect(fres[0].params, extra_params=fres[1], currdf=self.df_fit)
+            self.df_fit = dfout
             # print_fit_result(fres.params, printout=True)
 
-        self.df_fit = df_fit
+        self.df_fit.sort_values('spec_id', ascending=True, inplace=True)
 
         if ret:
-            return df_fit
+            return self.df_fit
     
     # @classmethod
     def _single_fit(self, model, pars, xvals, yspec, n, prefixes, varkeys, others, **kwds):
@@ -575,8 +572,9 @@ class ParallelPatchFitter(object):
         
         # Line fitting with all the initial guesses supplied
         out_single = pointwise_fitting(xvals, yspec, model=model, params=pars, ynorm=True, **kwds)
+        out_extra = {'spec_id': n}
 
-        return out_single
+        return out_single, out_extra
 
     def save_data(self, fdir=r'./', fname='', ftype='h5', keyname='fitres', orient='dict', **kwds):
         """ Save the fitting outcome to a file.
