@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.4.8 documentation</title>
+  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.4.8 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.5.0 documentation" href="index.html"/>
         <link rel="prev" title="Integrated fitting workflow (pesfit.fitter)" href="fitter.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.4.8
+                0.5.0
               </div>
             
           
@@ -171,11 +171,13 @@
 
 <dl class="py function">
 <dt id="pesfit.utils.df_collect">
-<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">df_collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">currdf</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.df_collect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">df_collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">extra_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">currdf</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.df_collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collect parameters from fitting outcome.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt>params: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameters</span></code>.</dt><dd><p>Collection of fitting parameters.</p>
+</dd>
+<dt>extra_params: dict | None</dt><dd><p>Extra parameters supplied as a dictionary</p>
 </dd>
 <dt>currdf: instance of <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> | None</dt><dd><p>An existing dataframe to append new data to.</p>
 </dd>
@@ -310,7 +312,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.8',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
