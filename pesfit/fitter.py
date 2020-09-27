@@ -502,7 +502,9 @@ class ParallelPatchFitter(object):
         self.band_inits2D = self.fitters[0].band_inits2D
 
     def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], compute_kwds={}, scheduler='processes', backend='dask', ret=False, **kwds):
-        """ Parallel line fitting of the data patch.
+        """ Parallel pointwise spectrum fitting of the data patch.
+
+        **Parameters**\n
         """
 
         n_cpu = mp.cpu_count()
@@ -517,7 +519,7 @@ class ParallelPatchFitter(object):
 
         # Fitting parameters for all line spectra in the data patch
         self.df_fit = pd.DataFrame(columns=self.pars[0].keys())
-        self.df_fit['spec_id'] = ''
+        self.df_fit['spec_id'] = '' # Spectrum ID for queuing
 
         varyvals = self.band_inits2D[:self.model.nlp, :nspec]
         if other_initvals is not None:
@@ -549,6 +551,13 @@ class ParallelPatchFitter(object):
             pool = mp.Pool(processes=n_workers)
             fit_results = pool.starmap(self._single_fit, process_args)
             pool.close()
+            pool.join()
+        
+        elif backend == 'async':
+            pool = mp.Pool(processes=n_workers)
+            fit_results = pool.starmap_async(self._single_fit, process_args).get()
+            pool.close()
+            pool.join()
         
         elif backend == 'singles': # Run sequentially for debugging
             fit_results = [self._single_fit(*args, **kwds) for args in process_args]
