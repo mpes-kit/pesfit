@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Integrated fitting workflow (pesfit.fitter) &mdash; pesfit 0.5.0 documentation</title>
+  <title>Integrated fitting workflow (pesfit.fitter) &mdash; pesfit 0.5.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.5.0 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.5.2 documentation" href="index.html"/>
         <link rel="next" title="Utility functions (pesfit.utils)" href="utils.html"/>
         <link rel="prev" title="Complex lineshape models (pesfit.lineshape)" href="lineshape.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.5.2
               </div>
             
           
@@ -182,8 +182,16 @@
 
 <dl class="py method">
 <dt id="pesfit.fitter.ParallelPatchFitter.parallel_fit">
-<code class="sig-name descname">parallel_fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">varkeys</span><span class="o">=</span><span class="default_value">['value', 'vary']</span></em>, <em class="sig-param"><span class="n">other_initvals</span><span class="o">=</span><span class="default_value">[True]</span></em>, <em class="sig-param"><span class="n">compute_kwds</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">scheduler</span><span class="o">=</span><span class="default_value">'processes'</span></em>, <em class="sig-param"><span class="n">backend</span><span class="o">=</span><span class="default_value">'dask'</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.ParallelPatchFitter.parallel_fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parallel line fitting of the data patch.</p>
+<code class="sig-name descname">parallel_fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">varkeys</span><span class="o">=</span><span class="default_value">['value', 'vary']</span></em>, <em class="sig-param"><span class="n">other_initvals</span><span class="o">=</span><span class="default_value">[True]</span></em>, <em class="sig-param"><span class="n">para_kwds</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">scheduler</span><span class="o">=</span><span class="default_value">'processes'</span></em>, <em class="sig-param"><span class="n">backend</span><span class="o">=</span><span class="default_value">'multiprocessing'</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.ParallelPatchFitter.parallel_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parallel pointwise spectrum fitting of the data patch.</p>
+<p><strong>Parameters</strong></p>
+<p>varkeys: list/tuple | [‘value’, ‘vary’]
+other_initvals: list/tuple | [True]
+para_kwds: dic | {}
+scheduler: str | ‘processes’
+backend: str | ‘multiprocessing’
+ret: bool | False
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwds: keyword arguments</p>
 </dd></dl>
 
 <dl class="py method">
@@ -235,7 +243,7 @@
 </dd>
 <dt>ftype: str | ‘h5’</dt><dd><p>File type to load.</p>
 </dd>
-<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwds: keywords argument</dt><dd><p>Additional arguments for <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.load_file()</span></code>.</p>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwds: keywords argument</dt><dd><p>Additional arguments for <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.load_file()</span></code>.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -284,7 +292,7 @@
 </dd>
 <dt>pbenv: str | ‘notebook’</dt><dd><p>Progress bar environment (‘notebook’ for Jupyter notebook or ‘classic’ for command line).</p>
 </dd>
-<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwds: keywords arguments</dt><dd><dl class="simple">
+<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwds: keywords arguments</dt><dd><dl class="simple">
 <dt>nspec: int | <code class="docutils literal notranslate"><span class="pre">self.nspec</span></code></dt><dd><p>Number of spectra for fitting.</p>
 </dd>
 <dt>additional arguments:</dt><dd><p>See <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.pointwise_fitting()</span></code>.</p>
@@ -331,7 +339,7 @@
 </dd>
 <dt>varkeys: list/tuple | [‘value’]</dt><dd><p>Keyword specified for the parameter (‘value’, ‘min’, ‘max’, ‘vary’).</p>
 </dd>
-<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
 <dt>lpnames: list/tuple | None</dt><dd><p>Collection of namestrings (or prefixes) for lineshapes.</p>
 </dd>
 <dt>parvals: list/tuple | None</dt><dd><p>Collection of values for parameters.</p>
@@ -357,7 +365,7 @@
 </dd>
 <dt>background: str | ‘None’</dt><dd><p>Background model name. All possible models see <code class="docutils literal notranslate"><span class="pre">lmfit.models</span></code>.</p>
 </dd>
-<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwds: keyword arguments</dt><dd><p>Additional keyword arguments for <code class="docutils literal notranslate"><span class="pre">pesfit.lineshape.MultipeakModel</span></code> class.</p>
+<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>kwds: keyword arguments</dt><dd><p>Additional keyword arguments for <code class="docutils literal notranslate"><span class="pre">pesfit.lineshape.MultipeakModel</span></code> class.</p>
 </dd>
 </dl>
 <p><strong>Return</strong></p>
@@ -389,7 +397,7 @@
 </dd>
 <dt>ret: bool | False</dt><dd><p>Option to return the graphical elements.</p>
 </dd>
-<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt><a href="#id11"><span class="problematic" id="id12">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
 <dt>figsize: list/tuple | [10, 6]</dt><dd><p>Default size of the figure.</p>
 </dd>
 </dl>
@@ -411,7 +419,7 @@
 </dd>
 <dt>downsamp: int | 1</dt><dd><p>Level of downsampling of the data (1 means no downsampling).</p>
 </dd>
-<dt><a href="#id11"><span class="problematic" id="id12">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt><a href="#id13"><span class="problematic" id="id14">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
 <dt>figsize: list/tuple | [8, 5]</dt><dd><p>Default size of the figure.</p>
 </dd>
 </dl>
@@ -445,7 +453,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">'result'</span></code>: returns the fitting result</p>
 <p><code class="docutils literal notranslate"><span class="pre">'all'</span></code>: returns the fitting result and evaluated lineshape components.</p>
 </dd>
-<dt><a href="#id13"><span class="problematic" id="id14">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt><a href="#id15"><span class="problematic" id="id16">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
 <dt>shifts: list/tuple/numpy array | np.arange(0.1, 1.1, 0.1)</dt><dd><p>The choices of random shifts to apply to the peak position initialization (energy in eV unit). The shifts are only operational when <code class="docutils literal notranslate"><span class="pre">jitter_init=True</span></code>.</p>
 </dd>
 <dt>other arguments</dt><dd><p>See details in <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.random_varshift()</span></code>.</p>
@@ -463,7 +471,7 @@
 
 <dl class="py function">
 <dt id="pesfit.fitter.random_varshift">
-<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">random_varshift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitres</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">shifts</span></em>, <em class="sig-param"><span class="n">yvals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xvals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parnames</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.random_varshift" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pesfit.fitter.</code><code class="sig-name descname">random_varshift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitres</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">shifts</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">yvals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xvals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parnames</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.random_varshift" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively apply a random shift value to certain key variables to get a better fit. Execution of the function terminates when either (1) the fitting results are sufficiently good (measured by its chi-squared metric) or (2) the trials exhaust all choices of shift parameters.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
@@ -473,11 +481,15 @@
 </dd>
 <dt>params: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameters</span></code></dt><dd><p>Lineshape model parameters.</p>
 </dd>
+<dt>shifts: list/tuple/array | []</dt><dd><p>Different random shifts to apply to the initial conditions.</p>
+</dd>
 <dt>xvals, yvals: numpy array, numpy array | None, None</dt><dd><p>Horizontal and vertical axis values for the lineshape fitting.</p>
 </dd>
 <dt>parnames: list | []</dt><dd><p>List of names of the parameters to update initial conditions.</p>
 </dd>
 <dt>verbose: bool | True</dt><dd><p>Option for printout of the chi-squared value.</p>
+</dd>
+<dt><a href="#id17"><span class="problematic" id="id18">**</span></a>kwds: keyword arguments</dt><dd><p>Extra keywords passed to the <code class="docutils literal notranslate"><span class="pre">Model.fit()</span></code> method.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -543,7 +555,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.0',
+            VERSION:'0.5.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
