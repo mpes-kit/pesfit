@@ -466,9 +466,13 @@ class PatchFitter(object):
         return plot
 
 
+from . import istarmap
 import concurrent.futures as ccf
 import multiprocessing as mp
 import dask as dk
+from dask.diagnostics import ProgressBar
+import sys
+from tqdm import tqdm
 
 class ParallelPatchFitter(object):
     """ Parallelized fitting of line spectra in a photoemission data patch.
@@ -505,7 +509,7 @@ class ParallelPatchFitter(object):
         self.inits_persist = self.fitters[0].inits_persist
         self.band_inits2D = self.fitters[0].band_inits2D
 
-    def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], para_kwds={}, scheduler='processes', backend='multiprocessing', ret=False, **kwds):
+    def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], para_kwds={}, scheduler='processes', backend='multiprocessing', pbar=False, ret=False, **kwds):
         """ Parallel pointwise spectrum fitting of the data patch.
 
         **Parameters**\n
@@ -552,7 +556,11 @@ class ParallelPatchFitter(object):
         n_workers = kwds.pop('num_workers', n_cpu)
         if backend == 'dask':
             fit_tasks = [dk.delayed(self._single_fit)(*args) for args in process_args]
-            fit_results = dk.compute(*fit_tasks, scheduler=scheduler, num_workers=n_workers, **para_kwds)
+            if pbar:
+                with ProgressBar():
+                    fit_results = dk.compute(*fit_tasks, scheduler=scheduler, num_workers=n_workers, **para_kwds)
+            else:
+                fit_results = dk.compute(*fit_tasks, scheduler=scheduler, num_workers=n_workers, **para_kwds)
 
         elif backend == 'concurrent':
             with ccf.ProcessPoolExecutor(max_workers=n_workers, **para_kwds) as executor:
@@ -560,7 +568,9 @@ class ParallelPatchFitter(object):
 
         elif backend == 'multiprocessing':
             pool = mp.Pool(processes=n_workers, **para_kwds)
-            fit_results = pool.starmap(self._single_fit, process_args)
+            fit_results = []
+            for fr in tqdm(pool.istarmap(self._single_fit, process_args), total=nspec, disable=not(pbar)):
+                fit_results.append(fr)
             pool.close()
             pool.join()
         
@@ -571,7 +581,7 @@ class ParallelPatchFitter(object):
             pool.join()
         
         elif backend == 'singles': # Run sequentially for debugging
-            fit_results = [self._single_fit(*args, **kwds) for args in process_args]
+            fit_results = [self._single_fit(*args, **kwds) for args in tqdm(process_args, disable=not(pbar))]
 
         else:
             raise NotImplementedError

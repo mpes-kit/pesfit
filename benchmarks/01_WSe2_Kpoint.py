@@ -149,7 +149,7 @@ else:
     en_range = slice(20, 400)
 
 ## Run the fitting benchmark
-nspec = 900
+nspec = 10
 
 if OPERATION == 'sequential':    
     kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], preftext=preftext)
@@ -174,11 +174,11 @@ if OPERATION == 'sequential':
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
         kfit = pf.fitter.ParallelPatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], nfitter=nspec)
-        
+
         kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
 
         tstart = time.perf_counter()
-        kfit.parallel_fit(jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nfitter=nspec, backend='multiprocessing', scheduler='processes')
+        kfit.parallel_fit(jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nfitter=nspec, backend='multiprocessing', scheduler='processes', pbar=False)
         tstop = time.perf_counter()
 
         if TIMECOUNT:

@@ -3,6 +3,7 @@ lmfit
 h5py
 pandas
 hdfio
+dask
 
 # build
 sphinx
