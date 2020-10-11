@@ -11,13 +11,14 @@ import argparse
 # Definitions of command line interaction
 parser = argparse.ArgumentParser(description='Input arguments')
 parser.add_argument('nband', metavar='nb', nargs='?', type=int, help='integer between 1 and 14')
-parser.add_argument('timecount', metavar='t', nargs='?', type=bool, help='whether to include time profiling')
+parser.add_argument('nspectra', metavar='ns', nargs='?', type=int, help='integer larger than 1')
 parser.add_argument('operation', metavar='op', nargs='?', type=str, help='what computing method to run the benchmark program with')
+parser.add_argument('timecount', metavar='t', nargs='?', type=bool, help='whether to include time profiling')
 parser.add_argument('persistent_init', metavar='pi', nargs='?', type=bool, help='initialization include persistent settings')
 parser.add_argument('varying_init', metavar='vi', nargs='?', type=str, help='initialization including varying settings')
 parser.add_argument('jitter_init', metavar='ji', nargs='?', type=bool, help='add jitter to initialization for better fits')
 parser.add_argument('preproc', metavar='pp', nargs='?', type=str, help='the stage of preprocessing used for fitting')
-parser.set_defaults(nband=2, timecount=True, operation='sequential', persistent_init=True, varying_init='recon', jitter_init=False, preproc='symmetrized')
+parser.set_defaults(nband=2, nspectra=10, operation='sequential', timecount=True, persistent_init=True, varying_init='recon', jitter_init=False, preproc='symmetrized')
 cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the K point of WSe2
@@ -27,10 +28,12 @@ PERSISTENT_INIT = cli_args.persistent_init
 NBAND = cli_args.nband
 if NBAND > 14 or NBAND < 1:
     raise ValueError('The number of bands to reconstruct is within [1, 14] for WSe2.')
-## Option to enable code profiling
-TIMECOUNT = cli_args.timecount
+## Number of line spectra to fit
+NSPECTRA = cli_args.nspectra
 ## Option for computing method ('sequential' or 'parallel')
 OPERATION = cli_args.operation
+## Option to enable code profiling
+TIMECOUNT = cli_args.timecount
 ## Specification of spectrum-dependent initial conditions ('theory' or 'recon')
 VARYING_INIT = cli_args.varying_init
 ## The preprocessing needed before fitting ('symmetrized', 'mclahe', 'mclahe_smooth')
@@ -149,7 +152,9 @@ else:
     en_range = slice(20, 400)
 
 ## Run the fitting benchmark
-nspec = 10
+pesdata_shape = pes_data['V'].shape
+maxspectra = pesdata_shape[0] * pesdata_shape[1]
+nspec = min([NSPECTRA, maxspectra])
 
 if OPERATION == 'sequential':    
     kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], preftext=preftext)
