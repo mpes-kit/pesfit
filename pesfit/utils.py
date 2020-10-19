@@ -3,6 +3,7 @@
 
 import numpy as np
 import pandas as pd
+from scipy.interpolate import RegularGridInterpolator as RGI
 from tqdm import notebook as nbk
 from tqdm import tqdm as tqdm_classic
 
@@ -165,23 +166,53 @@ def argpick(cliargs, argkey, defaults):
     return a
 
 
- def grid_indices(x, y, dtyp='float', ordering='rc', flatten=True):
+def grid_indices(x, y, dtyp='float', ordering='rc', flatten=True):
     """ Construct grid indices.
     """
     
     nx, ny = len(x), len(y)
-    
+
     if ordering == 'rc':
         grid = np.empty((ny, nx, 2), dtype=dtyp)
         grid[...,0] = y[:, None]
         grid[...,1] = x
-    
+
     elif ordering == 'xy':
         grid = np.empty((x, y, 2), dtype=dtyp)
         grid[...,0] = x[:, None]
         grid[...,1] = y
-    
+
     if flatten:
         grid = grid.reshape((nx*ny, 2))
         
     return grid
+
+
+def grid_resample(data, coords_axes, coords_new=None, grid_scale=None, zoom_scale=None, interpolator=RGI, **kwds):
+    """ Resample data to new resolution.
+    """
+    
+    nshape = list(map(len, coords_axes))
+    interp = interpolator(coords_axes, data, **kwds)
+    
+    if grid_scale is not None:
+        grid_scale = list(map(int, grid_scale))
+        coords_scaled = []
+        for ic, coo in enumerate(coords_axes):
+            coords_scaled.append(np.arange(coo[0], coo[-1], (coo[1] - coo[0]) / grid_scale[ic]))
+        coords_scaled = coords_scaled[::-1]
+        nshape = list(map(len, coords_scaled))
+        coords_new = grid_indices(*coords_scaled)
+    
+    elif (zoom_scale is not None) and (zoom_scale != 0):
+        if (zoom_scale < -1) or (zoom_scale > 1):
+            raise ValueError('Cannot interpolate beyond boundaries of original data!')
+        else:
+            coords_zoomed = [coo*zoom_scale for coo in coords_axes]
+            coords_new = grid_indices(*coords_zoomed)
+    
+    elif coords_new is None:
+        raise ValueError('Requires to specify coords_new or scale arguments.')
+        
+    resdata = interp(coords_new).reshape(nshape[::-1])
+    return resdata
