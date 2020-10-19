@@ -163,3 +163,25 @@ def argpick(cliargs, argkey, defaults):
         a = defaults[argkey.upper()]
     
     return a
+
+
+ def grid_indices(x, y, dtyp='float', ordering='rc', flatten=True):
+    """ Construct grid indices.
+    """
+    
+    nx, ny = len(x), len(y)
+    
+    if ordering == 'rc':
+        grid = np.empty((ny, nx, 2), dtype=dtyp)
+        grid[...,0] = y[:, None]
+        grid[...,1] = x
+    
+    elif ordering == 'xy':
+        grid = np.empty((x, y, 2), dtype=dtyp)
+        grid[...,0] = x[:, None]
+        grid[...,1] = y
+    
+    if flatten:
+        grid = grid.reshape((nx*ny, 2))
+        
+    return grid
