@@ -188,7 +188,7 @@ def grid_indices(x, y, dtyp='float', ordering='rc', flatten=True):
     return grid
 
 
-def grid_resample(data, coords_axes, coords_new=None, grid_scale=None, zoom_scale=None, interpolator=RGI, **kwds):
+def grid_resample(data, coords_axes, coords_new=None, grid_scale=None, zoom_scale=None, interpolator=RGI, ret='scaled', **kwds):
     """ Resample data to new resolution.
 
     **Parameters**\n
@@ -196,8 +196,16 @@ def grid_resample(data, coords_axes, coords_new=None, grid_scale=None, zoom_scal
         Data for resampling.
     coord_axes: list/tuple
         Current coordinates matching the dimensions of the input data
-    coords_new: list/tuple
+    coords_new: list/tuple | None
         New coordinates to resample the data with.
+    grid_scale: list/tuple | None
+        Scaling factors along every axis.
+    zoom_scale: numeric | None
+        Zooming-in factor.
+    interpolator: func | ``scipy.interpolate.RegularGridInterpolator``
+        Interpolation function.
+    **kwds: keyword arguments
+        Additional keyword arguments for the interpolation function.
     """
     
     nshape = list(map(len, coords_axes))
@@ -226,4 +234,8 @@ def grid_resample(data, coords_axes, coords_new=None, grid_scale=None, zoom_scal
         raise ValueError('Requires to specify coords_new or scale arguments.')
         
     resdata = interp(coords_new).reshape(nshape[::-1])
-    return resdata
+
+    if ret == 'scaled':
+        return resdata
+    elif ret == 'all':
+        return resdata, coords_new
