@@ -22,18 +22,24 @@ parser.set_defaults(nband=2, timecount=True, persistent_init=True, varying_init=
 cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the K point of WSe2
-# Option to introduce persistent initial conditions
-PERSISTENT_INIT = cli_args.persistent_init
-# Number of bands to fit
+## Number of bands to fit
 NBAND = cli_args.nband
-# Option to enable code profiling
+if NBAND > 14 or NBAND < 1:
+    raise ValueError('The number of bands to reconstruct is within [1, 14] for WSe2.')
+## Number of line spectra to fit
+NSPECTRA = cli_args.nspectra
+## Option for computing method ('sequential' or 'parallel')
+OPERATION = cli_args.operation
+## Option to enable code profiling
 TIMECOUNT = cli_args.timecount
-# Specification of spectrum-dependent initial conditions ('theory' or 'recon')
+## Option to introduce persistent initial conditions
+PERSISTENT_INIT = cli_args.persistent_init
+## Specification of spectrum-dependent initial conditions ('theory' or 'recon')
 VARYING_INIT = cli_args.varying_init
-# The preprocessing needed before fitting ('symmetrized', 'mclahe', 'mclahe_smooth')
-PREPROC = cli_args.preproc
-# Option to apply jittering to initializations to obtain better fitting results
+## Option to apply jittering to initializations to obtain better fitting results
 JITTER_INIT = cli_args.jitter_init
+## The preprocessing needed before fitting ('symmetrized', 'mclahe', 'mclahe_smooth')
+PREPROC = cli_args.preproc
 
 # Photoemission band mapping data
 data_dir = r'./data/WSe2'
