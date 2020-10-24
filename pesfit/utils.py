@@ -190,16 +190,27 @@ def grid_indices(x, y, dtyp='float', ordering='rc', flatten=True):
 
 def grid_resample(data, coords_axes, coords_new=None, grid_scale=None, zoom_scale=None, interpolator=RGI, **kwds):
     """ Resample data to new resolution.
+
+    **Parameters**\n
+    data: numpy.ndarray
+        Data for resampling.
+    coord_axes: list/tuple
+        Current coordinates matching the dimensions of the input data
+    coords_new: list/tuple
+        New coordinates to resample the data with.
     """
     
     nshape = list(map(len, coords_axes))
     interp = interpolator(coords_axes, data, **kwds)
     
     if grid_scale is not None:
-        grid_scale = list(map(int, grid_scale))
         coords_scaled = []
         for ic, coo in enumerate(coords_axes):
-            coords_scaled.append(np.arange(coo[0], coo[-1], (coo[1] - coo[0]) / grid_scale[ic]))
+            # If scaling factor is any real number, resample the axes coordinates.
+            nax = len(coords_axes[ic])
+            nstep_sc = int(np.rint(nax*grid_scale[ic]))
+            coo_sc = np.linspace(coo[0], coo[-1], nstep_sc, endpoint=True)
+            coords_scaled.append(coo_sc)
         coords_scaled = coords_scaled[::-1]
         nshape = list(map(len, coords_scaled))
         coords_new = grid_indices(*coords_scaled)
