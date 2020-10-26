@@ -524,7 +524,8 @@ class ParallelPatchFitter(object):
         scheduler: str | 'processes'
             Scheduler for parallelization ('processes' or 'threads', which can fail).
         backend: str | 'multiprocessing'
-            Backend for executing the parallelization ('dask', 'concurrent', 'multiprocessing', 'async'). Input 'singles' for sequential operation.
+            Backend for executing the parallelization ('dask', 'concurrent', 'multiprocessing', 'parmap', 'async').
+            Input 'singles' for sequential operation.
         ret: bool | False
             Option for returning the fitting outcome.
         **kwds: keyword arguments
@@ -532,6 +533,8 @@ class ParallelPatchFitter(object):
                 Number of spectra for fitting.
             num_workers: int | ``n_cpu``
                 Number of workers to use for the parallelization.
+            chunksize: int | integer from nfitter/num_worker
+                Number of tasks assigned to each worker (needs to be >=1).
         """
 
         n_cpu = mp.cpu_count()
@@ -684,8 +687,8 @@ def print_fit_result(params, printout=False, fpath='', mode='a', **kwds):
     """
 
     fr = fit_report(params, **kwds)
-    if printout:
-        
+    
+    if printout:        
         if fpath:
             with open(fpath, mode) as f:
                 print(fr, file=f)
