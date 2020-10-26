@@ -467,6 +467,10 @@ class PatchFitter(object):
 
 
 from . import istarmap
+try:
+    import parmap
+except:
+    pass
 import concurrent.futures as ccf
 import multiprocessing as mp
 import dask as dk
@@ -516,10 +520,18 @@ class ParallelPatchFitter(object):
         varkeys: list/tuple | ['value', 'vary']
         other_initvals: list/tuple | [True]
         para_kwds: dic | {}
+            Additional keyword arguments for the work scheduler.
         scheduler: str | 'processes'
+            Scheduler for parallelization ('processes' or 'threads', which can fail).
         backend: str | 'multiprocessing'
+            Backend for executing the parallelization ('dask', 'concurrent', 'multiprocessing', 'async'). Input 'singles' for sequential operation.
         ret: bool | False
+            Option for returning the fitting outcome.
         **kwds: keyword arguments
+            nfitter: int | ``self.nfitter``
+                Number of spectra for fitting.
+            num_workers: int | ``n_cpu``
+                Number of workers to use for the parallelization.
         """
 
         n_cpu = mp.cpu_count()
@@ -554,6 +566,8 @@ class ParallelPatchFitter(object):
         
         # Use different libraries for parallelization
         n_workers = kwds.pop('num_workers', n_cpu)
+        chunk_size = kwds.pop('chunksize', u.intnz(nspec/n_workers))
+        
         if backend == 'dask':
             fit_tasks = [dk.delayed(self._single_fit)(*args) for args in process_args]
             if pbar:
@@ -573,12 +587,24 @@ class ParallelPatchFitter(object):
                 fit_results.append(fr)
             pool.close()
             pool.join()
+
+        elif backend == 'parmap':
+            fit_results = parmap.starmap(self._single_fit, process_args, pm_processes=n_workers, pm_chunksize=chunk_size, pm_parallel=True, pm_pbar=pbar)
         
         elif backend == 'async':
-            pool = mp.Pool(processes=n_workers, **para_kwds)
-            fit_results = pool.starmap_async(self._single_fit, process_args).get()
-            pool.close()
-            pool.join()
+            fit_procs = parmap.starmap_async(self._single_fit, process_args, pm_processes=n_workers, pm_chunksize=chunk_size, pm_parallel=True)
+
+            fit_results = fit_procs.get()
+
+            # try:
+            #     parmap.parmap._do_pbar(fit_procs, num_tasks=nspec, chunksize=chunk_size)
+            # finally:
+            #     fit_results = fit_procs.get()
+
+            # pool = mp.Pool(processes=n_workers, **para_kwds)
+            # fit_results = pool.starmap_async(self._single_fit, process_args).get()
+            # pool.close()
+            # pool.join()
         
         elif backend == 'singles': # Run sequentially for debugging
             fit_results = [self._single_fit(*args, **kwds) for args in tqdm(process_args, disable=not(pbar))]
