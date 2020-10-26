@@ -23,7 +23,7 @@ parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bo
 parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='initialization include persistent settings')
 parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='initialization including varying settings')
 parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='add jitter to initialization for better fits')
-parser.add_argument('preproc', metavar='preproc', nargs='?', type=str, help='the stage of preprocessing used for fitting')
+parser.add_argument('-pp', '--preproc', metavar='preproc', nargs='?', type=str, help='the stage of preprocessing used for fitting')
 parser.set_defaults(nband=2, nspectra=10, operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False, preproc='symmetrized')
 cli_args = parser.parse_args()
 
