@@ -166,6 +166,17 @@ def argpick(cliargs, argkey, defaults):
     return a
 
 
+def intnz(num):
+    """ Output an integer at least larger than 1.
+    """
+
+    num = abs(num)
+    if num < 1:
+        return 1
+    else:
+        return np.rint(num).astype('int')
+
+
 def grid_indices(x, y, dtyp='float', ordering='rc', flatten=True):
     """ Construct grid indices.
     """
