@@ -7,18 +7,24 @@ import pesfit as pf
 import time
 from hdfio import dict_io as io
 import argparse
+import multiprocessing as mp
+
+n_cpu = mp.cpu_count()
 
 # Definitions of command line interaction
 parser = argparse.ArgumentParser(description='Input arguments')
-parser.add_argument('nband', metavar='nb', nargs='?', type=int, help='integer between 1 and 14')
-parser.add_argument('timecount', metavar='t', nargs='?', type=bool, help='whether to include time profiling')
-parser.add_argument('operation', metavar='op', nargs='?', type=str, help='what computing method to run the benchmark program with')
-parser.add_argument('persistent_init', metavar='pi', nargs='?', type=bool, help='initialization include persistent settings')
-parser.add_argument('varying_init', metavar='vi', nargs='?', type=str, help='initialization including varying settings')
-parser.add_argument('jitter_init', metavar='ji', nargs='?', type=bool, help='add jitter to initialization for better fits')
-parser.add_argument('preproc', metavar='pp', nargs='?', type=str, help='the stage of preprocessing used for fitting')
-parser.set_defaults(nband=2, timecount=True, persistent_init=True, varying_init='recon',
-                    jitter_init=False, preproc='symmetrized')
+parser.add_argument('-nb', '--nband', metavar='nband', nargs='?', type=int, help='integer between 1 and 14')
+parser.add_argument('-ns', '--nspectra', metavar='nspectra', nargs='?', type=int, help='integer larger than 1')
+parser.add_argument('-op', '--operation', metavar='operation', nargs='?', type=str, help='what computing method to run the benchmark program with')
+parser.add_argument('-bk', '--backend', metavar='backend', nargs='?', type=str, help='backend software package used for execution (in paralleli or in sequence)')
+parser.add_argument('-nw', '--nworker', metavar='nworker', nargs='?', type=int, help='number of workers to spawn')
+parser.add_argument('-cs', '--chunksize', metavar='chunksize', nargs='?', type=int, help='The chunk size of tasks assigned to each worker.')
+parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bool, help='whether to include time profiling')
+parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='initialization include persistent settings')
+parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='initialization including varying settings')
+parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='add jitter to initialization for better fits')
+parser.add_argument('preproc', metavar='preproc', nargs='?', type=str, help='the stage of preprocessing used for fitting')
+parser.set_defaults(nband=2, nspectra=10, operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False, preproc='symmetrized')
 cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the K point of WSe2
@@ -30,6 +36,8 @@ if NBAND > 14 or NBAND < 1:
 NSPECTRA = cli_args.nspectra
 ## Option for computing method ('sequential' or 'parallel')
 OPERATION = cli_args.operation
+## Number of workers to use in running the benchmark
+NWORKER = cli_args.nworker
 ## Option to enable code profiling
 TIMECOUNT = cli_args.timecount
 ## Option to introduce persistent initial conditions
