@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Integrated fitting workflow (pesfit.fitter) &mdash; pesfit 0.5.2 documentation</title>
+  <title>Integrated fitting workflow (pesfit.fitter) &mdash; pesfit 0.5.5 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.5.2 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.5.5 documentation" href="index.html"/>
         <link rel="next" title="Utility functions (pesfit.utils)" href="utils.html"/>
         <link rel="prev" title="Complex lineshape models (pesfit.lineshape)" href="lineshape.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.5
               </div>
             
           
@@ -182,16 +182,33 @@
 
 <dl class="py method">
 <dt id="pesfit.fitter.ParallelPatchFitter.parallel_fit">
-<code class="sig-name descname">parallel_fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">varkeys</span><span class="o">=</span><span class="default_value">['value', 'vary']</span></em>, <em class="sig-param"><span class="n">other_initvals</span><span class="o">=</span><span class="default_value">[True]</span></em>, <em class="sig-param"><span class="n">para_kwds</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">scheduler</span><span class="o">=</span><span class="default_value">'processes'</span></em>, <em class="sig-param"><span class="n">backend</span><span class="o">=</span><span class="default_value">'multiprocessing'</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.ParallelPatchFitter.parallel_fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parallel_fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">varkeys</span><span class="o">=</span><span class="default_value">['value', 'vary']</span></em>, <em class="sig-param"><span class="n">other_initvals</span><span class="o">=</span><span class="default_value">[True]</span></em>, <em class="sig-param"><span class="n">para_kwds</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">scheduler</span><span class="o">=</span><span class="default_value">'processes'</span></em>, <em class="sig-param"><span class="n">backend</span><span class="o">=</span><span class="default_value">'multiprocessing'</span></em>, <em class="sig-param"><span class="n">pbar</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.ParallelPatchFitter.parallel_fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parallel pointwise spectrum fitting of the data patch.</p>
 <p><strong>Parameters</strong></p>
 <p>varkeys: list/tuple | [‘value’, ‘vary’]
 other_initvals: list/tuple | [True]
-para_kwds: dic | {}
-scheduler: str | ‘processes’
-backend: str | ‘multiprocessing’
-ret: bool | False
-<a href="#id1"><span class="problematic" id="id2">**</span></a>kwds: keyword arguments</p>
+para_kwds: dic | {}</p>
+<blockquote>
+<div><p>Additional keyword arguments for the work scheduler.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>scheduler: str | ‘processes’</dt><dd><p>Scheduler for parallelization (‘processes’ or ‘threads’, which can fail).</p>
+</dd>
+<dt>backend: str | ‘multiprocessing’</dt><dd><p>Backend for executing the parallelization (‘dask’, ‘concurrent’, ‘multiprocessing’, ‘parmap’, ‘async’).
+Input ‘singles’ for sequential operation.</p>
+</dd>
+<dt>ret: bool | False</dt><dd><p>Option for returning the fitting outcome.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwds: keyword arguments</dt><dd><dl class="simple">
+<dt>nfitter: int | <code class="docutils literal notranslate"><span class="pre">self.nfitter</span></code></dt><dd><p>Number of spectra for fitting.</p>
+</dd>
+<dt>num_workers: int | <code class="docutils literal notranslate"><span class="pre">n_cpu</span></code></dt><dd><p>Number of workers to use for the parallelization.</p>
+</dd>
+<dt>chunksize: int | integer from nfitter/num_worker</dt><dd><p>Number of tasks assigned to each worker (needs to be &gt;=1).</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -555,7 +572,7 @@ ret: bool | False
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.2',
+            VERSION:'0.5.5',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.5.2 documentation</title>
+  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.5.5 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.5.2 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.5.5 documentation" href="index.html"/>
         <link rel="prev" title="Integrated fitting workflow (pesfit.fitter)" href="fitter.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.5
               </div>
             
           
@@ -221,6 +221,41 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="pesfit.utils.grid_indices">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">grid_indices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">dtyp</span><span class="o">=</span><span class="default_value">'float'</span></em>, <em class="sig-param"><span class="n">ordering</span><span class="o">=</span><span class="default_value">'rc'</span></em>, <em class="sig-param"><span class="n">flatten</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.grid_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct grid indices.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.utils.grid_resample">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">grid_resample</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">coords_axes</em>, <em class="sig-param">coords_new=None</em>, <em class="sig-param">grid_scale=None</em>, <em class="sig-param">zoom_scale=None</em>, <em class="sig-param">interpolator=&lt;class 'scipy.interpolate.interpolate.RegularGridInterpolator'&gt;</em>, <em class="sig-param">ret='scaled'</em>, <em class="sig-param">**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.grid_resample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resample data to new resolution.</p>
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt>data: numpy.ndarray</dt><dd><p>Data for resampling.</p>
+</dd>
+<dt>coord_axes: list/tuple</dt><dd><p>Current coordinates matching the dimensions of the input data</p>
+</dd>
+<dt>coords_new: list/tuple | None</dt><dd><p>New coordinates to resample the data with.</p>
+</dd>
+<dt>grid_scale: list/tuple | None</dt><dd><p>Scaling factors along every axis.</p>
+</dd>
+<dt>zoom_scale: numeric | None</dt><dd><p>Zooming-in factor.</p>
+</dd>
+<dt>interpolator: func | <code class="docutils literal notranslate"><span class="pre">scipy.interpolate.RegularGridInterpolator</span></code></dt><dd><p>Interpolation function.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwds: keyword arguments</dt><dd><p>Additional keyword arguments for the interpolation function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.utils.intnz">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">intnz</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.intnz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output an integer at least larger than 1.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pesfit.utils.partial_flatten">
 <code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">partial_flatten</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arr</span></em>, <em class="sig-param"><span class="n">axis</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.partial_flatten" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partially flatten a multidimensional array.</p>
@@ -244,7 +279,7 @@
 <dd><p>Interleave multiple arrays of the same number of elements.</p>
 <p><strong>Parameter</strong></p>
 <dl class="simple">
-<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>arr: array</dt><dd><p>A number of arrays</p>
+<dt><a href="#id3"><span class="problematic" id="id4">*</span></a>arr: array</dt><dd><p>A number of arrays</p>
 </dd>
 </dl>
 <p><strong>Return</strong></p>
@@ -312,7 +347,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.2',
+            VERSION:'0.5.5',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

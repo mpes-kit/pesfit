@@ -12,14 +12,15 @@ The fitting part of the package builds and improves on the existing ``Model`` an
 
 .. toctree::
    :caption: Instructions
-   :maxdepth: 1
+   :maxdepth: 2
    
    I01_start
+   I02_benchmark
 
 
 .. toctree::
    :caption: API documentation
-   :maxdepth: 1
+   :maxdepth: 2
 
    lineshape
    fitter
