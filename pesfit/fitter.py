@@ -136,7 +136,7 @@ def varsetter(params, inits={}, ret=False):
     """ Function to set the parameter constrains in multiparameter fitting.
     
     **Parameters**\n
-    params: ``lmfit.parameter.Parameter`` or other subclass of dict
+    params: ``lmfit.parameter.Parameter`` or other subclass of dict.
         Parameter dictionary.
     init: dict | {}
         Initialization value dictionary.
@@ -320,7 +320,7 @@ class PatchFitter(object):
         if ftype == 'h5':
             self.df_fit = pd.read_hdf(path, **kwds)
 
-    def set_inits(self, inits_dict=None, xdata=None, band_inits=None, drange=None):
+    def set_inits(self, inits_dict=None, xdata=None, band_inits=None, drange=None, offset=0):
         """ Set the persistent part of initialization parameters.
 
         **Parameters**\n
@@ -332,6 +332,8 @@ class PatchFitter(object):
             Initialization for the band energy values.
         drange: slice object | None
             Slice object corresponding to the energy range to select (None or slice(None, None) means selecting all values).
+        offset: numeric | 0
+            Global (energy) offset for the band positions.
         """
         
         if inits_dict is not None:
@@ -349,7 +351,7 @@ class PatchFitter(object):
         try:
             if band_inits is not None:
                 self.band_inits = band_inits
-            self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2))
+            self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2)) + offset
         except:
             raise Exception('Cannot reshape the initialization!')
     
@@ -394,7 +396,7 @@ class PatchFitter(object):
         # Number of spectrum to fit (for diagnostics)
         nspec = kwds.pop('nspec', self.nspec)
         
-        # Construct the variable initialization parameters for all spectra
+        # Construct the variable initialization parameters (usu. band positions) for all spectra
         # TODO: a better handling of nested dictionary generation
         varyvals = self.band_inits2D[:self.model.nlp, :nspec]
         if other_initvals is not None:
@@ -498,12 +500,13 @@ class ParallelPatchFitter(object):
         
         return self.fitters[0].nspec
 
-    def set_inits(self, inits_dict=None, xdata=None, band_inits=None, drange=None):
+    def set_inits(self, inits_dict=None, xdata=None, band_inits=None, drange=None, offset=0):
         """ Set initialization for all constituent fitters.
+        Parameters see ``set_inits()`` method in ``pesfit.fitter.PatchFitter`` class.
         """
         
         for i in range(self.nfitter):
-            self.fitters[i].set_inits(inits_dict=inits_dict, band_inits=band_inits, drange=drange)
+            self.fitters[i].set_inits(inits_dict=inits_dict, band_inits=band_inits, drange=drange, offset=offset)
         if xdata is None:
             self.xvals = self.xdata[drange]
         else:
@@ -518,7 +521,9 @@ class ParallelPatchFitter(object):
 
         **Parameters**\n
         varkeys: list/tuple | ['value', 'vary']
+            Collection of parameter keys to set ('value', 'min', 'max', 'vary').
         other_initvals: list/tuple | [True]
+            Initialization values for spectrum-dependent variables. Supply a list/tuple of size 1 or the same size as the number of spectra.
         para_kwds: dic | {}
             Additional keyword arguments for the work scheduler.
         scheduler: str | 'processes'
@@ -621,7 +626,7 @@ class ParallelPatchFitter(object):
             self.df_fit = dfout
             # print_fit_result(fres.params, printout=True)
 
-        # Sort values by `spec_id`
+        # Sort values by `spec_id` (relevant for unordered parallel fitting)
         self.df_fit.sort_values('spec_id', ascending=True, inplace=True)
 
         if ret:
@@ -687,7 +692,7 @@ def print_fit_result(params, printout=False, fpath='', mode='a', **kwds):
     """
 
     fr = fit_report(params, **kwds)
-    
+
     if printout:        
         if fpath:
             with open(fpath, mode) as f:

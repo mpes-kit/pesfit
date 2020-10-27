@@ -147,6 +147,13 @@ class MultipeakModel(Model):
         
         return reduce(self.op, [comp.eval(params=params, **kwargs) for comp in self.components])
 
+    # def eval_parallel(self, params=None, **kwargs):
+    #     """ Parallelized evaluation of the entire lineshape model.
+    #     """
+        
+    #     mapper = mr.MapReduce(lambda obj: obj.eval(params=params, **kwargs), self.op)
+    #     return mapper(self.components)
+
     def eval_components(self, **kwargs):
         """ Return OrderedDict of name, results for each component.
         """
@@ -185,7 +192,7 @@ class MultipeakModel(Model):
         """
         
         return reduce(op, map(lambda obj, fev: fev(obj, *args, **kwargs), objs, fevs))
-    
+ 
     def multi_retrieve(self, prop, op=operator.add):
         """ Retrieve the specified properties for all components in the multipeak model.
 
