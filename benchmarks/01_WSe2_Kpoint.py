@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import os
-import pesfit as pf
 import numpy as np
+import pesfit as pf
 import time
 from hdfio import dict_io as io
 import argparse
@@ -13,18 +13,19 @@ n_cpu = mp.cpu_count()
 
 # Definitions of command line interaction
 parser = argparse.ArgumentParser(description='Input arguments')
-parser.add_argument('-nb', '--nband', metavar='nband', nargs='?', type=int, help='integer between 1 and 14')
-parser.add_argument('-ns', '--nspectra', metavar='nspectra', nargs='?', type=int, help='integer larger than 1')
-parser.add_argument('-op', '--operation', metavar='operation', nargs='?', type=str, help='what computing method to run the benchmark program with')
-parser.add_argument('-bk', '--backend', metavar='backend', nargs='?', type=str, help='backend software package used for execution (in paralleli or in sequence)')
-parser.add_argument('-nw', '--nworker', metavar='nworker', nargs='?', type=int, help='number of workers to spawn')
-parser.add_argument('-cs', '--chunksize', metavar='chunksize', nargs='?', type=int, help='The chunk size of tasks assigned to each worker.')
-parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bool, help='whether to include time profiling')
-parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='initialization include persistent settings')
-parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='initialization including varying settings')
-parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='add jitter to initialization for better fits')
-parser.add_argument('-pp', '--preproc', metavar='preproc', nargs='?', type=str, help='the stage of preprocessing used for fitting')
-parser.set_defaults(nband=2, nspectra=10, operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False, preproc='symmetrized')
+parser.add_argument('-nb', '--nband', metavar='nband', nargs='?', type=int, help='Number of bands in fitting model, needs an integer between 1 and 14')
+parser.add_argument('-ns', '--nspectra', metavar='nspectra', nargs='?', type=int, help='Number of spectra to fit, needs an integer larger than 1')
+parser.add_argument('-ofs', '--eoffset', metavar='eoffset', nargs='?', type=float, help='Global energy offset')
+parser.add_argument('-op', '--operation', metavar='operation', nargs='?', type=str, help='What computing method to run the benchmark program with')
+parser.add_argument('-bk', '--backend', metavar='backend', nargs='?', type=str, help='Backend software package used for execution (in paralleli or in sequence)')
+parser.add_argument('-nw', '--nworker', metavar='nworker', nargs='?', type=int, help='Number of workers to spawn')
+parser.add_argument('-cs', '--chunksize', metavar='chunksize', nargs='?', type=int, help='Chunk size of tasks assigned to each worker')
+parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bool, help='Whether to include time profiling')
+parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='Initialization include persistent settings')
+parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='Initialization including varying settings')
+parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='Add jitter to initialization for better fits')
+parser.add_argument('-pp', '--preproc', metavar='preproc', nargs='?', type=str, help='Stage of preprocessing used for fitting')
+parser.set_defaults(nband=2, nspectra=10, eoffset=0., operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False, preproc='symmetrized')
 cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the K point of WSe2
@@ -34,6 +35,8 @@ if NBAND > 14 or NBAND < 1:
     raise ValueError('The number of bands to reconstruct is within [1, 14] for WSe2.')
 ## Number of line spectra to fit
 NSPECTRA = cli_args.nspectra
+## Global energy offset for band fitting initialization
+EOFFSET = cli_args.eoffset
 ## Option for computing method ('sequential' or 'parallel')
 OPERATION = cli_args.operation
 ## Backend software package for execution
@@ -133,7 +136,7 @@ if PERSISTENT_INIT:
         vals = vardict['14']
         vardict_other = {}
         lp_exclude = [preftext+str(i)+'_' for i in range(NBAND+1, 15)]
-        print(lp_exclude)
+        # print(lp_exclude)
         for inits in vardict['14']:
             for lpn, lpv in inits.items():
                 if lpn in lp_exclude:
@@ -192,7 +195,8 @@ elif OPERATION == 'parallel':
     if __name__ == '__main__':
         kfit = pf.fitter.ParallelPatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], nfitter=nspec)
 
-        kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
+        kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range, offset=EOFFSET)
+        print(EOFFSET)
 
         if CHUNKSIZE > 0:
             tstart = time.perf_counter()
