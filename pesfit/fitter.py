@@ -248,7 +248,7 @@ class PatchFitter(object):
     xdata: 1D array
         Energy coordinates for photoemission line spectrum fitting.
     ydata: numpy array
-        Photoemission spectral data for fitting (2D or 3D).
+        Photoemission spectral data for fitting (2D or 3D). The default shape is that the last dimension is energy.
     model: instance of ``lmfit.model.Model`` or ``pesfit.lineshape.MultipeakModel``
         Existing universal lineshape model for fitting (all spectra).
     peaks: dict | {'Voigt':2}
@@ -265,7 +265,10 @@ class PatchFitter(object):
         self.ydata = ydata
 
         if self.ydata is not None:
-            self.patch_shape = self.ydata.shape
+            if self.ydata.ndim == 3:
+                self.patch_shape = self.ydata.shape
+            elif self.ydata.ndim == 2:
+                self.patch_shape = self.ydata[None,:,:].shape
             self.patch_r, self.patch_c, self.elen = self.patch_shape
         
         if model is None:
@@ -303,7 +306,10 @@ class PatchFitter(object):
         self.load(attrname='ydata', **kwds)
 
         if self.ydata is not None:
-            self.patch_shape = self.ydata.shape
+            if self.ydata.ndim == 3:
+                self.patch_shape = self.ydata.shape
+            elif self.ydata.ndim == 2:
+                self.patch_shape = self.ydata[None,:,:].shape
             self.patch_r, self.patch_c, self.elen = self.patch_shape
     
     def load_band_inits(self, **kwds):
@@ -346,12 +352,18 @@ class PatchFitter(object):
             self.xvals = self.xdata[drange]
         else:
             self.xvals = xdata
-        self.ydata2D = u.partial_flatten(self.ydata[...,self.drange], axis=(0, 1))
+        if self.ydata.ndim == 3:
+            self.ydata2D = u.partial_flatten(self.ydata[...,self.drange], axis=(0, 1))
+        elif self.ydata.ndim == 2:
+            self.ydata2D = self.ydata[...,self.drange].copy()
         
         try:
             if band_inits is not None:
                 self.band_inits = band_inits
-            self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2)) + offset
+                if self.band_inits.ndim == 3:
+                    self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2)) + offset
+                elif self.band_inits.ndim == 2:
+                    self.band_inits2D = self.band_inits + offset
         except:
             raise Exception('Cannot reshape the initialization!')
     
