@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Integrated fitting workflow (pesfit.fitter) &mdash; pesfit 0.5.5 documentation</title>
+  <title>Integrated fitting workflow (pesfit.fitter) &mdash; pesfit 0.5.6 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.5.5 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.5.6 documentation" href="index.html"/>
         <link rel="next" title="Utility functions (pesfit.utils)" href="utils.html"/>
         <link rel="prev" title="Complex lineshape models (pesfit.lineshape)" href="lineshape.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.5.5
+                0.5.6
               </div>
             
           
@@ -93,6 +93,7 @@
               <p class="caption"><span class="caption-text">Instructions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="I01_start.html">How to start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="I02_benchmark.html">Fitting benchmarks</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API documentation</span></p>
 <ul class="current">
@@ -185,13 +186,13 @@
 <code class="sig-name descname">parallel_fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">varkeys</span><span class="o">=</span><span class="default_value">['value', 'vary']</span></em>, <em class="sig-param"><span class="n">other_initvals</span><span class="o">=</span><span class="default_value">[True]</span></em>, <em class="sig-param"><span class="n">para_kwds</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">scheduler</span><span class="o">=</span><span class="default_value">'processes'</span></em>, <em class="sig-param"><span class="n">backend</span><span class="o">=</span><span class="default_value">'multiprocessing'</span></em>, <em class="sig-param"><span class="n">pbar</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ret</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.ParallelPatchFitter.parallel_fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parallel pointwise spectrum fitting of the data patch.</p>
 <p><strong>Parameters</strong></p>
-<p>varkeys: list/tuple | [‘value’, ‘vary’]
-other_initvals: list/tuple | [True]
-para_kwds: dic | {}</p>
-<blockquote>
-<div><p>Additional keyword arguments for the work scheduler.</p>
-</div></blockquote>
 <dl class="simple">
+<dt>varkeys: list/tuple | [‘value’, ‘vary’]</dt><dd><p>Collection of parameter keys to set (‘value’, ‘min’, ‘max’, ‘vary’).</p>
+</dd>
+<dt>other_initvals: list/tuple | [True]</dt><dd><p>Initialization values for spectrum-dependent variables. Supply a list/tuple of size 1 or the same size as the number of spectra.</p>
+</dd>
+<dt>para_kwds: dic | {}</dt><dd><p>Additional keyword arguments for the work scheduler.</p>
+</dd>
 <dt>scheduler: str | ‘processes’</dt><dd><p>Scheduler for parallelization (‘processes’ or ‘threads’, which can fail).</p>
 </dd>
 <dt>backend: str | ‘multiprocessing’</dt><dd><p>Backend for executing the parallelization (‘dask’, ‘concurrent’, ‘multiprocessing’, ‘parmap’, ‘async’).
@@ -219,8 +220,9 @@ Input ‘singles’ for sequential operation.</p>
 
 <dl class="py method">
 <dt id="pesfit.fitter.ParallelPatchFitter.set_inits">
-<code class="sig-name descname">set_inits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inits_dict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xdata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">band_inits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">drange</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.ParallelPatchFitter.set_inits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set initialization for all constituent fitters.</p>
+<code class="sig-name descname">set_inits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inits_dict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xdata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">band_inits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">drange</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.ParallelPatchFitter.set_inits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set initialization for all constituent fitters.
+Parameters see <code class="docutils literal notranslate"><span class="pre">set_inits()</span></code> method in <code class="docutils literal notranslate"><span class="pre">pesfit.fitter.PatchFitter</span></code> class.</p>
 </dd></dl>
 
 </dd></dl>
@@ -233,7 +235,7 @@ Input ‘singles’ for sequential operation.</p>
 <dl class="simple">
 <dt>xdata: 1D array</dt><dd><p>Energy coordinates for photoemission line spectrum fitting.</p>
 </dd>
-<dt>ydata: numpy array</dt><dd><p>Photoemission spectral data for fitting (2D or 3D).</p>
+<dt>ydata: numpy array</dt><dd><p>Photoemission spectral data for fitting (2D or 3D). The default shape is that the last dimension is energy.</p>
 </dd>
 <dt>model: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.Model</span></code> or <code class="docutils literal notranslate"><span class="pre">pesfit.lineshape.MultipeakModel</span></code></dt><dd><p>Existing universal lineshape model for fitting (all spectra).</p>
 </dd>
@@ -321,7 +323,7 @@ Input ‘singles’ for sequential operation.</p>
 
 <dl class="py method">
 <dt id="pesfit.fitter.PatchFitter.set_inits">
-<code class="sig-name descname">set_inits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inits_dict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xdata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">band_inits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">drange</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.PatchFitter.set_inits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_inits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inits_dict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xdata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">band_inits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">drange</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.fitter.PatchFitter.set_inits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the persistent part of initialization parameters.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
@@ -332,6 +334,8 @@ Input ‘singles’ for sequential operation.</p>
 <dt>band_inits: numpy array | None</dt><dd><p>Initialization for the band energy values.</p>
 </dd>
 <dt>drange: slice object | None</dt><dd><p>Slice object corresponding to the energy range to select (None or slice(None, None) means selecting all values).</p>
+</dd>
+<dt>offset: numeric | 0</dt><dd><p>Global (energy) offset for the band positions.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -517,7 +521,7 @@ Input ‘singles’ for sequential operation.</p>
 <dd><p>Function to set the parameter constrains in multiparameter fitting.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt>params: <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameter</span></code> or other subclass of dict</dt><dd><p>Parameter dictionary.</p>
+<dt>params: <code class="docutils literal notranslate"><span class="pre">lmfit.parameter.Parameter</span></code> or other subclass of dict.</dt><dd><p>Parameter dictionary.</p>
 </dd>
 <dt>init: dict | {}</dt><dd><p>Initialization value dictionary.</p>
 </dd>
@@ -572,7 +576,7 @@ Input ‘singles’ for sequential operation.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.5',
+            VERSION:'0.5.6',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -583,6 +587,7 @@ Input ‘singles’ for sequential operation.</p>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
       <script type="text/javascript" src="_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
