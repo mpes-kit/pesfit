@@ -15,6 +15,7 @@ n_cpu = mp.cpu_count()
 parser = argparse.ArgumentParser(description='Input arguments')
 parser.add_argument('-nb', '--nband', metavar='nband', nargs='?', type=int, help='Number of bands in fitting model, needs an integer between 1 and 14')
 parser.add_argument('-ns', '--nspectra', metavar='nspectra', nargs='?', type=int, help='Number of spectra to fit, needs an integer larger than 1')
+parser.add_argument('-ds', '--datasource', metavar='datasource', nargs='?', type=str, help='Name of the data source for band fitting')
 parser.add_argument('-ofs', '--eoffset', metavar='eoffset', nargs='?', type=float, help='Global energy offset')
 parser.add_argument('-op', '--operation', metavar='operation', nargs='?', type=str, help='What computing method to run the benchmark program with')
 parser.add_argument('-bk', '--backend', metavar='backend', nargs='?', type=str, help='Backend software package used for execution (in paralleli or in sequence)')
@@ -24,15 +25,16 @@ parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bo
 parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='Initialization include persistent settings')
 parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='Initialization including varying settings')
 parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='Add jitter to initialization for better fits')
-parser.add_argument('-pp', '--preproc', metavar='preproc', nargs='?', type=str, help='Stage of preprocessing used for fitting')
-parser.set_defaults(nband=2, nspectra=10, eoffset=0., operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False, preproc='symmetrized')
+parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=0., operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False)
 cli_args = parser.parse_args()
 
-# Sequential fitting of photoemission data patch around the K point of WSe2
+# Sequential fitting of photoemission data patch around the M point of WSe2
 ## Number of bands to fit
 NBAND = cli_args.nband
 if NBAND > 14 or NBAND < 1:
     raise ValueError('The number of bands to reconstruct is within [1, 14] for WSe2.')
+## Data source used for band fitting, ('symmetrized', 'preprocessed')
+DATASOURCE = cli_args.datasource
 ## Number of line spectra to fit
 NSPECTRA = cli_args.nspectra
 ## Global energy offset for band fitting initialization
@@ -53,24 +55,26 @@ PERSISTENT_INIT = cli_args.persistent_init
 VARYING_INIT = cli_args.varying_init
 ## Option to apply jittering to initializations to obtain better fitting results
 JITTER_INIT = cli_args.jitter_init
-## The preprocessing needed before fitting ('symmetrized', 'mclahe', 'mclahe_smooth')
-PREPROC = cli_args.preproc
 
 # Photoemission band mapping data
-data_dir = r'./data/WSe2'
-pes_fname = r'/pes/mpoint/mpoint_symmetrized.h5'
+data_dir = r'../data/WSe2'
+pes_fname = r'/pes/mpoint/mpoint_{}.h5'.format(DATASOURCE)
 pes_path = data_dir + pes_fname
 pes_data = io.h5_to_dict(pes_path)
 
-# Theoretical calculations interpolated to the same momentum grid (as one type of initialization)
-theo_fname = r'/theory/mpoint/mpoint_LDA.h5'
-theo_path = data_dir + theo_fname
-theo_data = io.h5_to_dict(theo_path)
+if VARYING_INIT == 'theory':
+    # Theoretical calculations interpolated to the same momentum grid (as one type of initialization)
+    theo_fname = r'/theory/mpoint/mpoint_LDA.h5'
+    theo_path = data_dir + theo_fname
+    theo_data = io.h5_to_dict(theo_path)['bands']
+    inits_vary = theo_data
 
-# Reconstructed photoemission band dispersion (as another type of initialization)
-recon_fname = r'/recon/mpoint/mpoint_LDA_recon.h5'
-recon_path = data_dir + recon_fname
-recon_data = io.h5_to_dict(recon_path)
+elif VARYING_INIT == 'recon':
+    # Reconstructed photoemission band dispersion (as another type of initialization)
+    recon_fname = r'/recon/mpoint/mpoint_LDA_recon.h5'
+    recon_path = data_dir + recon_fname
+    recon_data = io.h5_to_dict(recon_path)['recon']
+    inits_vary = recon_data
 
 # Setting initial conditions persistent throughout the fitting. These fixed constraints are tested for fitting the band dispersion nearby the M' point of WSe2 and are required to make the fitting relatively stable!
 if PERSISTENT_INIT:
@@ -78,7 +82,7 @@ if PERSISTENT_INIT:
     preftext = 'lp'
     lp_prefixes = [preftext+str(i)+'_' for i in range(1, NBAND+1)]
 
-    ## Case of 2 bands near K point
+    ## Case of 2 bands near M point
     vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
                     'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
                     'gamma':dict(value=0.02, min=0, max=2, vary=True)}},
@@ -87,7 +91,7 @@ if PERSISTENT_INIT:
                         'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
                         'gamma':dict(value=0.02, min=0, max=2, vary=True)}}]
 
-    ## Case of 4 bands near K point
+    ## Case of 4 bands near M point
     vardict['04'] = [{'lp3_':{'amplitude':dict(value=0.2, min=0, max=2, vary=1.),
                     'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
                     'gamma':dict(value=0.02, min=0, max=2, vary=True),
@@ -99,11 +103,11 @@ if PERSISTENT_INIT:
                     'center':dict(vary=True)}}]
     vardict['04'] = vardict['02'] + vardict['04']
 
-    ## Case of 8 bands near K point
+    ## Case of 8 bands near M point
     vardict['08'] = []
     vardict['08'] = vardict['04'] + vardict['08']
 
-    ## Case of 14 bands near K point
+    ## Case of 14 bands near M point
     amplitudes = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='sigma',
                                         varkeys=['value', 'min', 'max', 'vary'],
                                         parvals=[[0.5, 0, 2, True] for i in range(14-4)])
@@ -127,23 +131,16 @@ if PERSISTENT_INIT:
                     vals.pop(lpn)
         vardict_other[str(NBAND).zfill(2)] = vals
 
-if TIMECOUNT:
-    tstart = time.perf_counter()
-
 # Set up and run the fitting routine
-## Fitting model initialization
-mfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], preftext=preftext)
-
-## Specify the set of initialization to apply to the fitting
+## Specify the sets of initialization to apply to the fitting
 if PERSISTENT_INIT:
-    inits_persist = vardict[str(int(NBAND)).zfill(2)]
+    bandkey = str(int(NBAND)).zfill(2)
+    try:
+        inits_persist = vardict[bandkey]
+    except:
+        inits_persist = vardict_other[bandkey]
 else:
     inits_persist = None
-
-if VARYING_INIT == 'theory':
-    inits_vary = theo_data
-elif VARYING_INIT == 'recon':
-    inits_vary = recon_data
 
 ## Select energy axis data range used for fitting
 if NBAND == 2:
@@ -154,17 +151,59 @@ elif NBAND == 8:
     en_range = slice(20, 320)
 elif NBAND == 14:
     en_range = slice(20, 470)
+else:
+    en_range = slice(20, 400)
 
-mfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
-mfit.sequential_fit(pbar=False, jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=900)
+## Run the fitting benchmark
+pesdata_shape = pes_data['V'].shape
+maxspectra = pesdata_shape[0] * pesdata_shape[1]
+nspec = min([NSPECTRA, maxspectra])
 
-if TIMECOUNT:
+if OPERATION == 'sequential':    
+    kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], preftext=preftext)
+
+    kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
+
+    tstart = time.perf_counter()
+    kfit.sequential_fit(pbar=True, pbenv='classic', jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=nspec)
     tstop = time.perf_counter()
-    tdiff =  tstop - tstart
 
-# Save the fitting outcome
-out_dir = r'../data/WSe2/benchmark'
-if not os.path.exists(out_dir):
-    os.makedirs(out_dir)
+    if TIMECOUNT:
+        tdiff =  tstop - tstart
+        print('Fitting took {} seconds'.format(tdiff))
 
-mfit.save_data(fdir=out_dir, fname='/mpoint_symmetrized_fit_nband={}.h5'.format(NBAND))
+    ## Save the fitting outcome
+    out_dir = r'../data/WSe2/benchmark'
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+
+    kfit.save_data(fdir=out_dir, fname='/mpoint_{}_seqfit_nband={}_ofs={}_{}.h5'.format(DATASOURCE,NBAND,EOFFSET,VARYING_INIT))
+
+elif OPERATION == 'parallel':
+    if __name__ == '__main__':
+        kfit = pf.fitter.ParallelPatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], nfitter=nspec)
+
+        kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range, offset=EOFFSET)
+        print(EOFFSET)
+
+        if CHUNKSIZE > 0:
+            tstart = time.perf_counter()
+            kfit.parallel_fit(jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nfitter=nspec, backend=BACKEND, scheduler='processes', num_workers=NWORKER, chunksize=CHUNKSIZE, pbar=True)
+        else:
+            tstart = time.perf_counter()
+            kfit.parallel_fit(jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nfitter=nspec, backend=BACKEND, scheduler='processes', num_workers=NWORKER, pbar=True)
+        tstop = time.perf_counter()
+
+        if TIMECOUNT:
+            tdiff =  tstop - tstart
+            print('Fitting took {} seconds'.format(tdiff))
+
+        ## Save the fitting outcome
+        out_dir = r'../data/WSe2/benchmark'
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
+
+        kfit.save_data(fdir=out_dir, fname='/mpoint_{}_parafit_nband={}_ofs={}_{}.h5'.format(DATASOURCE,NBAND,EOFFSET,VARYING_INIT))
+
+else:
+    raise NotImplementedError

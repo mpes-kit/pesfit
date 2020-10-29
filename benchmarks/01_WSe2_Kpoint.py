@@ -136,7 +136,6 @@ if PERSISTENT_INIT:
         vals = vardict['14']
         vardict_other = {}
         lp_exclude = [preftext+str(i)+'_' for i in range(NBAND+1, 15)]
-        # print(lp_exclude)
         for inits in vardict['14']:
             for lpn, lpv in inits.items():
                 if lpn in lp_exclude:
