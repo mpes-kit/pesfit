@@ -15,6 +15,7 @@ n_cpu = mp.cpu_count()
 parser = argparse.ArgumentParser(description='Input arguments')
 parser.add_argument('-nb', '--nband', metavar='nband', nargs='?', type=int, help='Number of bands in fitting model, needs an integer between 1 and 14')
 parser.add_argument('-ns', '--nspectra', metavar='nspectra', nargs='?', type=int, help='Number of spectra to fit, needs an integer larger than 1')
+parser.add_argument('-ds', '--datasource', metavar='datasource', nargs='?', type=str, help='Name of the data source for band fitting')
 parser.add_argument('-ofs', '--eoffset', metavar='eoffset', nargs='?', type=float, help='Global energy offset')
 parser.add_argument('-op', '--operation', metavar='operation', nargs='?', type=str, help='What computing method to run the benchmark program with')
 parser.add_argument('-bk', '--backend', metavar='backend', nargs='?', type=str, help='Backend software package used for execution (in paralleli or in sequence)')
@@ -24,8 +25,7 @@ parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bo
 parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='Initialization include persistent settings')
 parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='Initialization including varying settings')
 parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='Add jitter to initialization for better fits')
-parser.add_argument('-pp', '--preproc', metavar='preproc', nargs='?', type=str, help='Stage of preprocessing used for fitting')
-parser.set_defaults(nband=2, nspectra=10, eoffset=0., operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False, preproc='symmetrized')
+parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=0., operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False)
 cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the K point of WSe2
@@ -33,6 +33,8 @@ cli_args = parser.parse_args()
 NBAND = cli_args.nband
 if NBAND > 14 or NBAND < 1:
     raise ValueError('The number of bands to reconstruct is within [1, 14] for WSe2.')
+## Data source used for band fitting, ('symmetrized', 'preprocessed')
+DATASOURCE = cli_args.datasource
 ## Number of line spectra to fit
 NSPECTRA = cli_args.nspectra
 ## Global energy offset for band fitting initialization
@@ -53,13 +55,11 @@ PERSISTENT_INIT = cli_args.persistent_init
 VARYING_INIT = cli_args.varying_init
 ## Option to apply jittering to initializations to obtain better fitting results
 JITTER_INIT = cli_args.jitter_init
-## The preprocessing needed before fitting ('symmetrized', 'mclahe', 'mclahe_smooth')
-PREPROC = cli_args.preproc
 # print(cli_args)
 
 # Photoemission band mapping data
 data_dir = r'../data/WSe2'
-pes_fname = r'/pes/kpoint/kpoint_symmetrized.h5'
+pes_fname = r'/pes/kpoint/kpoint_{}.h5'.format(DATASOURCE)
 pes_path = data_dir + pes_fname
 pes_data = io.h5_to_dict(pes_path)
 
@@ -189,7 +189,7 @@ if OPERATION == 'sequential':
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
-    kfit.save_data(fdir=out_dir, fname='/kpoint_symmetrized_seqfit_nband={}.h5'.format(NBAND))
+    kfit.save_data(fdir=out_dir, fname='/kpoint_{}_seqfit_nband={}_ofs={}_{}.h5'.format(DATASOURCE,NBAND,EOFFSET,VARYING_INIT))
 
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
@@ -215,7 +215,7 @@ elif OPERATION == 'parallel':
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        kfit.save_data(fdir=out_dir, fname='/kpoint_symmetrized_parafit_nband={}.h5'.format(NBAND))
+        kfit.save_data(fdir=out_dir, fname='/kpoint_{}_parafit_nband={}_ofs={}_{}.h5'.format(DATASOURCE,NBAND,EOFFSET,VARYING_INIT))
 
 else:
     raise NotImplementedError
