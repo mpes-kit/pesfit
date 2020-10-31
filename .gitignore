@@ -47,3 +47,4 @@ examples/.ipynb_checkpoints
 
 # Test
 data/*
+benchmarks/*.txt
