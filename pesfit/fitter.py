@@ -614,12 +614,10 @@ class ParallelPatchFitter(object):
         elif backend == 'async':
             fit_procs = parmap.starmap_async(self._single_fit, process_args, pm_processes=n_workers, pm_chunksize=chunk_size, pm_parallel=True)
 
-            fit_results = fit_procs.get()
-
-            # try:
-            #     parmap.parmap._do_pbar(fit_procs, num_tasks=nspec, chunksize=chunk_size)
-            # finally:
-            #     fit_results = fit_procs.get()
+            try:
+                parmap.parmap._do_pbar(fit_procs, num_tasks=nspec, chunksize=chunk_size)
+            finally:
+                fit_results = fit_procs.get()
 
             # pool = mp.Pool(processes=n_workers, **para_kwds)
             # fit_results = pool.starmap_async(self._single_fit, process_args).get()
