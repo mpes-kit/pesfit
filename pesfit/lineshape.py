@@ -4,11 +4,50 @@
 from . import utils as u
 import operator
 from functools import reduce
+from itertools import chain
 from copy import deepcopy
 from collections import OrderedDict
 import lmfit.models as lmm
 from lmfit import Model
 
+
+def map_reduce_meth(meth, elems, op, init, **kwargs):
+    """ Execute map-reduce on instance methods (callable).
+    """
+
+    return reduce(op, map(lambda elem: getattr(elem, meth)(**kwargs), elems), init)
+
+
+def map_reduce_attr(attr, elems, op, init):
+    """ Execute map-reduce on instance attributes (non-callable).
+    """
+
+    return reduce(op, map(lambda elem: getattr(elem, attr), elems), init)
+
+
+def mr_dict_merge(meth, elems, op_dict=OrderedDict, **kwargs):
+    """ Dictionary merging using map-reduce operations.
+    """
+
+    try: # Dictionary merging for Python 3.5 or above
+        merged = map_reduce_meth(meth, elems, lambda x, y: {**x, **y}, {}, **kwargs)
+    except: # Dictionary merging for other Python versions
+        merged = map_reduce_meth(meth, elems, lambda x, y: chain(x.items(), y.items()), {}, **kwargs)
+
+    return op_dict(merged)
+
+
+def dict_merge(elems, init={}, op_dict=OrderedDict):
+    """ Dictionary merging by reduce operation.
+    """
+
+    try:
+        merged = reduce(lambda x, y: {**x, **y}, elems, init)
+    except:
+        merged = reduce(lambda x, y: chain(x.items(), y.items()), elems, init)
+
+    return op_dict(merged)
+    
 
 class MultipeakModel(Model):
     """ Composite lineshape model consisting of multiple identical peak profiles.
@@ -84,7 +123,7 @@ class MultipeakModel(Model):
                 self.param_hints["%s%s" % (prefix, basename)] = hint
 
     def _tmp(self, *args, **kws):
-        """ Dummy function.
+        """ Dummy function (essential, don't delete!).
         """
         pass
             
@@ -105,7 +144,7 @@ class MultipeakModel(Model):
         """ Representation string for the multipeak model.
         """
         
-        meth_reprs = list(map(lambda obj: getattr(obj, '_reprstring'), self.components))
+        meth_reprs = [self.components[i]._reprstring for i in range(self.ncomp)]
         f_reprs = [meth_reprs[i](long=long) for i in range(self.ncomp)]
         op_reprs = [self._known_ops.get(self.op, self.op)]*self.ncomp
         mod_repr = u.riffle(f_reprs, op_reprs)[:-1].tolist()
@@ -144,35 +183,28 @@ class MultipeakModel(Model):
     def eval(self, params=None, **kwargs):
         """ Evaluate the entire model.
         """
-        
+        # The commented-out line functions the same as the actual one
         return reduce(self.op, [comp.eval(params=params, **kwargs) for comp in self.components])
-
-    # def eval_parallel(self, params=None, **kwargs):
-    #     """ Parallelized evaluation of the entire lineshape model.
-    #     """
-        
-    #     mapper = mr.MapReduce(lambda obj: obj.eval(params=params, **kwargs), self.op)
-    #     return mapper(self.components)
+        # return map_reduce_meth('eval', self.components, self.op, init=0, params=params, **kwargs)
 
     def eval_components(self, **kwargs):
-        """ Return OrderedDict of name, results for each component.
+        """ Component-wise evaluation, which returns an OrderedDict of name, numerical results for each lineshape component.
         """
-        out = OrderedDict(self.components[0].eval_components(**kwargs))
-        if self.ncomp > 1:
-            for i in range(self.ncomp-1):
-                out.update(self.components[i+1].eval_components(**kwargs))
         
+        comp_evals = [self.components[i].eval_components(**kwargs) for i in range(self.ncomp)]
+        out = dict_merge(comp_evals, {}, op_dict=OrderedDict)
+        # out = mr_dict_merge('eval_components', self.components, op_dict=OrderedDict, **kwargs)
+    
         return out
     
     def _make_all_args(self, params=None, **kwargs):
         """ Generate **all** function arguments for all functions.
         """
-        
-        out = self.components[0]._make_all_args(params=params, **kwargs)
-        if self.ncomp > 1:
-            for i in range(self.ncomp-1):
-                out.update(self.components[i+1]._make_all_args(params=params, **kwargs))
-        
+
+        all_args = [self.components[i]._make_all_args(params=params, **kwargs) for i in range(self.ncomp)]
+        out = dict_merge(all_args, {}, op_dict=OrderedDict)
+        # out = mr_dict_merge('_make_all_args', self.components, op_dict=OrderedDict, params=params, **kwargs)
+
         return out
     
     def multi_eval(self, op, objs, fevs, *args, **kwargs):
@@ -202,8 +234,9 @@ class MultipeakModel(Model):
         op: func | operator.add
             Functional operator used to reduce the terms.
         """
-        
-        return self.multi_eval(op, self.components, [getattr]*self.ncomp, prop)
+
+        return map_reduce_attr(prop, self.components, op, [])
+        # return self.multi_eval(op, self.components, [getattr]*self.ncomp, prop)
 
 
 class MultipeakModeler(Model):
@@ -335,6 +368,7 @@ class MultipeakModeler(Model):
         """
         
         return reduce(self.op, [comp.eval(params=params, **kwargs) for comp in self.components])
+        # return reduce(self.op, map(lambda comp: comp.eval(params=params, **kwargs), self.components, pm_parallel=True))
 
     def eval_components(self, **kwargs):
         """ Return OrderedDict of name, results for each component.
