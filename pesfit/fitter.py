@@ -226,13 +226,15 @@ def pointwise_fitting(xdata, ydata, model=None, peaks=None, background='None', p
     
     # Intensity normalization
     if ynorm:
-        ydata /= ydata.max()
+        ydatafit = ydata/ydata.max()
+    else:
+        ydatafit = ydata.copy()
     
-    fit_result = mod.fit(ydata, pars, x=xdata, **kwds)
+    fit_result = mod.fit(ydatafit, pars, x=xdata, **kwds)
     
     # Apply random shifts to initialization to find a better fit
     if jitter_init:
-        fit_result = random_varshift(fit_result, model=mod, params=pars, yvals=ydata, xvals=xdata, shifts=sfts, method=method, **kwds)
+        fit_result = random_varshift(fit_result, model=mod, params=pars, yvals=ydatafit, xvals=xdata, shifts=sfts, method=method, **kwds)
     
     if ret == 'result':
         return fit_result
