@@ -106,7 +106,7 @@ if PERSISTENT_INIT:
     vardict['04'] = vardict['02'] + vardict['04']
 
     ## Case of 8 bands near K point
-    amplitudes = pf.fitter.init_generator(lpnames=lp_prefixes[4:8], parname='sigma',
+    amplitudes = pf.fitter.init_generator(lpnames=lp_prefixes[4:8], parname='amplitude',
                                         varkeys=['value', 'min', 'max', 'vary'],
                                         parvals=[[0.5, 0, 2, True] for i in range(8-4)])
     sigmas = pf.fitter.init_generator(lpnames=lp_prefixes[4:8], parname='sigma',
@@ -119,7 +119,7 @@ if PERSISTENT_INIT:
     vardict['08'] = vardict['04'] + vardict['08']
 
     ## Case of 14 bands near K point
-    amplitudes = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='sigma',
+    amplitudes = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='amplitude',
                                         varkeys=['value', 'min', 'max', 'vary'],
                                         parvals=[[0.5, 0, 2, True] for i in range(14-4)])
     sigmas = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='sigma',
@@ -130,6 +130,8 @@ if PERSISTENT_INIT:
                                     parvals=[[0.05, 0, 2, True] for i in range(14-4)])
     vardict['14'] = amplitudes + sigmas + gammas
     vardict['14'] = vardict['04'] + vardict['14']
+
+    print(vardict)
 
     ## Other number of bands
     if NBAND not in [2, 4, 8, 14]:

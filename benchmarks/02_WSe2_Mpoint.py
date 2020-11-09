@@ -104,11 +104,20 @@ if PERSISTENT_INIT:
     vardict['04'] = vardict['02'] + vardict['04']
 
     ## Case of 8 bands near M point
-    vardict['08'] = []
+    amplitudes = pf.fitter.init_generator(lpnames=lp_prefixes[4:8], parname='amplitude',
+                                        varkeys=['value', 'min', 'max', 'vary'],
+                                        parvals=[[0.5, 0, 2, True] for i in range(8-4)])
+    sigmas = pf.fitter.init_generator(lpnames=lp_prefixes[4:8], parname='sigma',
+                                    varkeys=['value', 'min', 'max', 'vary'],
+                                    parvals=[[0.1, 0.05, 0.2, False] for i in range(8-4)])
+    gammas = pf.fitter.init_generator(lpnames=lp_prefixes[4:8], parname='gamma',
+                                    varkeys=['value', 'min', 'max', 'vary'],
+                                    parvals=[[0.05, 0, 2, True] for i in range(8-4)])
+    vardict['08'] = amplitudes + sigmas + gammas
     vardict['08'] = vardict['04'] + vardict['08']
 
     ## Case of 14 bands near M point
-    amplitudes = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='sigma',
+    amplitudes = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='amplitude',
                                         varkeys=['value', 'min', 'max', 'vary'],
                                         parvals=[[0.5, 0, 2, True] for i in range(14-4)])
     sigmas = pf.fitter.init_generator(lpnames=lp_prefixes[4:14], parname='sigma',
