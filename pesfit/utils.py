@@ -3,6 +3,7 @@
 
 import numpy as np
 import pandas as pd
+from functools import reduce
 from scipy.interpolate import RegularGridInterpolator as RGI
 from tqdm import notebook as nbk
 from tqdm import tqdm as tqdm_classic
@@ -250,3 +251,28 @@ def grid_resample(data, coords_axes, coords_new=None, grid_scale=None, zoom_scal
         return resdata
     elif ret == 'all':
         return resdata, coords_new
+
+
+def merge_nested_dict(dicts):
+    """ Merge nested dictionaries.
+    """
+    
+    keys = [i.keys() for i in dicts]
+    unique_keys = list(set([list(i)[0] for i in keys]))
+    dict_merged = []
+    
+    for uk in unique_keys:
+        # Look for duplicated keys
+        repeats = [uk in k for k in keys]
+        loc = np.where(repeats)
+
+        if np.sum(repeats) == 1:
+            dict_merged.append(np.array(dicts)[loc][0])
+        elif np.sum(repeats) > 1:
+            # Extract dictionaries with a shared key, uk
+            shared_dicts = np.array(dicts)[loc]
+            combined_vals = reduce(lambda x,y: {**x, **y}, [sd[uk] for sd in shared_dicts])
+            combined_dict = {uk: combined_vals}
+            dict_merged.append(combined_dict)
+            
+    return dict_merged
