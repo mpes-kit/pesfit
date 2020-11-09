@@ -131,7 +131,7 @@ if PERSISTENT_INIT:
     vardict['14'] = amplitudes + sigmas + gammas
     vardict['14'] = vardict['04'] + vardict['14']
 
-    print(vardict)
+    # print(vardict)
 
     ## Other number of bands
     if NBAND not in [2, 4, 8, 14]:
@@ -155,6 +155,7 @@ if PERSISTENT_INIT:
 else:
     inits_persist = None
 
+print(inits_persist)
 ## Select energy axis data range used for fitting
 if NBAND == 2:
     en_range = slice(20, 100)

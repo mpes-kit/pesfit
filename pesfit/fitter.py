@@ -430,7 +430,8 @@ class PatchFitter(object):
             # Setting the initialization parameters that vary for every line spectrum
             other_inits = inits_vary_vals[..., n]
             self.inits_vary = init_generator(parname='center', varkeys=varkeys, lpnames=self.prefixes, parvals=other_inits)
-            varsetter(self.pars, self.inits_vary, ret=False)
+            self.inits_all = u.merge_nested_dict(self.inits_persist + self.inits_vary)
+            varsetter(self.pars, self.inits_all, ret=False)
             
             y = self.ydata2D[n, :] # Current energy distribution curve
             # Line fitting with all the initial guesses supplied
@@ -650,7 +651,8 @@ class ParallelPatchFitter(object):
         
         # Setting the initialization parameters that vary for every line spectrum
         inits_vary = init_generator(parname='center', varkeys=varkeys, lpnames=prefixes, parvals=others)
-        varsetter(pars, inits_vary, ret=False)
+        inits_all = u.merge_nested_dict(self.inits_persist + inits_vary)
+        varsetter(pars, inits_all, ret=False)
         
         # Line fitting with all the initial guesses supplied
         out_single = pointwise_fitting(xvals, yspec, model=model, params=pars, ynorm=True, **kwds)
