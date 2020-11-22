@@ -190,7 +190,7 @@ if OPERATION == 'sequential':
 
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
-        kfit = pf.fitter.ParallelPatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], nfitter=nspec)
+        kfit = pf.fitter.DistributedFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], nfitter=nspec)
 
         kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range, offset=EOFFSET)
         print(EOFFSET)

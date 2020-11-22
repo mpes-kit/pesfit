@@ -495,7 +495,7 @@ from dask.diagnostics import ProgressBar
 import sys
 from tqdm import tqdm
 
-class ParallelPatchFitter(object):
+class DistributedFitter(object):
     """ Parallelized fitting of line spectra in a photoemission data patch.
     """
 
@@ -733,6 +733,10 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, ret=False, **kw
     **kwds: keyword arguments
         figsize: list/tuple | [8, 5]
             Default size of the figure.
+        xlabel, ylabel: str, str | None, None
+            Axis labels.
+        lfs: numeric | 15
+            Font size of the axis labels.
     """
     
     figsz = kwds.pop('figsize', (8, 5))
@@ -747,6 +751,14 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, ret=False, **kw
     
     ax.plot(x, fitres.best_fit, '-r')
     ax.plot(x[::downsamp], fitres.data[::downsamp], '.k')
+    
+    xlabel = kwds.pop('xlabel', None)
+    ylabel = kwds.pop('ylabel', None)
+    lfs = kwds.pop('lfs', 15)
+    if xlabel is not None:
+        ax.set_xlabel(xlabel, fontsize=lfs)
+    if ylabel is not None:
+        ax.set_ylabel(ylabel, fontsize=lfs)
 
     if ret:
         return f, ax
