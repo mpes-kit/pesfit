@@ -22,7 +22,7 @@ parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bo
 parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='Initialization include persistent settings')
 parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='Initialization including varying settings')
 parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='Add jitter to initialization for better fits')
-parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=0., operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False)
+parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=0., operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=1, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False)
 cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the K point of WSe2

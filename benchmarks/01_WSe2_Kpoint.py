@@ -25,7 +25,7 @@ parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bo
 parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='Initialization include persistent settings')
 parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='Initialization including varying settings')
 parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='Add jitter to initialization for better fits')
-parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=0., operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=0, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False)
+parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=0., operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=1, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False)
 cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the K point of WSe2
@@ -59,13 +59,14 @@ JITTER_INIT = cli_args.jitter_init
 
 # Photoemission band mapping data
 data_dir = r'../data/WSe2'
-pes_fname = r'/pes/kpoint/kpoint_{}.h5'.format(DATASOURCE)
+# pes_fname = r'/pes/kpoint/kpoint_{}.h5'.format(DATASOURCE)
+pes_fname = r'/synth/kpoint/kpoint_{}.h5'.format(DATASOURCE)
 pes_path = data_dir + pes_fname
 pes_data = io.h5_to_dict(pes_path)
 
 if VARYING_INIT == 'theory':
     # Theoretical calculations interpolated to the same momentum grid (as one type of initialization)
-    theo_fname = r'/theory/kpoint/kpoint_LDA.h5'
+    theo_fname = r'/theory/kpoint/kpoint_PBE.h5'
     theo_path = data_dir + theo_fname
     theo_data = io.h5_to_dict(theo_path)['bands']
     inits_vary = theo_data
@@ -155,18 +156,18 @@ if PERSISTENT_INIT:
 else:
     inits_persist = None
 
-print(inits_persist)
+# print(inits_persist)
 ## Select energy axis data range used for fitting
 if NBAND == 2:
-    en_range = slice(20, 100)
+    en_range = slice(10, 100)
 elif NBAND == 4:
-    en_range = slice(20, 220)
+    en_range = slice(10, 220)
 elif NBAND == 8:
-    en_range = slice(20, 320)
+    en_range = slice(10, 320)
 elif NBAND == 14:
-    en_range = slice(20, 470)
+    en_range = slice(10, 470)
 else:
-    en_range = slice(20, 400)
+    en_range = slice(10, 400)
 
 ## Run the fitting benchmark
 pesdata_shape = pes_data['V'].shape
