@@ -2,14 +2,30 @@
 # -*- coding: utf-8 -*-
 
 from . import lineshape as ls, utils as u
+from . import istarmap
 import numpy as np
 import pandas as pd
 from functools import reduce
 from lmfit import Minimizer, fit_report
-import inspect
+import inspect, sys
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import hdfio.dict_io as io
+from tqdm import tqdm
+
+# Parallel computing packages
+try:
+    import parmap
+except:
+    pass
+try:
+    import torcpy as torc
+except:
+    pass
+import concurrent.futures as ccf
+import multiprocessing as mp
+import dask as dk
+from dask.diagnostics import ProgressBar
 
 # Suppress YAML deprecation warning
 import yaml
@@ -483,18 +499,6 @@ class PatchFitter(object):
         return plot
 
 
-from . import istarmap
-try:
-    import parmap
-except:
-    pass
-import concurrent.futures as ccf
-import multiprocessing as mp
-import dask as dk
-from dask.diagnostics import ProgressBar
-import sys
-from tqdm import tqdm
-
 class DistributedFitter(object):
     """ Parallelized fitting of line spectra in a photoemission data patch.
     """
@@ -611,24 +615,31 @@ class DistributedFitter(object):
             pool.close()
             pool.join()
 
-        elif backend == 'parmap': # Can get stuck, but has progress bar
+        elif backend == 'parmap':
             fit_results = parmap.starmap(self._single_fit, process_args, pm_processes=n_workers, pm_chunksize=chunk_size, pm_parallel=True, pm_pbar=pbar)
         
-        elif backend == 'pm_async': # Can get stuck, but has progress bar
+        elif backend == 'async':
             fit_procs = parmap.starmap_async(self._single_fit, process_args, pm_processes=n_workers, pm_chunksize=chunk_size, pm_parallel=True)
 
             try:
                 parmap.parmap._do_pbar(fit_procs, num_tasks=nspec, chunksize=chunk_size)
             finally:
                 fit_results = fit_procs.get()
-
-        elif backend == 'mp_async': # Doesn't automatically suports tqdm
-            pool = mp.Pool(processes=n_workers, **para_kwds)
-            fit_results = pool.starmap_async(self._single_fit, process_args, chunksize=chunk_size).get()
-            pool.close()
-            pool.join()
         
-        elif backend == 'singles': # Run sequentially for debugging
+        # For debugging use and performance comparison
+        # elif backend == 'mp_async': # Doesn't automatically suports tqdm
+        #     pool = mp.Pool(processes=n_workers, **para_kwds)
+        #     fit_results = pool.starmap_async(self._single_fit, process_args, chunksize=chunk_size).get()
+        #     pool.close()
+        #     pool.join()
+
+        elif backend == 'torcpy':
+            torc.init()
+            torc.launch(None)
+            fit_results = torc.map(self._single_fit, *zip(*process_args), chunksize=chunk_size)
+            torc.shutdown()
+        
+        elif backend == 'singles': # Run sequentially for debugging use
             fit_results = [self._single_fit(*args, **kwds) for args in tqdm(process_args, disable=not(pbar))]
 
         else:
