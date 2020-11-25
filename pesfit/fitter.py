@@ -601,20 +601,20 @@ class DistributedFitter(object):
 
         elif backend == 'concurrent':
             with ccf.ProcessPoolExecutor(max_workers=n_workers, **para_kwds) as executor:
-                fit_results = executor.map(self._single_fit, *zip(*process_args))
+                fit_results = list(tqdm(executor.map(self._single_fit, *zip(*process_args), chunksize=chunk_size), total=nspec, disable=not(pbar)))
 
         elif backend == 'multiprocessing':
             pool = mp.Pool(processes=n_workers, **para_kwds)
             fit_results = []
-            for fr in tqdm(pool.istarmap(self._single_fit, process_args), total=nspec, disable=not(pbar)):
+            for fr in tqdm(pool.istarmap(self._single_fit, process_args, chunksize=chunk_size), total=nspec, disable=not(pbar)):
                 fit_results.append(fr)
             pool.close()
             pool.join()
 
-        elif backend == 'parmap':
+        elif backend == 'parmap': # Can get stuck, but has progress bar
             fit_results = parmap.starmap(self._single_fit, process_args, pm_processes=n_workers, pm_chunksize=chunk_size, pm_parallel=True, pm_pbar=pbar)
         
-        elif backend == 'async':
+        elif backend == 'pm_async': # Can get stuck, but has progress bar
             fit_procs = parmap.starmap_async(self._single_fit, process_args, pm_processes=n_workers, pm_chunksize=chunk_size, pm_parallel=True)
 
             try:
@@ -622,10 +622,11 @@ class DistributedFitter(object):
             finally:
                 fit_results = fit_procs.get()
 
-            # pool = mp.Pool(processes=n_workers, **para_kwds)
-            # fit_results = pool.starmap_async(self._single_fit, process_args).get()
-            # pool.close()
-            # pool.join()
+        elif backend == 'mp_async': # Doesn't automatically suports tqdm
+            pool = mp.Pool(processes=n_workers, **para_kwds)
+            fit_results = pool.starmap_async(self._single_fit, process_args, chunksize=chunk_size).get()
+            pool.close()
+            pool.join()
         
         elif backend == 'singles': # Run sequentially for debugging
             fit_results = [self._single_fit(*args, **kwds) for args in tqdm(process_args, disable=not(pbar))]
