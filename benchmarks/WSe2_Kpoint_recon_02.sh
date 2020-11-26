@@ -6,7 +6,7 @@ NSPEC=900
 EOFS="0.22 0.26 0.30 0.34 0.38"
 NWORK=4
 CHUNKSIZE=300
-FPATH="WSe2_Kpoint_recon_2.txt"
+FPATH="WSe2_Kpoint_recon_02.txt"
 > $FPATH
 
 # Tune the relative energy shift in initialization for 1st band
@@ -15,7 +15,7 @@ for EOF in $EOFS
 do
     SHFTS="$EOF 0"
     echo "total band = $NBAND, current band = 1, total spec = $NSPEC, chunk size = $CHUNKSIZE, energy shift = $SHFTS" >> $FPATH
-    /cygdrive/c/ProgramData/Anaconda3/python ./01_WSe2_Kpoint.py -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS >> $FPATH
+    /cygdrive/c/ProgramData/Anaconda3/python ./01_WSe2_Kpoint.py -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS -varin="theory" >> $FPATH
     echo "" >> $FPATH
 done
 
@@ -25,6 +25,6 @@ for EOF in $EOFS
 do
     SHFTS="0.3 $EOF"
     echo "total band = $NBAND, current band = 2, total spec = $NSPEC, chunk size = $CHUNKSIZE, energy shift = $SHFTS" >> $FPATH
-    /cygdrive/c/ProgramData/Anaconda3/python ./01_WSe2_Kpoint.py -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS >> $FPATH
+    /cygdrive/c/ProgramData/Anaconda3/python ./01_WSe2_Kpoint.py -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS -varin="theory" >> $FPATH
     echo "" >> $FPATH
 done
