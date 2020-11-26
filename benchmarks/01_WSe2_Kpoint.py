@@ -72,6 +72,7 @@ pes_data = io.h5_to_dict(pes_path)
 
 if VARYING_INIT == 'theory':
     # Theoretical calculations interpolated to the same momentum grid (as one type of initialization)
+    # theo_fname = r'/theory/kpoint/kpoint_LDA.h5'
     theo_fname = r'/theory/kpoint/kpoint_PBE.h5'
     theo_path = data_dir + theo_fname
     theo_data = io.h5_to_dict(theo_path)['bands']

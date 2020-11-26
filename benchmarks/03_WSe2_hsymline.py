@@ -62,13 +62,15 @@ JITTER_INIT = cli_args.jitter_init
 
 # Photoemission band mapping data
 data_dir = r'../data/WSe2'
-pes_fname = r'/pes/symline/hsymline_{}.h5'.format(DATASOURCE)
+# pes_fname = r'/pes/hsymline/hsymline_{}.h5'.format(DATASOURCE)
+pes_fname = r'/synth/hsymline/hsymline_{}.h5'.format(DATASOURCE)
 pes_path = data_dir + pes_fname
 pes_data = io.h5_to_dict(pes_path)
 
 if VARYING_INIT == 'theory':
     # Theoretical calculations interpolated to the same momentum grid (as one type of initialization)
-    theo_fname = r'/theory/symline/hsymline_LDA.h5'
+    # theo_fname = r'/theory/symline/hsymline_LDA.h5'
+    theo_fname = r'/theory/symline/hsymline_PBE.h5'
     theo_path = data_dir + theo_fname
     theo_data = io.h5_to_dict(theo_path)['data']['kimage']
     inits_vary = theo_data
