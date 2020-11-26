@@ -140,9 +140,9 @@ def tqdmenv(env):
     """ Choose tqdm progress bar executing environment.
     
     **Parameter**\n
-        env: str
-            Name of the environment, 'classic' for ordinary environment,
-            'notebook' for Jupyter notebook.
+    env: str
+        Name of the environment, 'classic' for ordinary environment,
+        'notebook' for Jupyter notebook.
     """
 
     if env == 'classic':
@@ -154,7 +154,15 @@ def tqdmenv(env):
 
 
 def argpick(cliargs, argkey, defaults):
-    """ Argument picker.
+    """ Command-line input argument picker.
+
+    **Parameters**\n
+    cliargs: dict
+        Command-line inputs
+    argkey: str
+        Argument key.
+    defaults: any
+        Default value for the argument if no input is found.
     """
 
     try:
@@ -180,6 +188,16 @@ def intnz(num):
 
 def grid_indices(x, y, dtyp='float', ordering='rc', flatten=True):
     """ Construct grid indices.
+
+    **Parameters**\n
+    x, y: 1D array, 1D array
+        Single-axis x and y coordinates.
+    dtyp: str | 'float'
+        Data type of the generated grid indices.
+    ordering: str | 'rc'
+        Ordering of the indices ('rc' for row-column ordering, 'xy' for x-y ordering).
+    flatten: bool | True
+        Option to flatten the grid indices.
     """
     
     nx, ny = len(x), len(y)
@@ -255,6 +273,10 @@ def grid_resample(data, coords_axes, coords_new=None, grid_scale=None, zoom_scal
 
 def merge_nested_dict(dicts):
     """ Merge nested dictionaries.
+
+    **Parameter**\n
+    dicts: list/tuple
+        Collection of dictionaries
     """
     
     keys = [i.keys() for i in dicts]
