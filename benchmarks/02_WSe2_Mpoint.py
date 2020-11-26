@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description='Input arguments')
 parser.add_argument('-nb', '--nband', metavar='nband', nargs='?', type=int, help='Number of bands in fitting model, needs an integer between 1 and 14')
 parser.add_argument('-ns', '--nspectra', metavar='nspectra', nargs='?', type=int, help='Number of spectra to fit, needs an integer larger than 1')
 parser.add_argument('-ds', '--datasource', metavar='datasource', nargs='?', type=str, help='Name of the data source for band fitting')
-parser.add_argument('-ofs', '--eoffset', metavar='eoffset', nargs='?', type=float, help='Global energy offset')
+parser.add_argument('-ofs', '--eoffset', metavar='eoffset', nargs='*', type=float, help='Global energy offset for each energy band')
 parser.add_argument('-op', '--operation', metavar='operation', nargs='?', type=str, help='What computing method to run the benchmark program with')
 parser.add_argument('-bk', '--backend', metavar='backend', nargs='?', type=str, help='Backend software package used for execution (in paralleli or in sequence)')
 parser.add_argument('-nw', '--nworker', metavar='nworker', nargs='?', type=int, help='Number of workers to spawn')
@@ -37,8 +37,14 @@ if NBAND > 14 or NBAND < 1:
 DATASOURCE = cli_args.datasource
 ## Number of line spectra to fit
 NSPECTRA = cli_args.nspectra
-## Global energy offset for band fitting initialization
-EOFFSET = cli_args.eoffset
+## Global energy offset for fitting initialization of each band
+argofs = cli_args.eoffset
+nargofs = len(argofs)
+if nargofs == 1:
+    allofs = argofs*NBAND + [0]*(14-NBAND)
+elif nargofs == NBAND:
+    allofs = argofs + [0]*(14-NBAND)
+EOFFSET = np.asarray([allofs]).T
 ## Option for computing method ('sequential' or 'parallel')
 OPERATION = cli_args.operation
 ## Backend software package for execution
@@ -186,7 +192,7 @@ if OPERATION == 'sequential':
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
-    kfit.save_data(fdir=out_dir, fname='/mpoint_{}_seqfit_nband={}_ofs={}_{}.h5'.format(DATASOURCE,NBAND,EOFFSET,VARYING_INIT))
+    kfit.save_data(fdir=out_dir, fname='/mpoint_{}_seqfit_nband={}_ofs={}_{}.h5'.format(DATASOURCE, NBAND, argofs, VARYING_INIT))
 
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
@@ -212,7 +218,7 @@ elif OPERATION == 'parallel':
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        kfit.save_data(fdir=out_dir, fname='/mpoint_{}_parafit_nband={}_ofs={}_{}.h5'.format(DATASOURCE,NBAND,EOFFSET,VARYING_INIT))
+        kfit.save_data(fdir=out_dir, fname='/mpoint_{}_parafit_nband={}_ofs={}_{}.h5'.format(DATASOURCE, NBAND, argofs, VARYING_INIT))
 
 else:
     raise NotImplementedError
