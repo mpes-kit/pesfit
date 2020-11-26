@@ -11,6 +11,6 @@ FPATH="WSe2_Kpoint_benchmark.txt"
 for CS in $SIZES
 do
     echo "total band = $NBAND, total spec = $NSPEC, chunk size = $CS" >> $FPATH
-    /cygdrive/c/ProgramData/Anaconda3/python ./01_WSe2_Kpoint.py -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='preprocessed' -bk="parmap" -nw=4 -cs=$CS -ofs=$EOFS >> $FPATH
+    /cygdrive/c/ProgramData/Anaconda3/python ./01_WSe2_Kpoint.py -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=4 -cs=$CS -ofs=$EOFS >> $FPATH
     echo "" >> $FPATH
 done
