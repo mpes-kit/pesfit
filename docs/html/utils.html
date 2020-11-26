@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.5.6 documentation</title>
+  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.5.9 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.5.6 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.5.9 documentation" href="index.html"/>
         <link rel="prev" title="Integrated fitting workflow (pesfit.fitter)" href="fitter.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.5.6
+                0.5.9
               </div>
             
           
@@ -167,7 +167,16 @@
 <dl class="py function">
 <dt id="pesfit.utils.argpick">
 <code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">argpick</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cliargs</span></em>, <em class="sig-param"><span class="n">argkey</span></em>, <em class="sig-param"><span class="n">defaults</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.argpick" title="Permalink to this definition">¶</a></dt>
-<dd><p>Argument picker.</p>
+<dd><p>Command-line input argument picker.</p>
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt>cliargs: dict</dt><dd><p>Command-line inputs</p>
+</dd>
+<dt>argkey: str</dt><dd><p>Argument key.</p>
+</dd>
+<dt>defaults: any</dt><dd><p>Default value for the argument if no input is found.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -225,6 +234,17 @@
 <dt id="pesfit.utils.grid_indices">
 <code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">grid_indices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">dtyp</span><span class="o">=</span><span class="default_value">'float'</span></em>, <em class="sig-param"><span class="n">ordering</span><span class="o">=</span><span class="default_value">'rc'</span></em>, <em class="sig-param"><span class="n">flatten</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.grid_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct grid indices.</p>
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt>x, y: 1D array, 1D array</dt><dd><p>Single-axis x and y coordinates.</p>
+</dd>
+<dt>dtyp: str | ‘float’</dt><dd><p>Data type of the generated grid indices.</p>
+</dd>
+<dt>ordering: str | ‘rc’</dt><dd><p>Ordering of the indices (‘rc’ for row-column ordering, ‘xy’ for x-y ordering).</p>
+</dd>
+<dt>flatten: bool | True</dt><dd><p>Option to flatten the grid indices.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -254,6 +274,17 @@
 <dt id="pesfit.utils.intnz">
 <code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">intnz</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.intnz" title="Permalink to this definition">¶</a></dt>
 <dd><p>Output an integer at least larger than 1.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.utils.merge_nested_dict">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">merge_nested_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dicts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.merge_nested_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge nested dictionaries.</p>
+<p><strong>Parameter</strong></p>
+<dl class="simple">
+<dt>dicts: list/tuple</dt><dd><p>Collection of dictionaries</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -295,13 +326,11 @@
 <code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">tqdmenv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.tqdmenv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Choose tqdm progress bar executing environment.</p>
 <p><strong>Parameter</strong></p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>env: str</dt><dd><p>Name of the environment, ‘classic’ for ordinary environment,
 ‘notebook’ for Jupyter notebook.</p>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 </div>
@@ -348,7 +377,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.6',
+            VERSION:'0.5.9',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

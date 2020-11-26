@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Complex lineshape models (pesfit.lineshape) &mdash; pesfit 0.5.6 documentation</title>
+  <title>Complex lineshape models (pesfit.lineshape) &mdash; pesfit 0.5.9 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.5.6 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.5.9 documentation" href="index.html"/>
         <link rel="next" title="Integrated fitting workflow (pesfit.fitter)" href="fitter.html"/>
         <link rel="prev" title="Fitting benchmarks" href="I02_benchmark.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.5.6
+                0.5.9
               </div>
             
           
@@ -205,7 +205,7 @@
 <dl class="py method">
 <dt id="pesfit.lineshape.MultipeakModel._tmp">
 <code class="sig-name descname">_tmp</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kws</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModel._tmp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dummy function.</p>
+<dd><p>Dummy function (essential, don’t delete!).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -223,7 +223,7 @@
 <dl class="py method">
 <dt id="pesfit.lineshape.MultipeakModel.eval_components">
 <code class="sig-name descname">eval_components</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModel.eval_components" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return OrderedDict of name, results for each component.</p>
+<dd><p>Component-wise evaluation, which returns an OrderedDict of name, numerical results for each lineshape component.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -376,6 +376,30 @@
 
 </dd></dl>
 
+<dl class="py function">
+<dt id="pesfit.lineshape.dict_merge">
+<code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">dict_merge</code><span class="sig-paren">(</span><em class="sig-param">elems</em>, <em class="sig-param">init={}</em>, <em class="sig-param">op_dict=&lt;class 'collections.OrderedDict'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.dict_merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary merging by reduce operation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.lineshape.map_reduce_attr">
+<code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">map_reduce_attr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span></em>, <em class="sig-param"><span class="n">elems</span></em>, <em class="sig-param"><span class="n">op</span></em>, <em class="sig-param"><span class="n">init</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.map_reduce_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute map-reduce on instance attributes (non-callable).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.lineshape.map_reduce_meth">
+<code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">map_reduce_meth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">meth</span></em>, <em class="sig-param"><span class="n">elems</span></em>, <em class="sig-param"><span class="n">op</span></em>, <em class="sig-param"><span class="n">init</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.map_reduce_meth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute map-reduce on instance methods (callable).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.lineshape.mr_dict_merge">
+<code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">mr_dict_merge</code><span class="sig-paren">(</span><em class="sig-param">meth</em>, <em class="sig-param">elems</em>, <em class="sig-param">op_dict=&lt;class 'collections.OrderedDict'&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.mr_dict_merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary merging using map-reduce operations.</p>
+</dd></dl>
+
 </div>
 
 
@@ -422,7 +446,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.6',
+            VERSION:'0.5.9',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

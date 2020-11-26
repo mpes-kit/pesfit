@@ -1,7 +1,7 @@
 # pesfit
 ![License](https://img.shields.io/github/license/mpes-kit/pesfit) ![Downloads](https://pepy.tech/badge/pesfit) ![PyPI version](https://badge.fury.io/py/pesfit.svg)
 
-Multiband lineshape fitting routines and benchmarks for photoemission spectroscopy
+Distributed multiband lineshape fitting routines and benchmarks for photoemission spectroscopy
 
 ### Rationale
 
