@@ -18,10 +18,6 @@ try:
     import parmap
 except:
     pass
-try:
-    import torcpy as torc
-except:
-    pass
 import concurrent.futures as ccf
 import multiprocessing as mp
 import dask as dk
@@ -634,6 +630,11 @@ class DistributedFitter(object):
         #     pool.join()
 
         elif backend == 'torcpy':
+            try:
+                import torcpy as torc
+            except:
+                pass
+            
             torc.init()
             torc.launch(None)
             fit_results = torc.map(self._single_fit, *zip(*process_args), chunksize=chunk_size)
