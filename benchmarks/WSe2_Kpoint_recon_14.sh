@@ -15,7 +15,7 @@ FPATH="WSe2_Kpoint_recon_14.txt"
 echo "Tuning initial conditions for reconstructing band #9 ..."
 for EOF in $EOFS
 do
-    SHFTS="0.26 0.26 0.26 0.2 $EOF 0 0 0"
+    SHFTS="0.26 0.26 0.26 0.1 0 0 0 0 $EOF 0 0 0 0 0"
     echo "total band = $NBAND, current band = 9, total spec = $NSPEC, worker = $NWORK, chunk size = $CHUNKSIZE, energy shift = $SHFTS" >> $FPATH
     $PYTHONPATH $CODEPATH -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS -varin="theory" >> $FPATH
     echo "" >> $FPATH
@@ -25,7 +25,7 @@ done
 echo "Tuning initial conditions for reconstructing band #10 ..."
 for EOF in $EOFS
 do
-    SHFTS="0.26 0.26 0.26 0.2 $EOF 0 0 0"
+    SHFTS="0.26 0.26 0.26 0.1 0 0 0 0 $EOF 0 0 0 0 0"
     echo "total band = $NBAND, current band = 10, total spec = $NSPEC, worker = $NWORK, chunk size = $CHUNKSIZE, energy shift = $SHFTS" >> $FPATH
     $PYTHONPATH $CODEPATH -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS -varin="theory" >> $FPATH
     echo "" >> $FPATH
@@ -35,7 +35,7 @@ done
 echo "Tuning initial conditions for reconstructing band #11 ..."
 for EOF in $EOFS
 do
-    SHFTS="0.26 0.26 0.26 0.2 $EOF 0 0 0"
+    SHFTS="0.26 0.26 0.26 0.1 0 0 0 0 $EOF 0 0 0 0 0"
     echo "total band = $NBAND, current band = 7, total spec = $NSPEC, worker = $NWORK, chunk size = $CHUNKSIZE, energy shift = $SHFTS" >> $FPATH
     $PYTHONPATH $CODEPATH -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS -varin="theory" >> $FPATH
     echo "" >> $FPATH
@@ -45,7 +45,7 @@ done
 echo "Tuning initial conditions for reconstructing band #12 ..."
 for EOF in $EOFS
 do
-    SHFTS="0.26 0.26 0.26 0.2 $EOF 0 0 0"
+    SHFTS="0.26 0.26 0.26 0.1 0 0 0 0 $EOF 0 0 0 0 0"
     echo "total band = $NBAND, current band = 8, total spec = $NSPEC, worker = $NWORK, chunk size = $CHUNKSIZE, energy shift = $SHFTS" >> $FPATH
     $PYTHONPATH $CODEPATH -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS -varin="theory" >> $FPATH
     echo "" >> $FPATH
@@ -56,7 +56,7 @@ done
 echo "Tuning initial conditions for reconstructing band #13 ..."
 for EOF in $EOFS
 do
-    SHFTS="0.26 0.26 0.26 0.2 $EOF 0 0 0"
+    SHFTS="0.26 0.26 0.26 0.1 0 0 0 0 $EOF 0 0 0 0 0"
     echo "total band = $NBAND, current band = 7, total spec = $NSPEC, worker = $NWORK, chunk size = $CHUNKSIZE, energy shift = $SHFTS" >> $FPATH
     $PYTHONPATH $CODEPATH -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS -varin="theory" >> $FPATH
     echo "" >> $FPATH
@@ -66,7 +66,7 @@ done
 echo "Tuning initial conditions for reconstructing band #14 ..."
 for EOF in $EOFS
 do
-    SHFTS="0.26 0.26 0.26 0.2 $EOF 0 0 0"
+    SHFTS="0.26 0.26 0.26 0.1 0 0 0 0 $EOF 0 0 0 0 0"
     echo "total band = $NBAND, current band = 8, total spec = $NSPEC, worker = $NWORK, chunk size = $CHUNKSIZE, energy shift = $SHFTS" >> $FPATH
     $PYTHONPATH $CODEPATH -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS -varin="theory" >> $FPATH
     echo "" >> $FPATH
