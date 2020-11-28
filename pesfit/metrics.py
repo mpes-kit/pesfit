@@ -6,7 +6,7 @@ import numpy as np
 
 
 class GroupMetrics(object):
-    """ Group-wise root-mean-square error calculator.
+    """ Group-wise evaluation metrics calculator.
     """
     
     def __init__(self, fres, nband):
