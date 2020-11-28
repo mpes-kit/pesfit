@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; pesfit 0.5.9 documentation</title>
+  <title>Index &mdash; pesfit 0.6.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="#"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.5.9 documentation" href="index.html"/> 
+    <link rel="top" title="pesfit 0.6.2 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.5.9
+                0.6.2
               </div>
             
           
@@ -97,6 +97,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="lineshape.html">Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.lineshape)</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="fitter.html">Integrated fitting workflow  <code class="docutils literal notranslate"><span class="pre">(pesfit.fitter)</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics for hyperparameter tuning  <code class="docutils literal notranslate"><span class="pre">(pesfit.metrics)</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Utility functions  <code class="docutils literal notranslate"><span class="pre">(pesfit.utils)</span></code></a></li>
 </ul>
 
@@ -284,9 +285,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="utils.html#pesfit.utils.grid_indices">grid_indices() (in module pesfit.utils)</a>
 </li>
+      <li><a href="utils.html#pesfit.utils.grid_resample">grid_resample() (in module pesfit.utils)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="utils.html#pesfit.utils.grid_resample">grid_resample() (in module pesfit.utils)</a>
+      <li><a href="metrics.html#pesfit.metrics.GroupRMSE.group_rmse">group_rmse() (pesfit.metrics.GroupRMSE method)</a>
+</li>
+      <li><a href="metrics.html#pesfit.metrics.GroupRMSE">GroupRMSE (class in pesfit.metrics)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -308,10 +313,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fitter.html#pesfit.fitter.PatchFitter.load">load() (pesfit.fitter.PatchFitter method)</a>
 </li>
+      <li><a href="metrics.html#pesfit.metrics.GroupRMSE.load_all_data">load_all_data() (pesfit.metrics.GroupRMSE method)</a>
+</li>
       <li><a href="fitter.html#pesfit.fitter.PatchFitter.load_band_inits">load_band_inits() (pesfit.fitter.PatchFitter method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="metrics.html#pesfit.metrics.GroupRMSE.load_data">load_data() (pesfit.metrics.GroupRMSE method)</a>
+</li>
       <li><a href="fitter.html#pesfit.fitter.load_file">load_file() (in module pesfit.fitter)</a>
 </li>
       <li><a href="fitter.html#pesfit.fitter.PatchFitter.load_fitting">load_fitting() (pesfit.fitter.PatchFitter method)</a>
@@ -339,6 +348,8 @@
         <li><a href="fitter.html#module-pesfit.fitter">pesfit.fitter</a>
 </li>
         <li><a href="lineshape.html#module-pesfit.lineshape">pesfit.lineshape</a>
+</li>
+        <li><a href="metrics.html#module-pesfit.metrics">pesfit.metrics</a>
 </li>
         <li><a href="utils.html#module-pesfit.utils">pesfit.utils</a>
 </li>
@@ -418,6 +429,13 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
+    pesfit.metrics
+
+      <ul>
+        <li><a href="metrics.html#module-pesfit.metrics">module</a>
+</li>
+      </ul></li>
+      <li>
     pesfit.utils
 
       <ul>
@@ -449,6 +467,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="utils.html#pesfit.utils.riffle">riffle() (in module pesfit.utils)</a>
+</li>
+      <li><a href="metrics.html#pesfit.metrics.GroupRMSE.rmse">rmse() (pesfit.metrics.GroupRMSE method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -531,7 +551,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.9',
+            VERSION:'0.6.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

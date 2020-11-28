@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pesfit documentation &mdash; pesfit 0.6.2 documentation</title>
+  <title>Metrics for hyperparameter tuning (pesfit.metrics) &mdash; pesfit 0.6.2 documentation</title>
   
 
   
@@ -35,8 +35,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.6.2 documentation" href="#"/>
-        <link rel="next" title="How to start" href="I01_start.html"/> 
+    <link rel="top" title="pesfit 0.6.2 documentation" href="index.html"/>
+        <link rel="next" title="Utility functions (pesfit.utils)" href="utils.html"/>
+        <link rel="prev" title="Integrated fitting workflow (pesfit.fitter)" href="fitter.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -55,7 +56,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> pesfit
+            <a href="index.html" class="icon icon-home"> pesfit
           
 
           
@@ -95,10 +96,10 @@
 <li class="toctree-l1"><a class="reference internal" href="I02_benchmark.html">Fitting benchmarks</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API documentation</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="lineshape.html">Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.lineshape)</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="fitter.html">Integrated fitting workflow  <code class="docutils literal notranslate"><span class="pre">(pesfit.fitter)</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics for hyperparameter tuning  <code class="docutils literal notranslate"><span class="pre">(pesfit.metrics)</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Metrics for hyperparameter tuning  <code class="docutils literal notranslate"><span class="pre">(pesfit.metrics)</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Utility functions  <code class="docutils literal notranslate"><span class="pre">(pesfit.utils)</span></code></a></li>
 </ul>
 
@@ -114,7 +115,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">pesfit</a>
+          <a href="index.html">pesfit</a>
         
       </nav>
 
@@ -142,15 +143,15 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li><code class="docutils literal notranslate"><span class="pre">pesfit</span></code> documentation</li>
+      <li>Metrics for hyperparameter tuning  <code class="docutils literal notranslate"><span class="pre">(pesfit.metrics)</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/metrics.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -163,36 +164,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pesfit-documentation">
-<h1><code class="docutils literal notranslate"><span class="pre">pesfit</span></code> documentation<a class="headerlink" href="#pesfit-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Multiband lineshape fitting routines and benchmarks for photoemission spectroscopy.</p>
-<div class="section" id="rationale">
-<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
-<p>Lineshape fitting is a universal task in photoemission spectroscopy and can be a tedious endeavor due to the increasing amount of data measured in modern instruments (e.g. angle-resolved hemispherical analyzer, time-of-flight electron momentum microscope). It extracts physically meaningful quantities directly related to the materials’ electronic properties, which can be reproduced from theory calculations. However, the efficiency bottleneck in lineshape fitting puts constraints on the potential new physical insights obtainable within a meaningful time frame. We set up here examples of multiband photoemission spectra along with existing domain knowledge in the field. The routines and benchmarks featured here offer an open-source data and algorithm platform for continuous algorithm development to improve the computational efficiency of the lineshape fitting task, which, in the meantime, also paves the way towards the automation of materials characterization using photoemission spectroscopy.</p>
-<p>The fitting part of the package builds and improves on the existing <code class="docutils literal notranslate"><span class="pre">Model</span></code> and <code class="docutils literal notranslate"><span class="pre">CompositeModel</span></code> classes in the <code class="docutils literal notranslate"><span class="pre">lmfit</span></code> <a class="reference external" href="https://github.com/lmfit/lmfit-py/">package</a> to include multiband lineshapes (involving an arbitrary number of bands) evaluated using map-reduce operations.</p>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Instructions</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="I01_start.html">How to start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="I01_start.html#installation">Installation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="I02_benchmark.html">Fitting benchmarks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="I02_benchmark.html#benchmarks-with-mathrm-wse-2">Benchmarks with <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span></a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">API documentation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="lineshape.html">Complex lineshape models  <code class="docutils literal notranslate"><span class="pre">(pesfit.lineshape)</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="fitter.html">Integrated fitting workflow  <code class="docutils literal notranslate"><span class="pre">(pesfit.fitter)</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics for hyperparameter tuning  <code class="docutils literal notranslate"><span class="pre">(pesfit.metrics)</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility functions  <code class="docutils literal notranslate"><span class="pre">(pesfit.utils)</span></code></a></li>
-</ul>
-</div>
-</div>
+  <div class="section" id="module-pesfit.metrics">
+<span id="metrics-for-hyperparameter-tuning-pesfit-metrics"></span><h1>Metrics for hyperparameter tuning  <code class="docutils literal notranslate"><span class="pre">(pesfit.metrics)</span></code><a class="headerlink" href="#module-pesfit.metrics" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pesfit.metrics.GroupRMSE">
+<em class="property">class </em><code class="sig-prename descclassname">pesfit.metrics.</code><code class="sig-name descname">GroupRMSE</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fres</span></em>, <em class="sig-param"><span class="n">nband</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group-wise root-mean-square error calculator.</p>
+<dl class="py method">
+<dt id="pesfit.metrics.GroupRMSE.group_rmse">
+<code class="sig-name descname">group_rmse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ground_truth</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE.group_rmse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate group-wise root-mean-square error.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pesfit.metrics.GroupRMSE.load_all_data">
+<code class="sig-name descname">load_all_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">varname</span></em>, <em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE.load_all_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load all reconstruction data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pesfit.metrics.GroupRMSE.load_data">
+<code class="sig-name descname">load_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">varname</span></em>, <em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE.load_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a set of reconstruction data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pesfit.metrics.GroupRMSE.rmse">
+<code class="sig-name descname">rmse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">result</span></em>, <em class="sig-param"><span class="n">ground_truth</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE.rmse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate root-mean-square error.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -205,8 +208,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="I01_start.html" class="btn btn-neutral float-right" title="How to start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utility functions (pesfit.utils)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+      
+        <a href="fitter.html" class="btn btn-neutral" title="Integrated fitting workflow (pesfit.fitter)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

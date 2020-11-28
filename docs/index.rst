@@ -24,5 +24,6 @@ The fitting part of the package builds and improves on the existing ``Model`` an
 
    lineshape
    fitter
+   metrics
    utils
 
