@@ -72,7 +72,7 @@ if VARYING_INIT == 'theory':
     # theo_fname = r'/theory/symline/hsymline_LDA.h5'
     theo_fname = r'/theory/symline/hsymline_PBE.h5'
     theo_path = data_dir + theo_fname
-    theo_data = io.h5_to_dict(theo_path)['data']['kimage']
+    theo_data = io.h5_to_dict(theo_path)['data']['kpath']
     inits_vary = theo_data
 
 elif VARYING_INIT == 'recon':
@@ -161,23 +161,23 @@ else:
 
 ## Select energy axis data range used for fitting
 if NBAND == 2:
-    en_range = slice(20, 100)
+    en_range = slice(10, 100)
 elif NBAND == 4:
-    en_range = slice(20, 220)
+    en_range = slice(10, 220)
 elif NBAND == 8:
-    en_range = slice(20, 320)
+    en_range = slice(10, 320)
 elif NBAND == 14:
-    en_range = slice(20, 470)
+    en_range = slice(10, 470)
 else:
-    en_range = slice(20, 400)
+    en_range = slice(10, 400)
 
 ## Run the fitting benchmark
-pesdata_shape = pes_data['data']['kimage'].shape
+pesdata_shape = pes_data['data']['kpath'].shape
 maxspectra = pesdata_shape[0] * pesdata_shape[1]
 nspec = min([NSPECTRA, maxspectra])
 
 if OPERATION == 'sequential':    
-    kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kimage'], preftext=preftext)
+    kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kpath'], preftext=preftext)
 
     kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
 
@@ -198,7 +198,7 @@ if OPERATION == 'sequential':
 
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
-        kfit = pf.fitter.DistributedFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kimage'], nfitter=nspec)
+        kfit = pf.fitter.DistributedFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kpath'], nfitter=nspec)
 
         kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range, offset=EOFFSET)
         print(EOFFSET)

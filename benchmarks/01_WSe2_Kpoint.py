@@ -93,14 +93,14 @@ if PERSISTENT_INIT:
     lp_prefixes = [preftext+str(i)+'_' for i in range(1, NBAND+1)]
 
     ## Case of 2 bands near K point
-    vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
+    vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.5, min=0, max=2, vary=True),
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                            'gamma':dict(value=0.02, min=0, max=2, vary=True),
+                            'gamma':dict(value=0.05, min=0, max=2, vary=True),
                             'center':dict(vary=True)}},
             
-                    {'lp2_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
+                    {'lp2_':{'amplitude':dict(value=0.5, min=0, max=2, vary=True),
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                            'gamma':dict(value=0.02, min=0, max=2, vary=True),
+                            'gamma':dict(value=0.05, min=0, max=2, vary=True),
                             'center':dict(vary=True)}}]
 
     ## Case of 4 bands near K point
@@ -108,7 +108,7 @@ if PERSISTENT_INIT:
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
                             'gamma':dict(value=0.05, min=0, max=2, vary=True)}},
           
-                    {'lp4_':{'amplitude':dict(value=0.6, min=0, max=2, vary=True),
+                    {'lp4_':{'amplitude':dict(value=0.5, min=0, max=2, vary=True),
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
                             'gamma':dict(value=0.05, min=0, max=2, vary=True)}}]
     vardict['04'] = vardict['02'] + vardict['04']
@@ -170,11 +170,11 @@ if NBAND == 2:
 elif NBAND == 4:
     en_range = slice(10, 220)
 elif NBAND == 8:
-    en_range = slice(10, 320)
+    en_range = slice(10, 280)
 elif NBAND == 14:
-    en_range = slice(10, 470)
+    en_range = slice(10, 490)
 else:
-    en_range = slice(10, 400)
+    en_range = slice(10, 490)
 
 ## Run the fitting benchmark
 pesdata_shape = pes_data['V'].shape
