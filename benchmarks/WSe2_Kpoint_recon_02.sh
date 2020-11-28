@@ -25,7 +25,7 @@ done
 echo "Tuning initial conditions for reconstructing band #2..."
 for EOF in $EOFS
 do
-    SHFTS="0.3 $EOF"
+    SHFTS="0.26 $EOF"
     echo "total band = $NBAND, current band = 2, total spec = $NSPEC, worker = $NWORK, chunk size = $CHUNKSIZE, energy shift = $SHFTS" >> $FPATH
     $PYTHONPATH $CODEPATH -nb=$NBAND -ns=$NSPEC -op="parallel" -ds='LDA_synth_14' -bk="async" -nw=$NWORK -cs=$CHUNKSIZE -ofs $SHFTS -varin="theory" >> $FPATH
     echo "" >> $FPATH
