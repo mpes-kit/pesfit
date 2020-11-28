@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 
-class GroupRMSE(object):
+class GroupMetrics(object):
     """ Group-wise root-mean-square error calculator.
     """
     
@@ -47,3 +47,18 @@ class GroupRMSE(object):
                         
         rmserrs = list(map(lambda r: self.rmse(r, ground_truth), self.res))
         self.group_rmserr = np.array(rmserrs)
+
+    def instability(self, result, ground_truth):
+        """ Calculate reconstruction instability.
+        """
+        
+        diff = result - ground_truth
+        instab = np.var(diff)
+        return instab
+        
+    def group_instability(self, ground_truth):
+        """ Calculate the group-wise reconstruction instability.
+        """
+        
+        instabs = list(map(lambda r: self.instability(r, ground_truth), self.res))
+        self.group_instab = np.array(instabs)
