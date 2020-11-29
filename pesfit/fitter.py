@@ -279,10 +279,13 @@ class PatchFitter(object):
         self.ydata = ydata
 
         if self.ydata is not None:
-            if self.ydata.ndim == 3:
+            ydata_dim = self.ydata.ndim
+            if ydata_dim == 3:
                 self.patch_shape = self.ydata.shape
-            elif self.ydata.ndim == 2:
+            elif ydata_dim == 2:
                 self.patch_shape = self.ydata[None,:,:].shape
+            elif ydata_dim == 1:
+                self.patch_shape = self.ydata[None,None,:].shape
             self.patch_r, self.patch_c, self.elen = self.patch_shape
         
         if model is None:
@@ -320,10 +323,13 @@ class PatchFitter(object):
         self.load(attrname='ydata', **kwds)
 
         if self.ydata is not None:
-            if self.ydata.ndim == 3:
+            ydata_dim = self.ydata.ndim
+            if ydata_dim == 3:
                 self.patch_shape = self.ydata.shape
-            elif self.ydata.ndim == 2:
+            elif ydata_dim == 2:
                 self.patch_shape = self.ydata[None,:,:].shape
+            elif ydata_dim == 1:
+                self.patch_shape = self.ydata[None,None,:].shape
             self.patch_r, self.patch_c, self.elen = self.patch_shape
     
     def load_band_inits(self, **kwds):
@@ -366,10 +372,14 @@ class PatchFitter(object):
             self.xvals = self.xdata[drange]
         else:
             self.xvals = xdata
-        if self.ydata.ndim == 3:
+        
+        ydata_dim = self.ydata.ndim
+        if ydata_dim == 3:
             self.ydata2D = u.partial_flatten(self.ydata[...,self.drange], axis=(0, 1))
-        elif self.ydata.ndim == 2:
+        elif ydata_dim == 2:
             self.ydata2D = self.ydata[...,self.drange].copy()
+        elif ydata_dim == 1:
+            self.ydata2D = self.ydata[None,self.drange].copy()
         
         try:
             if band_inits is not None:
@@ -508,15 +518,16 @@ class DistributedFitter(object):
         self.drange = drange
         self.xvals = self.xdata[self.drange]
         
-        if self.ydata.ndim == 3:
+        ydata_dim = self.ydata.ndim
+        if ydata_dim == 3:
             self.patch_shape = self.ydata.shape
             self.ydata2D = u.partial_flatten(self.ydata[...,self.drange], axis=(0, 1))
-        elif self.ydata.ndim == 2:
+        elif ydata_dim == 2:
             self.patch_shape = self.ydata[None,:,:].shape
             self.ydata2D = self.ydata[...,self.drange].copy()
         self.patch_r, self.patch_c, self.elen = self.patch_shape
         
-        self.fitters = [PatchFitter(self.xvals, self.ydata2D[ft:ft+1,...], mode=model, modelkwds=modelkwds, **kwds) for ft in range(self.nfitter)]
+        self.fitters = [PatchFitter(self.xvals, self.ydata2D[ft,...], mode=model, modelkwds=modelkwds, **kwds) for ft in range(self.nfitter)]
         self.models = [self.fitters[n].model for n in range(self.nfitter)]
         self.model = self.fitters[0].model
         self.prefixes = self.fitters[0].prefixes
