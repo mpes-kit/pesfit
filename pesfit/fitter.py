@@ -499,37 +499,59 @@ class DistributedFitter(object):
     """ Parallelized fitting of line spectra in a photoemission data patch.
     """
 
-    def __init__(self, xdata=None, ydata=None, model=None, modelkwds={}, **kwds):
+    def __init__(self, xdata, ydata, drange=None, model=None, modelkwds={}, **kwds):
 
         self.nfitter = kwds.pop('nfitter', 1)
-        self.fitters = [PatchFitter(xdata, ydata, mode=model, modelkwds=modelkwds, **kwds) for _ in range(self.nfitter)]
-        self.models = [self.fitters[n].model for n in range(self.nfitter)]
-        self.prefixes = self.fitters[0].prefixes
+
         self.xdata = xdata
         self.ydata = ydata
+        self.drange = drange
+        self.xvals = self.xdata[self.drange]
+        
+        if self.ydata.ndim == 3:
+            self.patch_shape = self.ydata.shape
+            self.ydata2D = u.partial_flatten(self.ydata[...,self.drange], axis=(0, 1))
+        elif self.ydata.ndim == 2:
+            self.patch_shape = self.ydata[None,:,:].shape
+            self.ydata2D = self.ydata[...,self.drange].copy()
+        self.patch_r, self.patch_c, self.elen = self.patch_shape
+        
+        self.fitters = [PatchFitter(self.xvals, self.ydata2D[ft:ft+1,...], mode=model, modelkwds=modelkwds, **kwds) for ft in range(self.nfitter)]
+        self.models = [self.fitters[n].model for n in range(self.nfitter)]
+        self.model = self.fitters[0].model
+        self.prefixes = self.fitters[0].prefixes
     
     @property
     def nspec(self):
         """ Number of line spectra.
         """
         
-        return self.fitters[0].nspec
+        return self.patch_r * self.patch_c
 
-    def set_inits(self, inits_dict=None, xdata=None, band_inits=None, drange=None, offset=0):
+    def set_inits(self, inits_dict=None, band_inits=None, offset=0):
         """ Set initialization for all constituent fitters.
         Parameters see ``set_inits()`` method in ``pesfit.fitter.PatchFitter`` class.
         """
         
-        for i in range(self.nfitter):
-            self.fitters[i].set_inits(inits_dict=inits_dict, band_inits=band_inits, drange=drange, offset=offset)
-        if xdata is None:
-            self.xvals = self.xdata[drange]
+        if inits_dict is not None:
+            self.inits_persist = inits_dict
         else:
-            self.xvals = xdata
-        self.model = self.fitters[0].model
-        self.ydata2D = self.fitters[0].ydata2D
-        self.inits_persist = self.fitters[0].inits_persist
-        self.band_inits2D = self.fitters[0].band_inits2D
+            self.inits_persist = {}
+
+        try:
+            if band_inits is not None:
+                self.band_inits = band_inits
+                if self.band_inits.ndim == 3:
+                    self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2)) + offset
+                elif self.band_inits.ndim == 2:
+                    self.band_inits2D = self.band_inits + offset
+        except:
+            raise Exception('Cannot reshape the initialization!')
+        
+        for n in range(self.nfitter):
+            self.fitters[n].set_inits(inits_dict=inits_dict, band_inits=self.band_inits2D[:,n:n+1], drange=None, offset=offset)
+
+        # self.band_inits2D = self.fitters[0].band_inits2D
 
     def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], para_kwds={}, scheduler='processes', backend='multiprocessing', pbar=False, ret=False, **kwds):
         """ Parallel pointwise spectrum fitting of the data patch.
@@ -582,9 +604,9 @@ class DistributedFitter(object):
                     raise Exception('other_initvals has incorrect shape!')
             else:
                 raise Exception('other_initvals has incorrect shape!')
-            
-        # Carry out parallelized fitting
-        process_args = [(self.models[n], self.pars[n], self.xvals, self.ydata2D[n, :], n, self.prefixes,
+        
+        # Generate arguments for compartmentalized fitting tasks
+        process_args = [(self.models[n], self.pars[n], self.xvals, self.fitters[n].ydata2D, n, self.prefixes,
         varkeys, self.other_inits[...,n]) for n in range(nspec)]
         
         # Use different libraries for parallelization
