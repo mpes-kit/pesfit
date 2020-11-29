@@ -199,9 +199,9 @@ if OPERATION == 'sequential':
 
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
-        kfit = pf.fitter.DistributedFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kpath'], nfitter=nspec)
+        kfit = pf.fitter.DistributedFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kpath'], drange=en_range, nfitter=nspec)
 
-        kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range, offset=EOFFSET)
+        kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, offset=EOFFSET)
         print(EOFFSET)
 
         if CHUNKSIZE > 0:
