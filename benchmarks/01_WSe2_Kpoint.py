@@ -38,10 +38,11 @@ DATASOURCE = cli_args.datasource
 ## Number of line spectra to fit
 NSPECTRA = cli_args.nspectra
 ## Global energy offset for fitting initialization of each band
-argofs = cli_args.eoffset
+argofs = list(map(float, cli_args.eoffset))
 nargofs = len(argofs)
 if nargofs == 1:
-    allofs = argofs*NBAND + [0]*(14-NBAND)
+    argofs = argofs*NBAND
+    allofs = argofs + [0]*(14-NBAND)
 elif nargofs == NBAND:
     allofs = argofs + [0]*(14-NBAND)
 EOFFSET = np.asarray([allofs]).T
