@@ -41,12 +41,15 @@ class GroupMetrics(object):
         rmserr = np.linalg.norm(result - ground_truth)
         return rmserr
     
-    def group_rmse(self, ground_truth):
+    def group_rmse(self, ground_truth, form='averaged'):
         """ Calculate group-wise root-mean-square error.
         """
                         
         rmserrs = list(map(lambda r: self.rmse(r, ground_truth), self.res))
-        self.group_rmserr = np.array(rmserrs)
+        if form == 'accumulated':
+            self.group_rmserr = np.array(rmserrs)
+        elif form == 'averaged':
+            self.group_rmserr = np.array(rmserrs) / self.nband
 
     def instability(self, result, ground_truth):
         """ Calculate reconstruction instability.
@@ -56,9 +59,12 @@ class GroupMetrics(object):
         instab = np.var(diff)
         return instab
         
-    def group_instability(self, ground_truth):
+    def group_instability(self, ground_truth, form='averaged'):
         """ Calculate the group-wise reconstruction instability.
         """
         
         instabs = list(map(lambda r: self.instability(r, ground_truth), self.res))
-        self.group_instab = np.array(instabs)
+        if form == 'accumulated':
+            self.group_instab = np.array(instabs)
+        elif form == 'averaged':
+            self.group_instab = np.array(instabs) / self.nband
