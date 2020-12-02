@@ -67,7 +67,7 @@ do
 done
 
 # Tune the relative energy shift in initialization for 14th band
-EOFS="0.02 0.06 0.10 0.14"
+EOFS="-0.06 -0.02 0.02 0.06 0.10 0.14"
 echo "Tuning initial conditions for reconstructing band #14 ..."
 for EOF in $EOFS
 do
