@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import numpy as np
 import pesfit as pf
@@ -91,14 +94,14 @@ if PERSISTENT_INIT:
     lp_prefixes = [preftext+str(i)+'_' for i in range(1, NBAND+1)]
 
     ## Case of 2 bands near K point
-    vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
+    vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.5, min=0, max=2, vary=True),
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                            'gamma':dict(value=0.02, min=0, max=2, vary=True),
+                            'gamma':dict(value=0.05, min=0, max=2, vary=True),
                             'center':dict(vary=True)}},
             
-                    {'lp2_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
+                    {'lp2_':{'amplitude':dict(value=0.5, min=0, max=2, vary=True),
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                            'gamma':dict(value=0.02, min=0, max=2, vary=True),
+                            'gamma':dict(value=0.05, min=0, max=2, vary=True),
                             'center':dict(vary=True)}}]
 
     ## Case of 4 bands near K point
@@ -106,7 +109,7 @@ if PERSISTENT_INIT:
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
                             'gamma':dict(value=0.05, min=0, max=2, vary=True)}},
           
-                    {'lp4_':{'amplitude':dict(value=0.6, min=0, max=2, vary=True),
+                    {'lp4_':{'amplitude':dict(value=0.5, min=0, max=2, vary=True),
                             'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
                             'gamma':dict(value=0.05, min=0, max=2, vary=True)}}]
     vardict['04'] = vardict['02'] + vardict['04']
@@ -162,23 +165,23 @@ else:
 
 ## Select energy axis data range used for fitting
 if NBAND == 2:
-    en_range = slice(10, 100)
+    en_range = slice(0, 110)
 elif NBAND == 4:
-    en_range = slice(10, 220)
+    en_range = slice(0, 190)
 elif NBAND == 8:
-    en_range = slice(10, 320)
+    en_range = slice(0, 280)
 elif NBAND == 14:
-    en_range = slice(10, 470)
+    en_range = slice(0, 490)
 else:
-    en_range = slice(10, 400)
+    en_range = slice(0, 490)
 
 ## Run the fitting benchmark
-pesdata_shape = pes_data['data']['kpath'].shape
+pesdata_shape = pes_data['data']['kimage'].shape
 maxspectra = pesdata_shape[0] * pesdata_shape[1]
 nspec = min([NSPECTRA, maxspectra])
 
 if OPERATION == 'sequential':    
-    kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kpath'], preftext=preftext)
+    kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kimage'], preftext=preftext)
 
     kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
 
@@ -199,10 +202,9 @@ if OPERATION == 'sequential':
 
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
-        kfit = pf.fitter.DistributedFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kpath'], drange=en_range, nfitter=nspec)
+        kfit = pf.fitter.DistributedFitter(peaks={'Voigt':NBAND}, xdata=pes_data['data']['E'], ydata=pes_data['data']['kimage'], drange=en_range, nfitter=nspec)
 
         kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, offset=EOFFSET)
-        print(EOFFSET)
 
         if CHUNKSIZE > 0:
             tstart = time.perf_counter()
