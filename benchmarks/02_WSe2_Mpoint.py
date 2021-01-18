@@ -162,7 +162,7 @@ else:
 if NBAND == 2:
     en_range = slice(20, 100)
 elif NBAND == 4:
-    en_range = slice(20, 220)
+    en_range = slice(20, 210)
 elif NBAND == 8:
     en_range = slice(20, 320)
 elif NBAND == 14:
