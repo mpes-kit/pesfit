@@ -174,7 +174,9 @@ def varsetter(params, inits={}, ret=False):
                 for kcomp, vcomp in inits.items():
                     # Unpack the dictionary at the parameter level
                     for kparam, vparam in vcomp.items():
-                        params[kcomp+kparam].set(**vparam)
+                        varcomp = kcomp + kparam
+                        if varcomp in params.keys():
+                            params[varcomp].set(**vparam)
             
             elif dd == 2:
                 # Unpack the dictionary at the parameter level
@@ -296,7 +298,7 @@ class PatchFitter(object):
             self.model = model
         
         self.prefixes = self.model.prefixes
-        self.fitres = None
+        self.fitres = []
     
     def load(self, attrname='', fdir='', fname='', ftype='h5', **kwds):
         """ Generic load function including attribute assignment.
@@ -388,6 +390,8 @@ class PatchFitter(object):
                     self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2)) + offset
                 elif self.band_inits.ndim == 2:
                     self.band_inits2D = self.band_inits + offset
+            else:
+                self.band_inits2D = None
         except:
             raise Exception('Cannot reshape the initialization!')
     
@@ -398,7 +402,7 @@ class PatchFitter(object):
         
         return self.patch_r * self.patch_c
     
-    def sequential_fit(self, varkeys=['value', 'vary'], other_initvals=[True], pbar=False, pbenv='notebook', **kwds):
+    def sequential_fit(self, varkeys=['value', 'vary'], other_initvals=[True], pref_exclude=['bg_'], include_vary=True, pbar=False, pbenv='notebook', **kwds):
         """ Sequential line fitting of the data patch.
 
         **Parameters**\n
@@ -418,6 +422,7 @@ class PatchFitter(object):
         """
         
         self.pars = self.model.make_params()
+        self.fitres = []
         # Setting the initialization parameters and constraints persistent throughout the fitting process
         try:
             varsetter(self.pars, self.inits_persist, ret=False)
@@ -434,30 +439,38 @@ class PatchFitter(object):
         
         # Construct the variable initialization parameters (usu. band positions) for all spectra
         # TODO: a better handling of nested dictionary generation
-        varyvals = self.band_inits2D[:self.model.nlp, :nspec]
-        if other_initvals is not None:
-            other_size = np.asarray(other_initvals).size
-            if (other_size != nspec) or ((other_size == 1) and (nspec == 1)):
-                try:
-                    othervals = np.ones((self.model.nlp, nspec))*other_initvals
-                    inits_vary_vals = np.moveaxis(np.stack((varyvals, othervals)), 0, 1)
-                except:
+        if include_vary:
+            varyvals = self.band_inits2D[:self.model.nlp, :nspec]
+            if other_initvals is not None:
+                other_size = np.asarray(other_initvals).size
+                if (other_size != nspec) or ((other_size == 1) and (nspec == 1)):
+                    try:
+                        othervals = np.ones((self.model.nlp, nspec))*other_initvals
+                        inits_vary_vals = np.moveaxis(np.stack((varyvals, othervals)), 0, 1)
+                    except:
+                        raise Exception('other_initvals has incorrect shape!')
+                else:
                     raise Exception('other_initvals has incorrect shape!')
-            else:
-                raise Exception('other_initvals has incorrect shape!')
 
+        if pref_exclude: # Exclude certain lineshapes in updating initialization, if needed
+            prefixes = list(set(self.prefixes) - set(pref_exclude))
+        
         # Sequentially fit every line spectrum in the data patch
         for n in tqdm(range(nspec), disable=not(pbar)):
 
             # Setting the initialization parameters that vary for every line spectrum
-            other_inits = inits_vary_vals[..., n]
-            self.inits_vary = init_generator(parname='center', varkeys=varkeys, lpnames=self.prefixes, parvals=other_inits)
-            self.inits_all = u.merge_nested_dict(self.inits_persist + self.inits_vary)
+            if include_vary:
+                other_inits = inits_vary_vals[..., n]
+                self.inits_vary = init_generator(parname='center', varkeys=varkeys, lpnames=prefixes, parvals=other_inits)
+                self.inits_all = u.merge_nested_dict(self.inits_persist + self.inits_vary)
+            else:
+                self.inits_all = u.merge_nested_dict(self.inits_persist)
             varsetter(self.pars, self.inits_all, ret=False)
-            
-            y = self.ydata2D[n, :] # Current energy distribution curve
+
+            y = self.ydata2D[n, :].ravel() # Current energy distribution curve
             # Line fitting with all the initial guesses supplied
-            out = pointwise_fitting(self.xvals, y, model=self.model, params=self.pars, ynorm=True, **kwds)
+            out = pointwise_fitting(self.xvals.ravel(), y, model=self.model, params=self.pars, ynorm=True, **kwds)
+            self.fitres.append(out)
 
             dfout = u.df_collect(out.params, extra_params={'spec_id':n}, currdf=self.df_fit)
             self.df_fit = dfout
@@ -498,7 +511,10 @@ class PatchFitter(object):
             xvals = self.xvals
         
         if fit_result is None:
-            fres = self.fitres
+            fid = kwds.pop('fid', 0)
+            fres = self.fitres[fid]
+        else:
+            fres = fit_result
         
         plot = plot_fit_result(fres, xvals, **kwds)
         
@@ -531,6 +547,7 @@ class DistributedFitter(object):
         self.models = [self.fitters[n].model for n in range(self.nfitter)]
         self.model = self.fitters[0].model
         self.prefixes = self.fitters[0].prefixes
+        self.fitres = []
     
     @property
     def nspec(self):
@@ -556,15 +573,20 @@ class DistributedFitter(object):
                     self.band_inits2D = u.partial_flatten(self.band_inits, axis=(1, 2)) + offset
                 elif self.band_inits.ndim == 2:
                     self.band_inits2D = self.band_inits + offset
+            else:
+                self.band_inits2D = None
         except:
             raise Exception('Cannot reshape the initialization!')
         
         for n in range(self.nfitter):
-            self.fitters[n].set_inits(inits_dict=inits_dict, band_inits=self.band_inits2D[:,n:n+1], drange=None, offset=offset)
+            if self.band_inits2D is not None:
+                self.fitters[n].set_inits(inits_dict=inits_dict, band_inits=self.band_inits2D[:,n:n+1], drange=None, offset=offset)
+            else:
+                self.fitters[n].set_inits(inits_dict=inits_dict, band_inits=None, drange=None, offset=offset)
 
         # self.band_inits2D = self.fitters[0].band_inits2D
 
-    def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], para_kwds={}, scheduler='processes', backend='multiprocessing', pbar=False, ret=False, **kwds):
+    def parallel_fit(self, varkeys=['value', 'vary'], other_initvals=[True], para_kwds={}, scheduler='processes', backend='multiprocessing', pref_exclude=[], include_vary=True, pbar=False, ret=False, **kwds):
         """ Parallel pointwise spectrum fitting of the data patch.
 
         **Parameters**\n
@@ -600,25 +622,36 @@ class DistributedFitter(object):
         except:
             pass
 
+        self.fitres = [] # Re-initialize fitting outcomes
         # Fitting parameters for all line spectra in the data patch
         self.df_fit = pd.DataFrame(columns=self.pars[0].keys())
         self.df_fit['spec_id'] = '' # Spectrum ID for queuing
 
-        varyvals = self.band_inits2D[:self.model.nlp, :nspec]
-        if other_initvals is not None:
-            other_size = np.asarray(other_initvals).size
-            if (other_size != nspec) or ((other_size == 1) and (nspec == 1)):
-                try:
-                    othervals = np.ones((self.model.nlp, nspec))*other_initvals
-                    self.other_inits = np.moveaxis(np.stack((varyvals, othervals)), 0, 1)
-                except:
+        if include_vary:
+            varyvals = self.band_inits2D[:self.model.nlp, :nspec]
+            if other_initvals is not None:
+                other_size = np.asarray(other_initvals).size
+                if (other_size != nspec) or ((other_size == 1) and (nspec == 1)):
+                    try:
+                        othervals = np.ones((self.model.nlp, nspec))*other_initvals
+                        self.other_inits = np.moveaxis(np.stack((varyvals, othervals)), 0, 1)
+                    except:
+                        raise Exception('other_initvals has incorrect shape!')
+                else:
                     raise Exception('other_initvals has incorrect shape!')
-            else:
-                raise Exception('other_initvals has incorrect shape!')
+
+        if pref_exclude: # Exclude certain lineshapes in updating initialization, if needed
+            prefixes = list(set(self.prefixes) - set(pref_exclude))
+        else:
+            prefixes =  self.prefixes
         
         # Generate arguments for compartmentalized fitting tasks
-        process_args = [(self.models[n], self.pars[n], self.xvals, self.fitters[n].ydata2D, n, self.prefixes,
-        varkeys, self.other_inits[...,n]) for n in range(nspec)]
+        try:
+            process_args = [(self.models[n], self.pars[n], self.xvals, self.fitters[n].ydata2D, n, include_vary, prefixes,
+            varkeys, self.other_inits[...,n], pref_exclude) for n in range(nspec)]
+        except:
+            process_args = [(self.models[n], self.pars[n], self.xvals, self.fitters[n].ydata2D, n, include_vary, prefixes,
+            varkeys, None, pref_exclude) for n in range(nspec)]
         
         # Use different libraries for parallelization
         n_workers = kwds.pop('num_workers', n_cpu)
@@ -681,6 +714,7 @@ class DistributedFitter(object):
 
         # Collect the results
         for fres in fit_results:
+            self.fitres.append(fres)
             dfout = u.df_collect(fres[0].params, extra_params=fres[1], currdf=self.df_fit)
             self.df_fit = dfout
             # print_fit_result(fres.params, printout=True)
@@ -691,17 +725,20 @@ class DistributedFitter(object):
         if ret:
             return self.df_fit
     
-    def _single_fit(self, model, pars, xvals, yspec, n, prefixes, varkeys, others, **kwds):
+    def _single_fit(self, model, pars, xvals, yspec, n, include_vary, prefixes, varkeys, others, pref_exclude, **kwds):
         """ Fit a single line spectrum with custom initializaton.
         """
         
         # Setting the initialization parameters that vary for every line spectrum
-        inits_vary = init_generator(parname='center', varkeys=varkeys, lpnames=prefixes, parvals=others)
-        inits_all = u.merge_nested_dict(self.inits_persist + inits_vary)
+        if include_vary:
+            inits_vary = init_generator(parname='center', varkeys=varkeys, lpnames=prefixes, parvals=others)
+            inits_all = u.merge_nested_dict(self.inits_persist + inits_vary)
+        else:
+            inits_all = u.merge_nested_dict(self.inits_persist)
         varsetter(pars, inits_all, ret=False)
         
         # Line fitting with all the initial guesses supplied
-        out_single = pointwise_fitting(xvals, yspec, model=model, params=pars, ynorm=True, **kwds)
+        out_single = pointwise_fitting(xvals.ravel(), yspec.ravel(), model=model, params=pars, ynorm=True, **kwds)
         out_extra = {'spec_id': n}
 
         return out_single, out_extra
@@ -764,7 +801,7 @@ def print_fit_result(params, printout=False, fpath='', mode='a', **kwds):
     return
 
 
-def plot_fit_result(fitres, x, plot_components=True, downsamp=1, ret=False, **kwds):
+def plot_fit_result(fitres, x, plot_components=True, downsamp=1, flatten=False, ret=False, **kwds):
     """ Plot the fitting outcomes.
 
     **Parameters**\n
@@ -796,7 +833,12 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, ret=False, **kw
             ax.plot(x, v, '-', label=k[:-1])
     
     ax.plot(x, fitres.best_fit, '-r')
-    ax.plot(x[::downsamp], fitres.data[::downsamp], '.k')
+    if flatten:
+        xflat = x.flatten()
+        datflat = fitres.data.flatten()
+        ax.plot(xflat[::downsamp], datflat[::downsamp], '.k')
+    else:
+        ax.plot(x[::downsamp], fitres.data[::downsamp], '.k')
     
     xlabel = kwds.pop('xlabel', None)
     ylabel = kwds.pop('ylabel', None)
