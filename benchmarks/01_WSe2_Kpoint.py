@@ -185,7 +185,7 @@ nspec = min([NSPECTRA, maxspectra])
 if OPERATION == 'sequential':    
     kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], preftext=preftext)
 
-    kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
+    kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range, offset=EOFFSET)
 
     tstart = time.perf_counter()
     kfit.sequential_fit(pbar=True, pbenv='classic', jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=nspec)
