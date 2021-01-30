@@ -4,6 +4,7 @@ h5py
 pandas
 hdfio
 dask
+cloudpickle
 
 # build
 sphinx

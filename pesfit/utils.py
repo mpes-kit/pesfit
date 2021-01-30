@@ -7,6 +7,7 @@ from functools import reduce
 from scipy.interpolate import RegularGridInterpolator as RGI
 from tqdm import notebook as nbk
 from tqdm import tqdm as tqdm_classic
+import cloudpickle as cpk
 
 def riffle(*arr):
     """
@@ -298,3 +299,21 @@ def merge_nested_dict(dicts):
             dict_merged.append(combined_dict)
             
     return dict_merged
+
+
+def pickle_obj(fname, obj):
+    """ Pickle object.
+    """
+    
+    f = open(fname, 'wb')
+    cpk.dump(obj, f)
+    f.close()
+
+
+def load_pickle(fname):
+    """ Load pickled object.
+    """
+    
+    f = open(fname, 'rb')
+    cpk.load(f)
+    f.close()
