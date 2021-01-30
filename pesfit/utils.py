@@ -315,5 +315,7 @@ def load_pickle(fname):
     """
     
     f = open(fname, 'rb')
-    cpk.load(f)
+    content = cpk.load(f)
     f.close()
+
+    return content
