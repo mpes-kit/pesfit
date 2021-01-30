@@ -44,20 +44,21 @@ vardict = centers + decay
 dts_seq = []
 dts_para = []
 
-for npk, sw in zip(npks, specwidths):
-    dat = np.moveaxis(diffpat['Im_an'], 2, 0)[:, :, 100:480].reshape((225, 380))
-    dat -= dat.min(axis=1)[:, None]
-    ctvals = ctvals[:npk]
+# for npk, sw in zip(npks, specwidths):
+#     dat = np.moveaxis(diffpat['Im_an'], 2, 0)[:, :, 100:sw+100].reshape((225, sw))
+#     dat -= dat.min(axis=1)[:, None]
+#     ctvals = ctvals[:npk]
     
-    # Time-stamping for the sequential fit
-    kfit = pf.fitter.PatchFitter(peaks={'Voigt':npk}, background='Exponential', xdata=np.arange(sw), ydata=dat)
-    kfit.set_inits(inits_dict=vardict, band_inits=None, offset=0)
-    t_start = time.perf_counter()
-    kfit.sequential_fit(jitter_init=False, varkeys=[], nspec=225, include_vary=False, pbar=True)
-    t_end = time.perf_counter()
+#     # Time-stamping for the sequential fit
+#     kfit = pf.fitter.PatchFitter(peaks={'Voigt':npk}, background='Exponential', xdata=np.arange(sw), ydata=dat)
+#     kfit.set_inits(inits_dict=vardict, band_inits=None, offset=0)
+#     t_start = time.perf_counter()
+#     kfit.sequential_fit(jitter_init=False, varkeys=[], nspec=225, include_vary=False, pbar=True)
+#     t_end = time.perf_counter()
 
-    dt = t_end - t_start
-    dts_seq.append(dt)
+#     dt = t_end - t_start
+#     print(dt)
+#     dts_seq.append(dt)
 
 chunks = [50, 50, 30, 3]
 for npk, sw, cs in zip(npks[3:], specwidths[3:], chunks[3:]):
