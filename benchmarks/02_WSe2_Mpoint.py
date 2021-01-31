@@ -22,10 +22,11 @@ parser.add_argument('-bk', '--backend', metavar='backend', nargs='?', type=str, 
 parser.add_argument('-nw', '--nworker', metavar='nworker', nargs='?', type=int, help='Number of workers to spawn')
 parser.add_argument('-cs', '--chunksize', metavar='chunksize', nargs='?', type=int, help='Chunk size of tasks assigned to each worker')
 parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bool, help='Whether to include time profiling')
+parser.add_argument('-pkl', '--pickle', metavar='pickle', nargs='?', type=bool, help='Whether to pickle the detailed results to file (may be large)')
 parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='Initialization include persistent settings')
 parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='Initialization including varying settings')
 parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='Add jitter to initialization for better fits')
-parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=[0.], operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=1, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False)
+parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=[0.], operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=1, timecount=True, pickle=False, persistent_init=True, varying_init='recon', jitter_init=False)
 cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the M point of WSe2
@@ -56,12 +57,15 @@ NWORKER = cli_args.nworker
 CHUNKSIZE = cli_args.chunksize
 ## Option to enable code profiling
 TIMECOUNT = cli_args.timecount
+## Option to pickle all detailed fitting results to a file (may be large)
+PICKLE = cli_args.pickle
 ## Option to introduce persistent initial conditions
 PERSISTENT_INIT = cli_args.persistent_init
 ## Specification of spectrum-dependent initial conditions ('theory' or 'recon')
 VARYING_INIT = cli_args.varying_init
 ## Option to apply jittering to initializations to obtain better fitting results
 JITTER_INIT = cli_args.jitter_init
+n=2
 
 # Photoemission band mapping data
 data_dir = r'../data/WSe2'
@@ -71,10 +75,11 @@ pes_data = io.h5_to_dict(pes_path)
 
 if VARYING_INIT == 'theory':
     # Theoretical calculations interpolated to the same momentum grid (as one type of initialization)
-    theo_fname = r'/theory/mpoint/mpoint_LDA.h5'
+    theo_fname = r'/theory/mpoint/mpoint_LDA_50.h5'
     theo_path = data_dir + theo_fname
     theo_data = io.h5_to_dict(theo_path)['bands']
-    inits_vary = theo_data
+    print(theo_data.shape)
+    inits_vary = theo_data[:,::n,::n]
 
 elif VARYING_INIT == 'recon':
     # Reconstructed photoemission band dispersion (as another type of initialization)
@@ -91,23 +96,25 @@ if PERSISTENT_INIT:
 
     ## Case of 2 bands near M point
     vardict['02'] = [{'lp1_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
-                    'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                    'gamma':dict(value=0.02, min=0, max=2, vary=True)}},
-            
-                    {'lp2_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
-                        'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                        'gamma':dict(value=0.02, min=0, max=2, vary=True)}}]
+                            'sigma':dict(value=0.1, min=0.05, max=0.5, vary=False),
+                            'gamma':dict(value=0.05, min=0, max=1, vary=True)}},
+                
+                    {'lp2_':{'amplitude':dict(value=0.5, min=0, max=2, vary=True),
+                            'sigma':dict(value=0.1, min=0.05, max=0.5, vary=False),
+                            'gamma':dict(value=0.05, min=0, max=1, vary=True)}}]
 
     ## Case of 4 bands near M point
     vardict['04'] = [{'lp3_':{'amplitude':dict(value=0.2, min=0, max=2, vary=1.),
                     'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                    'gamma':dict(value=0.02, min=0, max=2, vary=True),
-                    'center':dict(vary=True)}},
+                    'gamma':dict(value=0.05, min=0, max=2, vary=True)}},
             
-                {'lp4_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
-                    'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
-                    'gamma':dict(value=0.02, min=0, max=2, vary=True),
-                    'center':dict(vary=True)}}]
+                    {'lp4_':{'amplitude':dict(value=0.2, min=0, max=2, vary=True),
+                        'sigma':dict(value=0.1, min=0.05, max=2, vary=False),
+                        'gamma':dict(value=0.05, min=0, max=2, vary=True)}},
+                        
+                    {'bg_':{'amplitude':dict(value=0.8, min=0, max=2, vary=True),
+                            'sigma':dict(value=2, min=0, max=10, vary=True),
+                            'center':dict(value=-5, min=-20, max=-3, vary=True)}}]
     vardict['04'] = vardict['02'] + vardict['04']
 
     ## Case of 8 bands near M point
@@ -160,28 +167,28 @@ else:
 
 ## Select energy axis data range used for fitting
 if NBAND == 2:
-    en_range = slice(20, 100)
+    en_range = slice(20, 120)
 elif NBAND == 4:
-    en_range = slice(20, 210)
+    en_range = slice(20, 180)
 elif NBAND == 8:
-    en_range = slice(20, 320)
+    en_range = slice(20, 250)
 elif NBAND == 14:
-    en_range = slice(20, 470)
+    en_range = slice(20, 490)
 else:
-    en_range = slice(20, 400)
+    en_range = slice(20, 490)
 
 ## Run the fitting benchmark
-pesdata_shape = pes_data['V'].shape
+pesdata_shape = pes_data['V'][::n,::n,:].shape
 maxspectra = pesdata_shape[0] * pesdata_shape[1]
 nspec = min([NSPECTRA, maxspectra])
 
 if OPERATION == 'sequential':    
-    kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], preftext=preftext)
+    kfit = pf.fitter.PatchFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'][::n,::n,:], preftext=preftext)
 
-    kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range)
+    kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, drange=en_range, offset=EOFFSET)
 
     tstart = time.perf_counter()
-    kfit.sequential_fit(pbar=True, pbenv='classic', jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=nspec)
+    kfit.sequential_fit(pbar=True, pbenv='classic', jitter_init=JITTER_INIT, shifts=np.arange(-0.08, 0.09, 0.01), nspec=nspec, ynorm=True)
     tstop = time.perf_counter()
 
     if TIMECOUNT:
@@ -193,14 +200,16 @@ if OPERATION == 'sequential':
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
-    kfit.save_data(fdir=out_dir, fname='/mpoint_{}_seqfit_nband={}_ofs={}_{}.h5'.format(DATASOURCE, NBAND, argofs, VARYING_INIT))
+    fn_text = '/mpoint_{}_seqfit_nband={}_ofs={}_{}'.format(DATASOURCE, NBAND, argofs, VARYING_INIT)
+    kfit.save_data(fdir=out_dir, fname=fn_text + '.h5')
+    if PICKLE:
+        pf.utils.pickle_obj(out_dir + fn_text + '.pickle', kfit.fitres)
 
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
-        kfit = pf.fitter.DistributedFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'], drange=en_range, nfitter=nspec)
+        kfit = pf.fitter.DistributedFitter(peaks={'Voigt':NBAND}, xdata=pes_data['E'], ydata=pes_data['V'][::n,::n,:], drange=en_range, nfitter=nspec)
 
         kfit.set_inits(inits_dict=inits_persist, band_inits=inits_vary, offset=EOFFSET)
-        print(EOFFSET)
 
         if CHUNKSIZE > 0:
             tstart = time.perf_counter()
@@ -219,7 +228,10 @@ elif OPERATION == 'parallel':
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        kfit.save_data(fdir=out_dir, fname='/mpoint_{}_parafit_nband={}_ofs={}_{}.h5'.format(DATASOURCE, NBAND, argofs, VARYING_INIT))
+        fn_text = '/mpoint_{}_parafit_nband={}_ofs={}_{}'.format(DATASOURCE, NBAND, argofs, VARYING_INIT)
+        kfit.save_data(fdir=out_dir, fname=fn_text + '.h5')
+        if PICKLE:
+            pf.utils.pickle_obj(out_dir + fn_text + '.pickle', kfit.fitres)
 
 else:
     raise NotImplementedError

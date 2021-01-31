@@ -22,10 +22,11 @@ parser.add_argument('-bk', '--backend', metavar='backend', nargs='?', type=str, 
 parser.add_argument('-nw', '--nworker', metavar='nworker', nargs='?', type=int, help='Number of workers to spawn')
 parser.add_argument('-cs', '--chunksize', metavar='chunksize', nargs='?', type=int, help='Chunk size of tasks assigned to each worker')
 parser.add_argument('-tc', '--timecount', metavar='timcount', nargs='?', type=bool, help='Whether to include time profiling')
+parser.add_argument('-pkl', '--pickle', metavar='pickle', nargs='?', type=bool, help='Whether to pickle the detailed results to file (may be large)')
 parser.add_argument('-persin', '--persistent_init', metavar='persistent_init', nargs='?', type=bool, help='Initialization include persistent settings')
 parser.add_argument('-varin', '--varying_init', metavar='varying_init', nargs='?', type=str, help='Initialization including varying settings')
 parser.add_argument('-jittin', '--jitter_init', metavar='jitter_init', nargs='?', type=bool, help='Add jitter to initialization for better fits')
-parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=[0.], operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=1, timecount=True, persistent_init=True, varying_init='recon', jitter_init=False)
+parser.set_defaults(nband=2, nspectra=10, datasource='preprocessed', eoffset=[0.], operation='sequential', backend='multiprocessing', nworker=n_cpu, chunksize=1, timecount=True, pickle=False, persistent_init=True, varying_init='recon', jitter_init=False)
 cli_args = parser.parse_args()
 
 # Sequential fitting of photoemission data patch around the K point of WSe2
@@ -56,6 +57,8 @@ NWORKER = cli_args.nworker
 CHUNKSIZE = cli_args.chunksize
 ## Option to enable code profiling
 TIMECOUNT = cli_args.timecount
+## Option to pickle all detailed fitting results to a file (may be large)
+PICKLE = cli_args.pickle
 ## Option to introduce persistent initial conditions
 PERSISTENT_INIT = cli_args.persistent_init
 ## Specification of spectrum-dependent initial conditions ('theory' or 'recon')
@@ -198,7 +201,10 @@ if OPERATION == 'sequential':
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
-    kfit.save_data(fdir=out_dir, fname='/hsymline_{}_seqfit_nband={}_ofs={}_{}.h5'.format(DATASOURCE, NBAND, argofs, VARYING_INIT))
+    fn_text = '/hsymline_{}_seqfit_nband={}_ofs={}_{}'.format(DATASOURCE, NBAND, argofs, VARYING_INIT)
+    kfit.save_data(fdir=out_dir, fname=fn_text + '.h5')
+    if PICKLE:
+        pf.utils.pickle_obj(out_dir + fn_text + '.pickle', kfit.fitres)
 
 elif OPERATION == 'parallel':
     if __name__ == '__main__':
@@ -223,7 +229,10 @@ elif OPERATION == 'parallel':
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        kfit.save_data(fdir=out_dir, fname='/hsymline_{}_parafit_nband={}_ofs={}_{}.h5'.format(DATASOURCE, NBAND, argofs, VARYING_INIT))
+        fn_text = '/hsymline_{}_parafit_nband={}_ofs={}_{}'.format(DATASOURCE, NBAND, argofs, VARYING_INIT)
+        kfit.save_data(fdir=out_dir, fname=fn_text + '.h5')
+        if PICKLE:
+            pf.utils.pickle_obj(out_dir + fn_text + '.pickle', kfit.fitres)
 
 else:
     raise NotImplementedError
