@@ -101,8 +101,8 @@ def model_generator(peaks={'Voigt':2}, background='None', **kwds):
 
     return model
 
-
-def random_varshift(fitres, model, params, shifts=[], yvals=None, xvals=None, parnames=[], verbose=True, **kwds):
+rct = 0 # Counter for the number of rounds
+def random_varshift(fitres, model, params, shifts=[], yvals=None, xvals=None, parnames=[], verbose=True, fit_attr='chisqr',thresh=0.85, cbfit=None, rounds=None, rcount=0, method='leastsq', **kwds):
     """ Recursively apply a random shift value to certain key variables to get a better fit. Execution of the function terminates when either (1) the fitting results are sufficiently good (measured by its chi-squared metric) or (2) the trials exhaust all choices of shift parameters.
 
     **Parameters**\n
@@ -120,28 +120,56 @@ def random_varshift(fitres, model, params, shifts=[], yvals=None, xvals=None, pa
         List of names of the parameters to update initial conditions.
     verbose: bool | True
         Option for printout of the chi-squared value.
+    thresh: numeric | 0.8
+        Threshold of the chi-squared to judge quality of fit.
+    cbfit: instance of ``lmfit.model.ModelResult`` | None
+        Current best fitting result.
+    rounds: int | None
+        Total number of rounds in applying random shifts.
+    rcount: int | 0
+        Round counter.
     **kwds: keyword arguments
         Extra keywords passed to the ``Model.fit()`` method.
     """
-
+    
+    rct = rcount
+    if rounds is None:
+        rounds = len(shifts)
     # Check goodness-of-fit criterion
-    if (fitres.chisqr < 0.8) or (len(shifts) == 0):
+    # print(fit_attr)
+    if (getattr(fitres, fit_attr) < thresh) or (len(shifts) == 0):
+        rct = 0 # Zero the counter
         return fitres
     
     else:
         if verbose:
-            print('csq = {}'.format(fitres.chisqr))
+            print('csq = {}'.format(getattr(fitres, fit_attr)))
         
         idx = np.random.choice(range(len(shifts)), 1)[0]
         sft = shifts[idx]
         if parnames:
             pardict = dict((p, params[p].value+sft) for p in parnames)
+            # print(pardict)
             varsetter(params, pardict)
         
+        # print(kwds)
         newfit = model.fit(yvals, params, x=xvals, **kwds)
-        newshifts = np.delete(shifts, idx)
+        # Use compare the current fit outcome with the memoized best result
+        if cbfit is not None:
+            if getattr(newfit, fit_attr) > getattr(cbfit, fit_attr):
+                newfit = cbfit
+            else:
+                cbfit = newfit
+        else:
+            cbfit = newfit
         
-        return random_varshift(newfit, model, params, newshifts, yvals, xvals, parnames, verbose, **kwds)
+        rct += 1
+        if rct == rounds:
+            newshifts = np.array([])
+        elif rct < rounds:
+            newshifts = np.delete(shifts, idx)
+        
+        return random_varshift(newfit, model, params, newshifts, yvals, xvals, parnames, verbose, fit_attr, thresh, cbfit, rounds, rct, method, **kwds)
 
 
 def varsetter(params, inits={}, ret=False):
@@ -442,7 +470,7 @@ class PatchFitter(object):
         if include_vary:
             varyvals = self.band_inits2D[:self.model.nlp, :nspec]
             if other_initvals is not None:
-                other_size = np.asarray(other_initvals).size
+                other_size = len(other_initvals)
                 if (other_size != nspec) or ((other_size == 1) and (nspec == 1)):
                     try:
                         othervals = np.ones((self.model.nlp, nspec))*other_initvals
@@ -450,7 +478,7 @@ class PatchFitter(object):
                     except:
                         raise Exception('other_initvals has incorrect shape!')
                 else:
-                    raise Exception('other_initvals has incorrect shape!')
+                    inits_vary_vals = other_initvals
 
         if pref_exclude: # Exclude certain lineshapes in updating initialization, if needed
             prefixes = list(set(self.prefixes) - set(pref_exclude))
@@ -469,7 +497,7 @@ class PatchFitter(object):
 
             y = self.ydata2D[n, :].ravel() # Current energy distribution curve
             # Line fitting with all the initial guesses supplied
-            out = pointwise_fitting(self.xvals.ravel(), y, model=self.model, params=self.pars, ynorm=True, **kwds)
+            out = pointwise_fitting(self.xvals.ravel(), y, model=self.model, params=self.pars, **kwds)
             self.fitres.append(out)
 
             dfout = u.df_collect(out.params, extra_params={'spec_id':n}, currdf=self.df_fit)
