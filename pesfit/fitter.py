@@ -808,6 +808,36 @@ def load_file(fdir=r'./', fname='', ftype='h5', parts=None, **kwds):
     return content
 
 
+def restruct_fit_result(fpath, shape, pref='lp', ncomp=10, parname='center'):
+    """ Restructure the outcome into the desired format.
+    
+    **Parameters**\n
+    file: str
+        File path.
+    shape: list/tuple
+        Shape of reconstructed parameter matrix.
+    pref: str | 'lp'
+        Prefix of the line profile.
+    ncomp: int | 10
+        Number of components.
+    parname: str | 'çenter'
+        Namestring of the parameter.
+    """
+    
+    outdat = []
+    rdf = pd.read_hdf(fpath)
+    for i in range(ncomp):
+        try:
+            parstr = '{}{}_{}'.format(pref, i, parname)
+            outdat.append(rdf[parstr].values.reshape(shape))
+        except:
+            pass
+    
+    outdat = np.asarray(outdat)
+    
+    return outdat
+
+
 #####################################
 # Output and visualization routines #
 #####################################
