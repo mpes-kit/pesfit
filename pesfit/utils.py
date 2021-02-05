@@ -319,3 +319,22 @@ def load_pickle(fname):
     f.close()
 
     return content
+
+
+def randomize(data, axis=0, seed=None):
+    """ Randomize data along one axis.
+    """
+    
+    if seed is not None:
+        np.random.seed(seed)
+    
+    # Generate shuffled indices
+    nchoice = data.shape(axis)
+    choices = list(range(nchoice))
+    np.random.shuffle(choices)
+    
+    data_rand = np.moveaxis(data, axis, 0)
+    data_rand = data_rand[choices, ...]
+    data_rand = np.moveaxis(data, 0, axis)
+    
+    return data_rand, choices
