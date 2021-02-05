@@ -859,7 +859,8 @@ def print_fit_result(params, printout=False, fpath='', mode='a', **kwds):
     return
 
 
-def plot_fit_result(fitres, x, plot_components=True, downsamp=1, flatten=False, ret=False, **kwds):
+def plot_fit_result(fitres, x, plot_components=True, downsamp=1, flatten=False, legend=True, ret=False,
+                    lgkwds={'frameon':False, 'fontsize':15}, **kwds):
     """ Plot the fitting outcomes.
 
     **Parameters**\n
@@ -871,6 +872,14 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, flatten=False, 
         Option to plot components of the multipeak lineshape.
     downsamp: int | 1
         Level of downsampling of the data (1 means no downsampling).
+    flatten: bool | False
+        Option to flatten the data (in case multidimensional).
+    legend: bool | True
+        Option to include legend in the figure.
+    ret: bool | False
+        Option to return figure and axis objects.
+    lgkwds: dict | {'frameon':False, 'fontsize':15}
+        Keyword arguments for figure legend.
     **kwds: keyword arguments
         figsize: list/tuple | [8, 5]
             Default size of the figure.
@@ -905,6 +914,9 @@ def plot_fit_result(fitres, x, plot_components=True, downsamp=1, flatten=False, 
         ax.set_xlabel(xlabel, fontsize=lfs)
     if ylabel is not None:
         ax.set_ylabel(ylabel, fontsize=lfs)
+    
+    if legend:
+        ax.legend(**lgkwds)
 
     if ret:
         return f, ax
