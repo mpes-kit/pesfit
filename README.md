@@ -35,3 +35,9 @@ Besides source code, the package comes with [examples](https://github.com/mpes-k
 ### Documentation
 
 Online documentation is provided [here](https://mpes-kit.github.io/pesfit/).
+
+### Reference
+
+Please cite the following paper if you use the software:
+
+R. Patrick Xian, R. Ernstorfer, Philipp M. Pelz, Scalable multicomponent spectral analysis for high-throughput data annotation, arXiv: [2102.05604](https://arxiv.org/abs/2102.05604).
