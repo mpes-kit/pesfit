@@ -18,11 +18,11 @@ def map_reduce_meth(meth, elems, op, init, **kwargs):
     return reduce(op, map(lambda elem: getattr(elem, meth)(**kwargs), elems), init)
 
 
-def map_reduce_attr(attr, elems, op, init):
+def map_reduce_attr(attr, elems, op, **kwargs):
     """ Execute map-reduce on instance attributes (non-callable).
     """
 
-    return reduce(op, map(lambda elem: getattr(elem, attr), elems), init)
+    return reduce(op, map(lambda elem: getattr(elem, attr), elems), **kwargs)
 
 
 def mr_dict_merge(meth, elems, op_dict=OrderedDict, **kwargs):
@@ -50,7 +50,7 @@ def dict_merge(elems, init={}, op_dict=OrderedDict):
     
 
 class MultipeakModel(Model):
-    """ Composite lineshape model consisting of multiple identical peak profiles.
+    """ Composite lineshape model consisting of multiple (sets of) identical peak profiles.
 
     **Parameters**\n
     model: instance of ``lmfit.model.Model`` | []
@@ -225,7 +225,7 @@ class MultipeakModel(Model):
         
         return reduce(op, map(lambda obj, fev: fev(obj, *args, **kwargs), objs, fevs))
  
-    def multi_retrieve(self, prop, op=operator.add):
+    def multi_retrieve(self, prop, op=operator.add, init=[]):
         """ Retrieve the specified properties for all components in the multipeak model.
 
         **Parameters**\n
@@ -235,12 +235,12 @@ class MultipeakModel(Model):
             Functional operator used to reduce the terms.
         """
 
-        return map_reduce_attr(prop, self.components, op, [])
+        return map_reduce_attr(prop, self.components, op, initializer=init)
         # return self.multi_eval(op, self.components, [getattr]*self.ncomp, prop)
 
 
-class MultipeakModeler(Model):
-    """ Composite lineshape model consisting of multiple identical peak profiles. This version has preserves the property type of model components (``self.components``).
+class MultipeakModelPP(Model):
+    """ Composite lineshape model consisting of multiple (sets of) identical peak profiles. This version has preserves the property type of model components (``self.components``), therefore called property-preserved (PP) version.
     """
     
     _known_ops = {operator.add: '+', operator.mul: '*'}
