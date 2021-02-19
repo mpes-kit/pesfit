@@ -1,7 +1,7 @@
 # pesfit
-![License](https://img.shields.io/github/license/mpes-kit/pesfit) ![Downloads](https://pepy.tech/badge/pesfit) ![PyPI version](https://badge.fury.io/py/pesfit.svg)
+![License](https://img.shields.io/github/license/mpes-kit/pesfit) ![Downloads](https://pepy.tech/badge/pesfit) ![PyPI version](https://img.shields.io/pypi/v/pesfit)
 
-Distributed multicomponent lineshape fitting routines and benchmarks for photoemission spectroscopy and spectral imaging
+Scalable distributed multicomponent lineshape fitting routines and benchmarks for spectral or spectrum-like data
 
 ### Rationale
 
@@ -38,6 +38,6 @@ Online documentation is provided [here](https://mpes-kit.github.io/pesfit/).
 
 ### Reference
 
-Please cite the following paper if you use the software:
+Please cite the following paper if you want to refer to the software:
 
 R. Patrick Xian, R. Ernstorfer, Philipp M. Pelz, Scalable multicomponent spectral analysis for high-throughput data annotation, arXiv: [2102.05604](https://arxiv.org/abs/2102.05604).
