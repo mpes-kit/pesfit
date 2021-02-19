@@ -523,6 +523,12 @@ class PatchFitter(object):
 
     def fit_to_dict(self, shape, orient='dict'):
         """ Restructure the fitting outcome to dictionary.
+
+        **Parameters**\n
+        shape: list/tuple
+            Shape of the data to convert to.
+        orient: str | 'dict'
+            Customization of the key-value pairs (see ``pandas.DataFrame.to_dict``).
         """
 
         outdict = self.df_fit.to_dict(orient=orient)
