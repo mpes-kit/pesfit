@@ -338,3 +338,24 @@ def randomize(data, axis=0, seed=None):
     data_rand = np.moveaxis(data, 0, axis)
     
     return data_rand, choices
+
+
+def index_gen(x):
+    """Index generator.
+    """ 
+    
+    indices = np.arange(*x, dtype='int').tolist()
+    inditer = it.product(indices, indices)
+    
+    return inditer
+
+
+def shape_gen(scale_vector):
+    """ Generate a series of vector-related quantities.
+    """
+
+    length = len(range(*scale_vector))
+    shape = (length, length)
+    indices = index_gen(scale_vector)
+
+    return length, shape, indices
