@@ -4,6 +4,7 @@
 from . import lineshape as ls, utils as u
 from . import istarmap
 import numpy as np
+from scipy import interpolate as interp
 import pandas as pd
 from functools import reduce
 from lmfit import Minimizer, fit_report
@@ -842,6 +843,94 @@ def restruct_fit_result(fpath, shape, pref='lp', ncomp=10, parname='center'):
     outdat = np.asarray(outdat)
     
     return outdat
+
+
+class InteractiveFitter(object):
+    """ Interactively conducting spectrum fitting at anchor points individually
+    """
+    
+    def __init__(self, x, data, size, coarse_step, fine_step=1):
+        
+        self.x = x
+        self.data = data
+        self.size = size
+        self.all_fit_results = []
+        
+        coarse_scale = [0, size, coarse_step]
+        self.coarse_len, self.coarse_shape, self.coarse_ind = shape_gen(coarse_scale)
+        self.anchors = np.array(index_gen(coarse_scale))
+        
+        fine_scale = [0, size, fine_step]
+        self.fine_len, self.fine_shape, self.fine_ind = shape_gen(fine_scale)
+        
+    def next_task(self, indices=None):
+        """ Progress to the next task.
+        """
+        
+        if indices is None:
+            self.r_ind, self.c_ind = next(self.coarse_ind)
+        else:
+            self.r_ind, self.c_ind = indices
+            
+    def restart(self):
+        """ Restart counting the indices.
+        """
+        
+        self.coarse_ind = index_gen(coarse_scale)
+        self.r_ind, self.c_ind = next(self.coarse_ind)
+    
+    def fit(self, model, inits, pars=None, view_result=True, **kwds):
+        """ Manually fit for a single spectrum.
+        """
+        
+        if pars is None:
+            pars = model.make_params()
+        self.spectrum = self.data[self.r_ind, self.c_ind, :]
+
+        varsetter(pars, inits, ret=False)
+        self.fitres = pointwise_fitting(xdata=self.x, ydata=self.spectrum,
+                                        model=model, params=pars, ynorm=True, **kwds)
+        
+        if view_result:
+            plot_fit_result(self.fitres, x=self.x)
+        
+    def keep(self, fit_result, index=None):
+        """ Keep or replace the specified fit result.
+        """
+        
+        if index is None:
+            self.all_fit_results.append(fit_result)
+        else:
+            self.all_fit_results[index] = fit_result
+            
+    def extract(self, ncomp, compstr='center'):
+        """ Extract fitting parameters.
+        """
+        
+        self.fit_params = {str(n):[] for n in range(1, ncomp+1)}
+        for fres in self.all_fit_results:
+            fbv = fres.best_values
+            for n in range(1, ncomp+1):
+                self.fit_params[str(n)].append(fbv['lp{}_{}'.format(n, compstr)])
+        
+        coarse_fit = [np.array(parval).reshape(self.coarse_shape).tolist() for parval in self.fit_params.values]
+        self.coarse_fit = np.array(coarse_fit)
+        
+    def interpolate(self, shape=None):
+        
+        self.interpolator = interp.CloughTocher2DInterpolator((self.anchors[:,1], self.anchors[:,0]),
+                                                              self.coarse_fit[0,...].reshape((self.coarse_len**2, 1)))
+        patch = self.interpolator(np.array(self.fine_ind))
+        if shape is None:
+            self.patch = patch.reshape(self.fine_shape)
+        else:
+            self.patch = patch.reshape(shape)
+    
+    def view(self, data):
+        """ View the outcome of current fitting.
+        """
+        
+        plt.imshow(data)
 
 
 #####################################
