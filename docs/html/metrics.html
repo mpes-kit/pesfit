@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Metrics for hyperparameter tuning (pesfit.metrics) &mdash; pesfit 0.6.2 documentation</title>
+  <title>Metrics for hyperparameter tuning (pesfit.metrics) &mdash; pesfit 0.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.6.2 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.7.0 documentation" href="index.html"/>
         <link rel="next" title="Utility functions (pesfit.utils)" href="utils.html"/>
         <link rel="prev" title="Integrated fitting workflow (pesfit.fitter)" href="fitter.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.7.0
               </div>
             
           
@@ -167,30 +167,42 @@
   <div class="section" id="module-pesfit.metrics">
 <span id="metrics-for-hyperparameter-tuning-pesfit-metrics"></span><h1>Metrics for hyperparameter tuning  <code class="docutils literal notranslate"><span class="pre">(pesfit.metrics)</span></code><a class="headerlink" href="#module-pesfit.metrics" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="pesfit.metrics.GroupRMSE">
-<em class="property">class </em><code class="sig-prename descclassname">pesfit.metrics.</code><code class="sig-name descname">GroupRMSE</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fres</span></em>, <em class="sig-param"><span class="n">nband</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Group-wise root-mean-square error calculator.</p>
+<dt id="pesfit.metrics.GroupMetrics">
+<em class="property">class </em><code class="sig-prename descclassname">pesfit.metrics.</code><code class="sig-name descname">GroupMetrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fres</span></em>, <em class="sig-param"><span class="n">nband</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group-wise evaluation metrics calculator.</p>
 <dl class="py method">
-<dt id="pesfit.metrics.GroupRMSE.group_rmse">
-<code class="sig-name descname">group_rmse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ground_truth</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE.group_rmse" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.metrics.GroupMetrics.group_instability">
+<code class="sig-name descname">group_instability</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ground_truth</span></em>, <em class="sig-param"><span class="n">form</span><span class="o">=</span><span class="default_value">'averaged'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupMetrics.group_instability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the group-wise reconstruction instability.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pesfit.metrics.GroupMetrics.group_rmse">
+<code class="sig-name descname">group_rmse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ground_truth</span></em>, <em class="sig-param"><span class="n">form</span><span class="o">=</span><span class="default_value">'averaged'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupMetrics.group_rmse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate group-wise root-mean-square error.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.metrics.GroupRMSE.load_all_data">
-<code class="sig-name descname">load_all_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">varname</span></em>, <em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE.load_all_data" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.metrics.GroupMetrics.instability">
+<code class="sig-name descname">instability</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">result</span></em>, <em class="sig-param"><span class="n">ground_truth</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupMetrics.instability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate reconstruction instability.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pesfit.metrics.GroupMetrics.load_all_data">
+<code class="sig-name descname">load_all_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">varname</span></em>, <em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupMetrics.load_all_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load all reconstruction data.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.metrics.GroupRMSE.load_data">
-<code class="sig-name descname">load_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">varname</span></em>, <em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE.load_data" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.metrics.GroupMetrics.load_data">
+<code class="sig-name descname">load_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">varname</span></em>, <em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupMetrics.load_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a set of reconstruction data.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.metrics.GroupRMSE.rmse">
-<code class="sig-name descname">rmse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">result</span></em>, <em class="sig-param"><span class="n">ground_truth</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupRMSE.rmse" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.metrics.GroupMetrics.rmse">
+<code class="sig-name descname">rmse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">result</span></em>, <em class="sig-param"><span class="n">ground_truth</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.metrics.GroupMetrics.rmse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate root-mean-square error.</p>
 </dd></dl>
 
@@ -242,7 +254,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.6.2',
+            VERSION:'0.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -252,7 +264,6 @@
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   

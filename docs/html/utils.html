@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.6.2 documentation</title>
+  <title>Utility functions (pesfit.utils) &mdash; pesfit 0.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.6.2 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.7.0 documentation" href="index.html"/>
         <link rel="prev" title="Metrics for hyperparameter tuning (pesfit.metrics)" href="metrics.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.7.0
               </div>
             
           
@@ -272,9 +272,21 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="pesfit.utils.index_gen">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">index_gen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.index_gen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index generator.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pesfit.utils.intnz">
 <code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">intnz</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.intnz" title="Permalink to this definition">¶</a></dt>
 <dd><p>Output an integer at least larger than 1.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.utils.load_pickle">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">load_pickle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.load_pickle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load pickled object.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -307,6 +319,18 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="pesfit.utils.pickle_obj">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">pickle_obj</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em>, <em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.pickle_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pickle object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.utils.randomize">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">randomize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.randomize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomize data along one axis.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pesfit.utils.riffle">
 <code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">riffle</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">arr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.riffle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interleave multiple arrays of the same number of elements.</p>
@@ -320,6 +344,12 @@
 <dt>riffarr: 1D array</dt><dd><p>An array with interleaving elements from each input array.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pesfit.utils.shape_gen">
+<code class="sig-prename descclassname">pesfit.utils.</code><code class="sig-name descname">shape_gen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scale_vector</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.utils.shape_gen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a series of vector-related quantities.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -378,7 +408,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.6.2',
+            VERSION:'0.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -388,7 +418,6 @@
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   

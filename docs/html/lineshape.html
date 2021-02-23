@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Complex lineshape models (pesfit.lineshape) &mdash; pesfit 0.6.2 documentation</title>
+  <title>Complex lineshape models (pesfit.lineshape) &mdash; pesfit 0.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pesfit 0.6.2 documentation" href="index.html"/>
+    <link rel="top" title="pesfit 0.7.0 documentation" href="index.html"/>
         <link rel="next" title="Integrated fitting workflow (pesfit.fitter)" href="fitter.html"/>
         <link rel="prev" title="Fitting benchmarks" href="I02_benchmark.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.7.0
               </div>
             
           
@@ -169,7 +169,7 @@
 <dl class="py class">
 <dt id="pesfit.lineshape.MultipeakModel">
 <em class="property">class </em><code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">MultipeakModel</code><span class="sig-paren">(</span><em class="sig-param">model=[]</em>, <em class="sig-param">n=0</em>, <em class="sig-param">lineshape=[]</em>, <em class="sig-param">background=[]</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em>, <em class="sig-param">preftext='lp'</em>, <em class="sig-param">**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Composite lineshape model consisting of multiple identical peak profiles.</p>
+<dd><p>Composite lineshape model consisting of multiple (sets of) identical peak profiles.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt>model: instance of <code class="docutils literal notranslate"><span class="pre">lmfit.model.Model</span></code> | []</dt><dd><p>An existing lineshape model.</p>
@@ -248,7 +248,7 @@
 
 <dl class="py method">
 <dt id="pesfit.lineshape.MultipeakModel.multi_retrieve">
-<code class="sig-name descname">multi_retrieve</code><span class="sig-paren">(</span><em class="sig-param">prop</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModel.multi_retrieve" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">multi_retrieve</code><span class="sig-paren">(</span><em class="sig-param">prop</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em>, <em class="sig-param">init=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModel.multi_retrieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the specified properties for all components in the multipeak model.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
@@ -280,54 +280,54 @@
 </dd></dl>
 
 <dl class="py class">
-<dt id="pesfit.lineshape.MultipeakModeler">
-<em class="property">class </em><code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">MultipeakModeler</code><span class="sig-paren">(</span><em class="sig-param">lineshape=None</em>, <em class="sig-param">n=1</em>, <em class="sig-param">model=[]</em>, <em class="sig-param">background=[]</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em>, <em class="sig-param">preftext='lp'</em>, <em class="sig-param">**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Composite lineshape model consisting of multiple identical peak profiles. This version has preserves the property type of model components (<code class="docutils literal notranslate"><span class="pre">self.components</span></code>).</p>
+<dt id="pesfit.lineshape.MultipeakModelPP">
+<em class="property">class </em><code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">MultipeakModelPP</code><span class="sig-paren">(</span><em class="sig-param">lineshape=None</em>, <em class="sig-param">n=1</em>, <em class="sig-param">model=[]</em>, <em class="sig-param">background=[]</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em>, <em class="sig-param">preftext='lp'</em>, <em class="sig-param">**kws</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Composite lineshape model consisting of multiple (sets of) identical peak profiles. This version has preserves the property type of model components (<code class="docutils literal notranslate"><span class="pre">self.components</span></code>), therefore called property-preserved (PP) version.</p>
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler._make_all_args">
-<code class="sig-name descname">_make_all_args</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler._make_all_args" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP._make_all_args">
+<code class="sig-name descname">_make_all_args</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP._make_all_args" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate <strong>all</strong> function arguments for all functions.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler._model_convert">
-<code class="sig-name descname">_model_convert</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">test_obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler._model_convert" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP._model_convert">
+<code class="sig-name descname">_model_convert</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">test_obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP._model_convert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert into an <code class="docutils literal notranslate"><span class="pre">lmfit</span></code> Model object.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler._parse_params">
-<code class="sig-name descname">_parse_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler._parse_params" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP._parse_params">
+<code class="sig-name descname">_parse_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP._parse_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parsing and merging parameters from constituent models.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler._reprstring">
-<code class="sig-name descname">_reprstring</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">long</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler._reprstring" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP._reprstring">
+<code class="sig-name descname">_reprstring</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">long</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP._reprstring" title="Permalink to this definition">¶</a></dt>
 <dd><p>Representation string for the multipeak model.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler.components">
-<em class="property">property </em><code class="sig-name descname">components</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler.components" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP.components">
+<em class="property">property </em><code class="sig-name descname">components</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP.components" title="Permalink to this definition">¶</a></dt>
 <dd><p>All components for a multipeak model.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler.eval">
-<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler.eval" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP.eval">
+<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP.eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the entire model.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler.eval_components">
-<code class="sig-name descname">eval_components</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler.eval_components" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP.eval_components">
+<code class="sig-name descname">eval_components</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP.eval_components" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return OrderedDict of name, results for each component.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler.multi_eval">
-<code class="sig-name descname">multi_eval</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">op</span></em>, <em class="sig-param"><span class="n">objs</span></em>, <em class="sig-param"><span class="n">fevs</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler.multi_eval" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP.multi_eval">
+<code class="sig-name descname">multi_eval</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">op</span></em>, <em class="sig-param"><span class="n">objs</span></em>, <em class="sig-param"><span class="n">fevs</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP.multi_eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate multiple components with a defined operator using map-reduce operation, returns a list.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
@@ -345,8 +345,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler.multi_retrieve">
-<code class="sig-name descname">multi_retrieve</code><span class="sig-paren">(</span><em class="sig-param">prop</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler.multi_retrieve" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP.multi_retrieve">
+<code class="sig-name descname">multi_retrieve</code><span class="sig-paren">(</span><em class="sig-param">prop</em>, <em class="sig-param">op=&lt;built-in function add&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP.multi_retrieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the specified properties for all components in the multipeak model.</p>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
@@ -358,20 +358,20 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler.ncomp">
-<em class="property">property </em><code class="sig-name descname">ncomp</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler.ncomp" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP.ncomp">
+<em class="property">property </em><code class="sig-name descname">ncomp</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP.ncomp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of components for a multipeak model.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler.param_names">
-<em class="property">property </em><code class="sig-name descname">param_names</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler.param_names" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP.param_names">
+<em class="property">property </em><code class="sig-name descname">param_names</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP.param_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>All parameter names in a multipeak model.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pesfit.lineshape.MultipeakModeler.prefixes">
-<em class="property">property </em><code class="sig-name descname">prefixes</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModeler.prefixes" title="Permalink to this definition">¶</a></dt>
+<dt id="pesfit.lineshape.MultipeakModelPP.prefixes">
+<em class="property">property </em><code class="sig-name descname">prefixes</code><a class="headerlink" href="#pesfit.lineshape.MultipeakModelPP.prefixes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collection of prefixes for all lineshape components.</p>
 </dd></dl>
 
@@ -385,7 +385,7 @@
 
 <dl class="py function">
 <dt id="pesfit.lineshape.map_reduce_attr">
-<code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">map_reduce_attr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span></em>, <em class="sig-param"><span class="n">elems</span></em>, <em class="sig-param"><span class="n">op</span></em>, <em class="sig-param"><span class="n">init</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.map_reduce_attr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pesfit.lineshape.</code><code class="sig-name descname">map_reduce_attr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span></em>, <em class="sig-param"><span class="n">elems</span></em>, <em class="sig-param"><span class="n">op</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pesfit.lineshape.map_reduce_attr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute map-reduce on instance attributes (non-callable).</p>
 </dd></dl>
 
@@ -447,7 +447,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.6.2',
+            VERSION:'0.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -457,7 +457,6 @@
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
