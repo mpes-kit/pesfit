@@ -18,11 +18,11 @@ def map_reduce_meth(meth, elems, op, init, **kwargs):
     return reduce(op, map(lambda elem: getattr(elem, meth)(**kwargs), elems), init)
 
 
-def map_reduce_attr(attr, elems, op, **kwargs):
+def map_reduce_attr(attr, elems, op, init):
     """ Execute map-reduce on instance attributes (non-callable).
     """
 
-    return reduce(op, map(lambda elem: getattr(elem, attr), elems), **kwargs)
+    return reduce(op, map(lambda elem: getattr(elem, attr), elems), init)
 
 
 def mr_dict_merge(meth, elems, op_dict=OrderedDict, **kwargs):
@@ -235,7 +235,7 @@ class MultipeakModel(Model):
             Functional operator used to reduce the terms.
         """
 
-        return map_reduce_attr(prop, self.components, op, initializer=init)
+        return map_reduce_attr(prop, self.components, op, init=init)
         # return self.multi_eval(op, self.components, [getattr]*self.ncomp, prop)
 
 
