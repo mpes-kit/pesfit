@@ -16,6 +16,7 @@ The fitting part of the package builds and improves on the existing ``Model`` an
    
    I01_start
    I02_benchmark_pes
+   I03_benchmark_ped
 
 
 .. toctree::

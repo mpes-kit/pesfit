@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Module Index &mdash; pesfit 0.7.0 documentation</title>
+  <title>Batch fitting benchmark – powder electron diffraction &mdash; pesfit 0.7.0 documentation</title>
   
 
   
@@ -36,9 +36,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="pesfit 0.7.0 documentation" href="index.html"/>
- 
-
-
+        <link rel="next" title="Complex lineshape models (pesfit.lineshape)" href="lineshape.html"/>
+        <link rel="prev" title="Batch fitting benchmark – photoemission spectroscopy" href="I02_benchmark_pes.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -92,10 +91,14 @@
             
             
               <p class="caption"><span class="caption-text">Instructions</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="I01_start.html">How to start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="I02_benchmark_pes.html">Batch fitting benchmark – photoemission spectroscopy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="I03_benchmark_ped.html">Batch fitting benchmark – powder electron diffraction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Batch fitting benchmark – powder electron diffraction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#outline">Outline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">API documentation</span></p>
 <ul>
@@ -147,12 +150,14 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Python Module Index</li>
+      <li>Batch fitting benchmark – powder electron diffraction</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
+            <a href="_sources/I03_benchmark_ped.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -164,44 +169,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-   <h1>Python Module Index</h1>
-
-   <div class="modindex-jumpbox">
-   <a href="#cap-p"><strong>p</strong></a>
-   </div>
-
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-p"><td></td><td>
-       <strong>p</strong></td><td></td></tr>
-     <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-       <td>
-       <code class="xref">pesfit</code></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="fitter.html#module-pesfit.fitter"><code class="xref">pesfit.fitter</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="lineshape.html#module-pesfit.lineshape"><code class="xref">pesfit.lineshape</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="metrics.html#module-pesfit.metrics"><code class="xref">pesfit.metrics</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="utils.html#module-pesfit.utils"><code class="xref">pesfit.utils</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+  <div class="section" id="batch-fitting-benchmark-powder-electron-diffraction">
+<h1>Batch fitting benchmark – powder electron diffraction<a class="headerlink" href="#batch-fitting-benchmark-powder-electron-diffraction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="outline">
+<h2>Outline<a class="headerlink" href="#outline" title="Permalink to this headline">¶</a></h2>
+<p>The aim of the benchmark is to fit a 3D dataset of fluence and time-dependent diffraction patterns from polycrystalline platinum (<span class="math notranslate nohighlight">\(\mathrm{Pt}\)</span>) [1,2]. Each diffraction pattern is a 1D intensity profile composed of more than 10 diffraction peaks.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">04_Pt_Ediff.py</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/04_Pt_Ediff.py">link</a>)</p></li>
+</ol>
+<p>Contains a full script with the option to run on the command line for batch fitting the powder electron diffraction data of polycrystalline <span class="math notranslate nohighlight">\(\mathrm{Pt}\)</span>.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">[1] D. Zahn, H. Seiler, Y. W. Windsor, R. Ernstorfer, Ultrafast lattice dynamics and electron-phonon coupling in platinum extracted with a global fitting approach for time-resolved polycrystalline diffraction data, arXiv:<a class="reference external" href="https://arxiv.org/abs/2012.10428">2012.10428</a>.</div>
+<div class="line">[2] R. P. Xian, R. Ernstorfer, P. M. Pelz, Scalable multicomponent spectral analysis for high-throughput data annotation, arXiv:<a class="reference external" href="https://arxiv.org/abs/2102.05604">2102.05604</a>.</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
 
 
            </div>
@@ -210,6 +196,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="lineshape.html" class="btn btn-neutral float-right" title="Complex lineshape models (pesfit.lineshape)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="I02_benchmark_pes.html" class="btn btn-neutral" title="Batch fitting benchmark – photoemission spectroscopy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

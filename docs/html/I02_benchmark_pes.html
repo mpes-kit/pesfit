@@ -36,7 +36,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="pesfit 0.7.0 documentation" href="index.html"/>
-        <link rel="next" title="Complex lineshape models (pesfit.lineshape)" href="lineshape.html"/>
+        <link rel="next" title="Batch fitting benchmark – powder electron diffraction" href="I03_benchmark_ped.html"/>
         <link rel="prev" title="How to start" href="I01_start.html"/> 
 
   
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="I03_benchmark_ped.html">Batch fitting benchmark – powder electron diffraction</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API documentation</span></p>
 <ul>
@@ -173,11 +174,11 @@
 <h1>Batch fitting benchmark – photoemission spectroscopy<a class="headerlink" href="#batch-fitting-benchmark-photoemission-spectroscopy" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="outline">
 <h2>Outline<a class="headerlink" href="#outline" title="Permalink to this headline">¶</a></h2>
-<p>The aim of the benchmark is to reconstruct the energy dispersion of tungsten diselenide (<span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>) in the solid state from photoemission band mapping (PBM) experiments or from synthetic data of similar nature. Experimental PBM data for <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> are obtained from either experiment [1] or model-based synthesis [2]. Example scripts are included under the <a class="reference external" href="https://github.com/mpes-kit/pesfit/tree/master/benchmarks">/benchmarks</a> folder of the package.</p>
+<p>The aim of the benchmark is to reconstruct the energy dispersion of tungsten diselenide (<span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>) in the solid state from 3D photoemission band mapping (PBM) experiments or from synthetic data of similar nature. Experimental PBM data for <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> are obtained from either experiment [1] or model-based synthesis [2]. The three dimensions in the dataset include the two momentum components (<span class="math notranslate nohighlight">\(k_x, k_y\)</span>) and the energy (<span class="math notranslate nohighlight">\(E\)</span>) of the photoemitted electrons (<strong>photoelectrons</strong>). The spectra used in the batch fitting are the intensity profiles (<span class="math notranslate nohighlight">\(I(E)\)</span>) of the photoelectron as a function of momentum (or <strong>energy distribution curve</strong>), <span class="math notranslate nohighlight">\(I(E, k_x, k_y)\)</span>. Example scripts are included under the <a class="reference external" href="https://github.com/mpes-kit/pesfit/tree/master/benchmarks">/benchmarks</a> folder of the package.</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">01_WSe2_Kpoint.py</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/01_WSe2_Kpoint.py">link</a>)</p></li>
 </ol>
-<p>Contains a full script with the option to run on the command line for batch fitting photoemission data around the <span class="math notranslate nohighlight">\(K\)</span> point of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>. The following bash scripts contain numerical experiments for tuning the energy shift hyperparameters associated with each energy band.</p>
+<p>Contains a full script with the option to run on the command line for batch fitting the photoemission data around the <span class="math notranslate nohighlight">\(K\)</span> point of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>. The following bash scripts contain numerical experiments for tuning the energy shift hyperparameters associated with each energy band.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_02.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_02.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 1-2 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_04.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_04.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 3-4 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
@@ -189,11 +190,11 @@
 <ol class="arabic simple" start="2">
 <li><p><code class="docutils literal notranslate"><span class="pre">02_WSe2_Mpoint.py</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/02_WSe2_Mpoint.py">link</a>)</p></li>
 </ol>
-<p>Contains a full script with the option to run on the command line for batch fitting photoemission data around the <span class="math notranslate nohighlight">\(M\)</span> point of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>.</p>
+<p>Contains a full script with the option to run on the command line for batch fitting the photoemission data around the <span class="math notranslate nohighlight">\(M\)</span> point of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>.</p>
 <ol class="arabic simple" start="3">
 <li><p><code class="docutils literal notranslate"><span class="pre">03_WSe2_hsymline.py</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/03_WSe2_hsymline.py">link</a>)</p></li>
 </ol>
-<p>Contains a full script with the option to run on the command line for batch fitting photoemission data around the high-symmetry line (HSL) of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>. The following bash scripts contain numerical experiments for tuning the energy shift hyperparameters associated with each energy band.</p>
+<p>Contains a full script with the option to run on the command line for batch fitting the photoemission data around the high-symmetry line (HSL) of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>. The following bash scripts contain numerical experiments for tuning the energy shift hyperparameters associated with each energy band.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_02.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_02.sh">link</a>) – hyperparameter tuning for reconstructing energy band 1-2 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_04.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_04.sh">link</a>) – hyperparameter tuning for reconstructing energy band 3-4 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
@@ -226,7 +227,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="lineshape.html" class="btn btn-neutral float-right" title="Complex lineshape models (pesfit.lineshape)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="I03_benchmark_ped.html" class="btn btn-neutral float-right" title="Batch fitting benchmark – powder electron diffraction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="I01_start.html" class="btn btn-neutral" title="How to start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
