@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Fitting benchmarks &mdash; pesfit 0.7.0 documentation</title>
+  <title>Batch fitting benchmark – photoemission spectroscopy &mdash; pesfit 0.7.0 documentation</title>
   
 
   
@@ -93,9 +93,9 @@
               <p class="caption"><span class="caption-text">Instructions</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="I01_start.html">How to start</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Fitting benchmarks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#benchmarks-with-mathrm-wse-2">Benchmarks with <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to use</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Batch fitting benchmark – photoemission spectroscopy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#outline">Outline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -150,13 +150,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Fitting benchmarks</li>
+      <li>Batch fitting benchmark – photoemission spectroscopy</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/I02_benchmark.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/I02_benchmark_pes.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -169,20 +169,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="fitting-benchmarks">
-<h1>Fitting benchmarks<a class="headerlink" href="#fitting-benchmarks" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="benchmarks-with-mathrm-wse-2">
-<h2>Benchmarks with <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span><a class="headerlink" href="#benchmarks-with-mathrm-wse-2" title="Permalink to this headline">¶</a></h2>
-<p>Experimental photoemission band mapping data for tungsten diselenide (<span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>) are obtained from either experiment [1] or model-based synthesis [2]. Example scripts are included under the <a class="reference external" href="https://github.com/mpes-kit/pesfit/tree/master/benchmarks">/benchmarks folder</a> of the package.</p>
+  <div class="section" id="batch-fitting-benchmark-photoemission-spectroscopy">
+<h1>Batch fitting benchmark – photoemission spectroscopy<a class="headerlink" href="#batch-fitting-benchmark-photoemission-spectroscopy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="outline">
+<h2>Outline<a class="headerlink" href="#outline" title="Permalink to this headline">¶</a></h2>
+<p>The aim of the benchmark is to reconstruct the energy dispersion of tungsten diselenide (<span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>) in the solid state from photoemission band mapping (PBM) experiments or from synthetic data of similar nature. Experimental PBM data for <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> are obtained from either experiment [1] or model-based synthesis [2]. Example scripts are included under the <a class="reference external" href="https://github.com/mpes-kit/pesfit/tree/master/benchmarks">/benchmarks</a> folder of the package.</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">01_WSe2_Kpoint.py</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/01_WSe2_Kpoint.py">link</a>)</p></li>
 </ol>
 <p>Contains a full script with the option to run on the command line for batch fitting photoemission data around the <span class="math notranslate nohighlight">\(K\)</span> point of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>. The following bash scripts contain numerical experiments for tuning the energy shift hyperparameters associated with each energy band.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_02.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_02.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 1-2 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_04.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_04.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 3-4 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_08.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_08.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 5-8 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_14.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_14.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 9-14 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_02.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_02.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 1-2 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_04.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_04.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 3-4 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_08.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_08.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 5-8 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_Kpoint_recon_14.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_14.sh">link</a>) – energy shift hyperparameter tuning for reconstructing energy band 9-14 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PES_scaling_benchmark.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/PES_scaling_benchmark.sh">link</a>) – Computational scaling benchmark for an increasing number of spectral components or energy bands (used in [3])</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">WSe2_computing_params_tuning.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_computing_params_tuning.sh">link</a>) – Tuning the task distribution parameters in parallelization (used in [3])</p></li>
 </ul>
 <ol class="arabic simple" start="2">
@@ -194,14 +195,14 @@
 </ol>
 <p>Contains a full script with the option to run on the command line for batch fitting photoemission data around the high-symmetry line (HSL) of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span>. The following bash scripts contain numerical experiments for tuning the energy shift hyperparameters associated with each energy band.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_02.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_02.sh">link</a>) – hyperparameter tuning for reconstructing energy band 1-2 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_04.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_04.sh">link</a>) – hyperparameter tuning for reconstructing energy band 3-4 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_08.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_08.sh">link</a>) – hyperparameter tuning for reconstructing energy band 5-8 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_14.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_14.sh">link</a>) – hyperparameter tuning for reconstructing energy band 9-14 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_02.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_02.sh">link</a>) – hyperparameter tuning for reconstructing energy band 1-2 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_04.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_04.sh">link</a>) – hyperparameter tuning for reconstructing energy band 3-4 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_08.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_08.sh">link</a>) – hyperparameter tuning for reconstructing energy band 5-8 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WSe2_hsymline_recon_14.sh</span></code> (<a class="reference external" href="https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_14.sh">link</a>) – hyperparameter tuning for reconstructing energy band 9-14 of <span class="math notranslate nohighlight">\(\mathrm{WSe}_2\)</span> within the corresponding energy range (used in [2])</p></li>
 </ul>
 </div>
-<div class="section" id="how-to-use">
-<h2>How to use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <p>To execute the script on a local computer, one needs to download the data from the repository <a class="reference external" href="https://github.com/mpes-kit/pesarxiv">pesarxiv</a>. After updating the file address within the Python scripts, they can be executed directly on the command line. For the bash scripts, one needs to change the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> global parameter to the corresponding address on the local computer before execution.</p>
 </div>
 <div class="section" id="references">

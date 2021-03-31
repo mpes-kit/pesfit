@@ -23,3 +23,11 @@ Install and upgrade to the latest version from git repository, or override exist
 .. code-block:: bash
 
 	pip install --upgrade git+https://github.com/mpes-kit/pesfit.git
+
+
+Install from PyPI
+
+
+.. code-block:: bash
+
+	pip install pesfit

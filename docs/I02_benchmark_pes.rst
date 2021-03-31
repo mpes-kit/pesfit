@@ -1,0 +1,58 @@
+Batch fitting benchmark -- photoemission spectroscopy
+======================================================
+
+
+Outline
+########
+
+
+The aim of the benchmark is to reconstruct the energy dispersion of tungsten diselenide (:math:`\mathrm{WSe}_2`) in the solid state from photoemission band mapping (PBM) experiments or from synthetic data of similar nature. Experimental PBM data for :math:`\mathrm{WSe}_2` are obtained from either experiment [1] or model-based synthesis [2]. Example scripts are included under the `/benchmarks <https://github.com/mpes-kit/pesfit/tree/master/benchmarks>`_ folder of the package.
+
+1. ``01_WSe2_Kpoint.py`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/01_WSe2_Kpoint.py>`_)
+
+Contains a full script with the option to run on the command line for batch fitting photoemission data around the :math:`K` point of :math:`\mathrm{WSe}_2`. The following bash scripts contain numerical experiments for tuning the energy shift hyperparameters associated with each energy band.
+
+* ``WSe2_Kpoint_recon_02.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_02.sh>`_) -- energy shift hyperparameter tuning for reconstructing energy band 1-2 of :math:`\mathrm{WSe}_2` within the corresponding energy range (used in [2])
+
+* ``WSe2_Kpoint_recon_04.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_04.sh>`_) -- energy shift hyperparameter tuning for reconstructing energy band 3-4 of :math:`\mathrm{WSe}_2` within the corresponding energy range (used in [2])
+
+* ``WSe2_Kpoint_recon_08.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_08.sh>`_) -- energy shift hyperparameter tuning for reconstructing energy band 5-8 of :math:`\mathrm{WSe}_2` within the corresponding energy range (used in [2])
+
+* ``WSe2_Kpoint_recon_14.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_Kpoint_recon_14.sh>`_) -- energy shift hyperparameter tuning for reconstructing energy band 9-14 of :math:`\mathrm{WSe}_2` within the corresponding energy range (used in [2])
+
+* ``PES_scaling_benchmark.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/PES_scaling_benchmark.sh>`_) -- Computational scaling benchmark for an increasing number of spectral components or energy bands (used in [3])
+
+* ``WSe2_computing_params_tuning.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_computing_params_tuning.sh>`_) -- Tuning the task distribution parameters in parallelization (used in [3])
+
+
+2. ``02_WSe2_Mpoint.py`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/02_WSe2_Mpoint.py>`_)
+
+Contains a full script with the option to run on the command line for batch fitting photoemission data around the :math:`M` point of :math:`\mathrm{WSe}_2`.
+
+
+3. ``03_WSe2_hsymline.py`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/03_WSe2_hsymline.py>`_)
+
+Contains a full script with the option to run on the command line for batch fitting photoemission data around the high-symmetry line (HSL) of :math:`\mathrm{WSe}_2`. The following bash scripts contain numerical experiments for tuning the energy shift hyperparameters associated with each energy band.
+
+* ``WSe2_hsymline_recon_02.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_02.sh>`_) -- hyperparameter tuning for reconstructing energy band 1-2 of :math:`\mathrm{WSe}_2` within the corresponding energy range (used in [2])
+
+* ``WSe2_hsymline_recon_04.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_04.sh>`_) -- hyperparameter tuning for reconstructing energy band 3-4 of :math:`\mathrm{WSe}_2` within the corresponding energy range (used in [2])
+
+* ``WSe2_hsymline_recon_08.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_08.sh>`_) -- hyperparameter tuning for reconstructing energy band 5-8 of :math:`\mathrm{WSe}_2` within the corresponding energy range (used in [2])
+
+* ``WSe2_hsymline_recon_14.sh`` (`link <https://github.com/mpes-kit/pesfit/blob/master/benchmarks/WSe2_hsymline_recon_14.sh>`_) -- hyperparameter tuning for reconstructing energy band 9-14 of :math:`\mathrm{WSe}_2` within the corresponding energy range (used in [2])
+
+
+Usage
+######
+
+To execute the script on a local computer, one needs to download the data from the repository `pesarxiv <https://github.com/mpes-kit/pesarxiv>`_. After updating the file address within the Python scripts, they can be executed directly on the command line. For the bash scripts, one needs to change the ``PYTHONPATH`` global parameter to the corresponding address on the local computer before execution.
+
+
+References
+##########
+
+| [1] J. Maklar et al., A quantitative comparison of time-of-flight momentum microscopes and hemispherical analyzers for time-resolved ARPES experiments, Revivew of Scientific Instruments `91, 123112 (2020) <https://aip.scitation.org/doi/10.1063/5.0024493>`_.
+| [2] R. P. Xian, V. Stimper, M. Zacharias, et al., A machine learning route between band mapping and band structure, arXiv:`2005.10210 <https://arxiv.org/abs/2005.10210>`_.
+| [3] R. P. Xian, R. Ernstorfer, P. M. Pelz, Scalable multicomponent spectral analysis for high-throughput data annotation, arXiv:`2102.05604 <https://arxiv.org/abs/2102.05604>`_.
+| 

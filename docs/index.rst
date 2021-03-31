@@ -15,7 +15,7 @@ The fitting part of the package builds and improves on the existing ``Model`` an
    :maxdepth: 2
    
    I01_start
-   I02_benchmark
+   I02_benchmark_pes
 
 
 .. toctree::
