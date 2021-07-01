@@ -25,8 +25,11 @@ import dask as dk
 from dask.diagnostics import ProgressBar
 
 # Suppress YAML deprecation warning
-import yaml
-yaml.warnings({'YAMLLoadWarning': False})
+try:
+    import yaml
+    yaml.warnings({'YAMLLoadWarning': False})
+except:
+    pass
 
 
 existing_models = dict(inspect.getmembers(ls.lmm, inspect.isclass))
