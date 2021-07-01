@@ -96,9 +96,9 @@ class MultipeakModel(Model):
         if lineshape:
             self.components += [lineshape(prefix=preftext+str(i+1)+'_', **kws) for i in range(n)]
             self.nlp = n
-        elif model:
+        if model:
             self.components += model.components
-            self.nlp = len(model.components)
+            self.nlp += len(model.components)
 
         if 'independent_vars' not in kws:
             try:
